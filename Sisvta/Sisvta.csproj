@@ -1,0 +1,122 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+	
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Infrastructure\Repositories\IClienteRepository.cs" />
+    <None Include="Infrastructure\Repositories\IProductoRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+  </ItemGroup>
+
+
+
+	<ItemGroup>
+		<Compile Update="Fccampre.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcdev.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcinvfis.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fclispre.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fdev.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fimpinv.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Finvfis.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fprov.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcprov.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fctac.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcsug.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fclinl.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcmov.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcent.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fctra.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Ftac.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Ftra.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fent.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fsal.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fmain.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fccli.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcped.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcprod.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fcli.cs" />
+		<Compile Update="Fprod.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fvta.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fped.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+</Project>
