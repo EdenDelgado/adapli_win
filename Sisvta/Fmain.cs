@@ -152,8 +152,10 @@ namespace Sisvta
             btninvfis.Click += (s, e) => AbrirFormularioEnPanel<Fcinvfis>();
             btnimpinv.Click += (s, e) => AbrirFormularioEnPanel<Fimpinv>();
             btnDevoluciones.Click += (s, e) => AbrirFormularioEnPanel<Fcdev>();
+            btnReportesInv.Click += (s, e) => AbrirFormularioEnPanel<Fsrep>();
 
-            pnlSubmenuInventarios.Controls.Add(btnListaPrecios); 
+            pnlSubmenuInventarios.Controls.Add(btnListaPrecios);
+            
             pnlSubmenuInventarios.Controls.Add(btnCambioPrecio);
             pnlSubmenuInventarios.Controls.Add(btntransacciones);
             pnlSubmenuInventarios.Controls.Add(btnSalidas);

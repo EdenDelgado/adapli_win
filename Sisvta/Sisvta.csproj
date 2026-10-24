@@ -30,6 +30,19 @@
 		<Compile Update="Fcdev.cs">
 		  <SubType>Form</SubType>
 		</Compile>
+		<Compile Update="Frepexi.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepsal.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepconin.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepcosv.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepinv.cs" />
 		<Compile Update="Fcinvfis.cs">
 		  <SubType>Form</SubType>
 		</Compile>

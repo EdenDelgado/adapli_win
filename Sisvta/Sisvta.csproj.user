@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="Falm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fcalm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fccli.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fcgrul.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fcli.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fcsal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fcgru.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fcprod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fdped.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fgru.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fprodd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fclin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fmain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fmprod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fped.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fpedet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fprod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Frepinv.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fsrep.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Fvta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
