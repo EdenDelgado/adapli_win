@@ -24,12 +24,46 @@
 
 
 	<ItemGroup>
+		<Compile Update="Flispre.cs">
+		  <SubType>Form</SubType>
+		</Compile>
 		<Compile Update="Fccampre.cs">
 		  <SubType>Form</SubType>
 		</Compile>
 		<Compile Update="Fcdev.cs">
 		  <SubType>Form</SubType>
 		</Compile>
+		<Compile Update="Fcampre.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fddev.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fdtra.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fdinvfis.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fdsal.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Fsug.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepexi.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepsal.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepconin.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepcosv.cs">
+		  <SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Frepinv.cs" />
 		<Compile Update="Fcinvfis.cs">
 		  <SubType>Form</SubType>
 		</Compile>

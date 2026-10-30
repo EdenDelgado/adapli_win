@@ -37,7 +37,7 @@ namespace Sisvta
 
         private void ConfigurarMenuLateralDinamico()
         {
-            this.Size = new Size(1100, 760);
+            this.Size = new Size(1400, 760);
             this.StartPosition = FormStartPosition.CenterScreen;
 
             // 1. Panel lateral izquierdo (empieza compacto en 70px)
@@ -152,8 +152,10 @@ namespace Sisvta
             btninvfis.Click += (s, e) => AbrirFormularioEnPanel<Fcinvfis>();
             btnimpinv.Click += (s, e) => AbrirFormularioEnPanel<Fimpinv>();
             btnDevoluciones.Click += (s, e) => AbrirFormularioEnPanel<Fcdev>();
+            btnReportesInv.Click += (s, e) => AbrirFormularioEnPanel<Fsrep>();
 
-            pnlSubmenuInventarios.Controls.Add(btnListaPrecios); 
+            pnlSubmenuInventarios.Controls.Add(btnListaPrecios);
+            
             pnlSubmenuInventarios.Controls.Add(btnCambioPrecio);
             pnlSubmenuInventarios.Controls.Add(btntransacciones);
             pnlSubmenuInventarios.Controls.Add(btnSalidas);

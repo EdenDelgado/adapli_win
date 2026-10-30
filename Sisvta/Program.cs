@@ -78,10 +78,14 @@ static class Program
                 services.AddTransient<Fctra>();
                 services.AddTransient<Fcsug>();
                 services.AddTransient<Fctac>();
-                services.AddTransient<Fcprov>(); services.AddTransient<Fprov>();
-                services.AddTransient<Fclispre>(); services.AddTransient<Fccampre>();
-                services.AddTransient<Fcinvfis>(); services.AddTransient<Fimpinv>();
-                services.AddTransient<Fcdev>();
+                services.AddTransient<Fcprov>(); 
+                services.AddTransient<Fprov>();
+                services.AddTransient<Fclispre>(); 
+                services.AddTransient<Fccampre>();
+                services.AddTransient<Fcinvfis>(); 
+                services.AddTransient<Fimpinv>();
+                services.AddTransient<Fcdev>(); 
+                services.AddTransient<Fsrep>();
             })
             .Build();
 
