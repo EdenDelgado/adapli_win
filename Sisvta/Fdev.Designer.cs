@@ -30,6 +30,15 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fdev));
             splitContainer1 = new SplitContainer();
+            label10 = new Label();
+            txnotacredito = new TextBox();
+            txalmacen = new ComboBox();
+            label9 = new Label();
+            label6 = new Label();
+            txobservacion = new TextBox();
+            conceptotxt = new ComboBox();
+            txusuario = new ComboBox();
+            txfecha = new DateTimePicker();
             panel3 = new Panel();
             regresabt = new Button();
             button2 = new Button();
@@ -37,24 +46,17 @@
             label8 = new Label();
             pictureBox1 = new PictureBox();
             label7 = new Label();
-            label6 = new Label();
             label5 = new Label();
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
             txdoc_origen = new TextBox();
-            txunidad = new TextBox();
-            txproyecto = new TextBox();
-            txobservacion = new TextBox();
-            txmovinv = new TextBox();
-            txproveedor = new TextBox();
-            txusuario = new TextBox();
-            txalmacen = new TextBox();
-            txconcept = new TextBox();
-            txfecha = new TextBox();
+            txentrada = new TextBox();
             txfolio = new TextBox();
             dataGridView1 = new DataGridView();
+            btborrar = new Button();
+            btagregar = new Button();
             dataGridView2 = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -75,33 +77,108 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(label10);
+            splitContainer1.Panel1.Controls.Add(txnotacredito);
+            splitContainer1.Panel1.Controls.Add(txalmacen);
+            splitContainer1.Panel1.Controls.Add(label9);
+            splitContainer1.Panel1.Controls.Add(label6);
+            splitContainer1.Panel1.Controls.Add(txobservacion);
+            splitContainer1.Panel1.Controls.Add(conceptotxt);
+            splitContainer1.Panel1.Controls.Add(txusuario);
+            splitContainer1.Panel1.Controls.Add(txfecha);
             splitContainer1.Panel1.Controls.Add(panel3);
             splitContainer1.Panel1.Controls.Add(label7);
-            splitContainer1.Panel1.Controls.Add(label6);
             splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(label4);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(label1);
             splitContainer1.Panel1.Controls.Add(txdoc_origen);
-            splitContainer1.Panel1.Controls.Add(txunidad);
-            splitContainer1.Panel1.Controls.Add(txproyecto);
-            splitContainer1.Panel1.Controls.Add(txobservacion);
-            splitContainer1.Panel1.Controls.Add(txmovinv);
-            splitContainer1.Panel1.Controls.Add(txproveedor);
-            splitContainer1.Panel1.Controls.Add(txusuario);
-            splitContainer1.Panel1.Controls.Add(txalmacen);
-            splitContainer1.Panel1.Controls.Add(txconcept);
-            splitContainer1.Panel1.Controls.Add(txfecha);
+            splitContainer1.Panel1.Controls.Add(txentrada);
             splitContainer1.Panel1.Controls.Add(txfolio);
             splitContainer1.Panel1.Controls.Add(dataGridView1);
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(btborrar);
+            splitContainer1.Panel2.Controls.Add(btagregar);
             splitContainer1.Panel2.Controls.Add(dataGridView2);
             splitContainer1.Size = new Size(1034, 522);
             splitContainer1.SplitterDistance = 177;
             splitContainer1.TabIndex = 0;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(484, 83);
+            label10.Name = "label10";
+            label10.Size = new Size(75, 15);
+            label10.TabIndex = 31;
+            label10.Text = "Nota Credito";
+            // 
+            // txnotacredito
+            // 
+            txnotacredito.Location = new Point(475, 103);
+            txnotacredito.Name = "txnotacredito";
+            txnotacredito.Size = new Size(102, 23);
+            txnotacredito.TabIndex = 30;
+            // 
+            // txalmacen
+            // 
+            txalmacen.FormattingEnabled = true;
+            txalmacen.Location = new Point(892, 103);
+            txalmacen.Name = "txalmacen";
+            txalmacen.Size = new Size(121, 23);
+            txalmacen.TabIndex = 29;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(646, 128);
+            label9.Name = "label9";
+            label9.Size = new Size(84, 15);
+            label9.TabIndex = 28;
+            label9.Text = "Observaciones";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(357, 130);
+            label6.Name = "label6";
+            label6.Size = new Size(59, 15);
+            label6.TabIndex = 27;
+            label6.Text = "Concepto";
+            // 
+            // txobservacion
+            // 
+            txobservacion.Location = new Point(587, 147);
+            txobservacion.Name = "txobservacion";
+            txobservacion.Size = new Size(351, 23);
+            txobservacion.TabIndex = 26;
+            // 
+            // conceptotxt
+            // 
+            conceptotxt.FormattingEnabled = true;
+            conceptotxt.Location = new Point(327, 148);
+            conceptotxt.Name = "conceptotxt";
+            conceptotxt.Size = new Size(203, 23);
+            conceptotxt.TabIndex = 25;
+            // 
+            // txusuario
+            // 
+            txusuario.FormattingEnabled = true;
+            txusuario.Location = new Point(583, 103);
+            txusuario.Name = "txusuario";
+            txusuario.Size = new Size(303, 23);
+            txusuario.TabIndex = 24;
+            // 
+            // txfecha
+            // 
+            txfecha.Format = DateTimePickerFormat.Short;
+            txfecha.Location = new Point(247, 104);
+            txfecha.Name = "txfecha";
+            txfecha.Size = new Size(101, 23);
+            txfecha.TabIndex = 23;
             // 
             // panel3
             // 
@@ -156,6 +233,7 @@
             btGuardar.Text = "Guardar";
             btGuardar.TextImageRelation = TextImageRelation.ImageAboveText;
             btGuardar.UseVisualStyleBackColor = false;
+            btGuardar.Click += btGuardar_Click;
             // 
             // label8
             // 
@@ -184,16 +262,7 @@
             label7.Name = "label7";
             label7.Size = new Size(47, 15);
             label7.TabIndex = 18;
-            label7.Text = "Movinv";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(732, 87);
-            label6.Name = "label6";
-            label6.Size = new Size(61, 15);
-            label6.TabIndex = 17;
-            label6.Text = "Proveedor";
+            label7.Text = "Entrada";
             // 
             // label5
             // 
@@ -207,7 +276,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(506, 87);
+            label4.Location = new Point(863, 86);
             label4.Name = "label4";
             label4.Size = new Size(54, 15);
             label4.TabIndex = 15;
@@ -216,11 +285,11 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(412, 87);
+            label3.Location = new Point(382, 86);
             label3.Name = "label3";
-            label3.Size = new Size(59, 15);
+            label3.Size = new Size(67, 15);
             label3.TabIndex = 14;
-            label3.Text = "Concepto";
+            label3.Text = "Doc_origen";
             // 
             // label2
             // 
@@ -242,73 +311,17 @@
             // 
             // txdoc_origen
             // 
-            txdoc_origen.Location = new Point(715, 148);
+            txdoc_origen.Location = new Point(367, 103);
             txdoc_origen.Name = "txdoc_origen";
             txdoc_origen.Size = new Size(102, 23);
             txdoc_origen.TabIndex = 11;
             // 
-            // txunidad
+            // txentrada
             // 
-            txunidad.Location = new Point(575, 148);
-            txunidad.Name = "txunidad";
-            txunidad.Size = new Size(102, 23);
-            txunidad.TabIndex = 10;
-            // 
-            // txproyecto
-            // 
-            txproyecto.Location = new Point(454, 148);
-            txproyecto.Name = "txproyecto";
-            txproyecto.Size = new Size(102, 23);
-            txproyecto.TabIndex = 9;
-            // 
-            // txobservacion
-            // 
-            txobservacion.Location = new Point(321, 148);
-            txobservacion.Name = "txobservacion";
-            txobservacion.Size = new Size(102, 23);
-            txobservacion.TabIndex = 8;
-            // 
-            // txmovinv
-            // 
-            txmovinv.Location = new Point(191, 148);
-            txmovinv.Name = "txmovinv";
-            txmovinv.Size = new Size(102, 23);
-            txmovinv.TabIndex = 7;
-            // 
-            // txproveedor
-            // 
-            txproveedor.Location = new Point(695, 105);
-            txproveedor.Name = "txproveedor";
-            txproveedor.Size = new Size(308, 23);
-            txproveedor.TabIndex = 6;
-            // 
-            // txusuario
-            // 
-            txusuario.Location = new Point(587, 105);
-            txusuario.Name = "txusuario";
-            txusuario.Size = new Size(102, 23);
-            txusuario.TabIndex = 5;
-            // 
-            // txalmacen
-            // 
-            txalmacen.Location = new Point(491, 105);
-            txalmacen.Name = "txalmacen";
-            txalmacen.Size = new Size(90, 23);
-            txalmacen.TabIndex = 4;
-            // 
-            // txconcept
-            // 
-            txconcept.Location = new Point(360, 105);
-            txconcept.Name = "txconcept";
-            txconcept.Size = new Size(125, 23);
-            txconcept.TabIndex = 3;
-            // 
-            // txfecha
-            // 
-            txfecha.Location = new Point(252, 105);
-            txfecha.Name = "txfecha";
-            txfecha.Size = new Size(102, 23);
-            txfecha.TabIndex = 2;
+            txentrada.Location = new Point(191, 148);
+            txentrada.Name = "txentrada";
+            txentrada.Size = new Size(102, 23);
+            txentrada.TabIndex = 7;
             // 
             // txfolio
             // 
@@ -324,6 +337,30 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(133, 80);
             dataGridView1.TabIndex = 0;
+            // 
+            // btborrar
+            // 
+            btborrar.BackColor = Color.Aquamarine;
+            btborrar.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btborrar.Location = new Point(863, 92);
+            btborrar.Name = "btborrar";
+            btborrar.Size = new Size(118, 36);
+            btborrar.TabIndex = 30;
+            btborrar.Text = "- Borrar Detalle";
+            btborrar.UseVisualStyleBackColor = false;
+            btborrar.Click += btborrar1_Click;
+            // 
+            // btagregar
+            // 
+            btagregar.BackColor = Color.Aquamarine;
+            btagregar.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btagregar.Location = new Point(863, 26);
+            btagregar.Name = "btagregar";
+            btagregar.Size = new Size(118, 36);
+            btagregar.TabIndex = 29;
+            btagregar.Text = "+ Agregar Detalle";
+            btagregar.UseVisualStyleBackColor = false;
+            btagregar.Click += btagregar_Click;
             // 
             // dataGridView2
             // 
@@ -341,6 +378,7 @@
             ClientSize = new Size(1034, 522);
             Controls.Add(splitContainer1);
             Name = "Fdev";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fdev  DEVOLUCIONES ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -361,18 +399,9 @@
         private DataGridView dataGridView1;
         private DataGridView dataGridView2;
         private TextBox txdoc_origen;
-        private TextBox txunidad;
-        private TextBox txproyecto;
-        private TextBox txobservacion;
-        private TextBox txmovinv;
-        private TextBox txproveedor;
-        private TextBox txusuario;
-        private TextBox txalmacen;
-        private TextBox txconcept;
-        private TextBox txfecha;
+        private TextBox txentrada;
         private TextBox txfolio;
         private Label label7;
-        private Label label6;
         private Label label5;
         private Label label4;
         private Label label3;
@@ -384,5 +413,16 @@
         private Button btGuardar;
         private Label label8;
         private PictureBox pictureBox1;
+        private DateTimePicker txfecha;
+        private ComboBox txusuario;
+        private Button btborrar;
+        private Button btagregar;
+        private ComboBox conceptotxt;
+        private Label label9;
+        private Label label6;
+        private TextBox txobservacion;
+        private ComboBox txalmacen;
+        private Label label10;
+        private TextBox txnotacredito;
     }
 }

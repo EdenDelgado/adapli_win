@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
+using Sisvta.Infrastructure.Persistence.Contexts;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
-using Sisvta.Infrastructure.Persistence.Contexts;
 
 namespace Sisvta
 {
@@ -12,7 +13,7 @@ namespace Sisvta
         private readonly ApplicationDbContext _context;
         private readonly int _idTraspasoFiltro;
 
-        // 1. Constructor estándar (por si se abre desde el menú principal)
+        // 1. Constructor estándar (por si se abre desde el menú principal o nuevo)
         public Ftra(ApplicationDbContext context)
         {
             InitializeComponent();
@@ -20,7 +21,7 @@ namespace Sisvta
             _idTraspasoFiltro = 0;
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            _ = CargarMaestroDoctoscpAsync();
+            _ = InicializarFormularioAsync();
         }
 
         // 2. Constructor con parámetro (para cuando se invoca haciendo doble clic desde el catálogo)
@@ -31,12 +32,20 @@ namespace Sisvta
             _idTraspasoFiltro = idTraspaso;
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            _ = CargarMaestroDoctoscpAsync();
+            _ = InicializarFormularioAsync();
+        }
+
+        private async Task InicializarFormularioAsync()
+        {
+            await CargarAlmacenesoriAsync();
+            await CargarAlmacenesdesAsync();
+            await CargarConceptosAsync();
+            await CargarMaestroDoctoscpAsync();
         }
 
         private async void Ftra_Load(object sender, EventArgs e)
         {
-            await CargarMaestroDoctoscpAsync();
+            if (DesignMode) return;
         }
 
         public async Task CargarMaestroDoctoscpAsync(string filtroProveedor = null)
@@ -49,6 +58,24 @@ namespace Sisvta
                     return;
                 }
 
+                // =========================================================================
+                // SI ES UN NUEVO REGISTRO (ID = 0), LIMPIAMOS CONTROLES Y SALIMOS
+                // =========================================================================
+                if (_idTraspasoFiltro == 0)
+                {
+                    dataGridView1.DataSource = null;
+                    dataGridView2.DataSource = null;
+                    txtraspaso.Clear();
+                    txfolio.Clear();
+                    txcomentarios.Clear();
+                    txentrada.Clear();
+                    txfecha.Value = DateTime.Now;
+                    conceptotxt.SelectedIndex = -1;
+                    txalmacenorigen.SelectedIndex = -1;
+                    txalmacendestino.SelectedIndex = -1;
+                    return;
+                }
+
                 string sqlQuery = @"
                     SELECT 
                         t.id_traspaso AS Idtraspaso, 
@@ -57,22 +84,14 @@ namespace Sisvta
                         t.fecha AS Fecha,
                         t.concepto AS Concepto, 
                         c.concepto AS NomConcepto,
-                  
-                        d.nombre AS NomAlmacenDestino,
                         o.nombre AS NomAlmacenOrigen,
-                        t.comentarios as Comentarios
-                      
+                        d.nombre AS NomAlmacenDestino,
+                        t.Entrada, t.folio, t.comentarios
                     FROM traspaso as t 
-                  
                     LEFT JOIN concepto as c ON t.concepto = c.id_conceptosprov 
-                  left JOIN almacen as o ON t.almacen_origen = o.id_almacen
-                    LEFT JOIN almacen as d ON t.almacen_destino = d.id_almacen";
-
-                // CORREGIDO: Se evalúa sobre d.id_traspaso para asegurar que funcione al filtrar por ID específico
-                if (_idTraspasoFiltro > 0)
-                {
-                    sqlQuery += " WHERE t.id_traspaso = @IdTraspasoFiltro";
-                }
+                    LEFT JOIN almacen as o ON t.almacen_origen = o.id_almacen
+                    LEFT JOIN almacen as d ON t.almacen_destino = d.id_almacen
+                    WHERE t.id_traspaso = @IdTraspasoFiltro";
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -82,11 +101,7 @@ namespace Sisvta
 
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
-
-                if (_idTraspasoFiltro > 0)
-                {
-                    command.Parameters.AddWithValue("@IdTraspasoFiltro", _idTraspasoFiltro  );
-                }
+                command.Parameters.AddWithValue("@IdTraspasoFiltro", _idTraspasoFiltro);
 
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
@@ -100,14 +115,34 @@ namespace Sisvta
                 if (dataGridView1.Rows.Count > 0 && dataGridView1.CurrentRow != null)
                 {
                     await CargarDetalleDoctoscpAsync();
+
                     txtraspaso.Text = dataGridView1.CurrentRow.Cells["IdTraspaso"].Value?.ToString() ?? string.Empty;
-                    txfecha.Text = dataGridView1.CurrentRow.Cells["Fecha"].Value?.ToString() ?? string.Empty;
-                    txconcept.Text = dataGridView1.CurrentRow.Cells["NomConcepto"].Value?.ToString() ?? string.Empty;
-                   // txmovinv.Text = dataGridView1.CurrentRow.Cells["IdInventario"].Value?.ToString() ?? string.Empty;
-                    txalmacenorigen.Text = dataGridView1.CurrentRow.Cells["NomAlmacenOrigen"].Value?.ToString() ?? string.Empty;
-                    txalmacendestino.Text = dataGridView1.CurrentRow.Cells["NomAlmacenDestino"].Value?.ToString() ?? string.Empty;
-                   // txproveedor.Text = dataGridView1.CurrentRow.Cells["NomProveedor"].Value?.ToString() ?? string.Empty;
-                    txobservacion.Text = dataGridView1.CurrentRow.Cells["Comentarios"].Value?.ToString() ?? string.Empty;
+
+                    if (dataGridView1.CurrentRow.Cells["Fecha"].Value != DBNull.Value &&
+                        DateTime.TryParse(dataGridView1.CurrentRow.Cells["Fecha"].Value?.ToString(), out DateTime fechaReg))
+                    {
+                        txfecha.Value = fechaReg;
+                    }
+
+                    if (dataGridView1.CurrentRow.Cells["Concepto"].Value != DBNull.Value)
+                    {
+                        conceptotxt.SelectedValue = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Concepto"].Value);
+                    }
+
+                    txentrada.Text = dataGridView1.CurrentRow.Cells["Entrada"].Value?.ToString() ?? string.Empty;
+
+                    if (dataGridView1.CurrentRow.Cells["AlmacenOrigen"].Value != DBNull.Value)
+                    {
+                        txalmacenorigen.SelectedValue = Convert.ToInt32(dataGridView1.CurrentRow.Cells["AlmacenOrigen"].Value);
+                    }
+
+                    if (dataGridView1.CurrentRow.Cells["AlmacenDestino"].Value != DBNull.Value)
+                    {
+                        txalmacendestino.SelectedValue = Convert.ToInt32(dataGridView1.CurrentRow.Cells["AlmacenDestino"].Value);
+                    }
+
+                    txfolio.Text = dataGridView1.CurrentRow.Cells["Folio"].Value?.ToString() ?? string.Empty;
+                    txcomentarios.Text = dataGridView1.CurrentRow.Cells["Comentarios"].Value?.ToString() ?? string.Empty;
                 }
                 else
                 {
@@ -116,7 +151,7 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el maestro inventario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el maestro de traspasos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -124,23 +159,24 @@ namespace Sisvta
         {
             try
             {
-                if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Cells["IdTraspaso"].Value == null ||
+                if (_idTraspasoFiltro == 0 || dataGridView1.CurrentRow == null ||
+                    dataGridView1.CurrentRow.Cells["IdTraspaso"].Value == null ||
                     dataGridView1.CurrentRow.Cells["IdTraspaso"].Value == DBNull.Value)
                 {
                     dataGridView2.DataSource = null;
                     return;
                 }
 
-                int idInventario = Convert.ToInt32(dataGridView1.CurrentRow.Cells["IdTraspaso"].Value);
+                int idTraspaso = Convert.ToInt32(dataGridView1.CurrentRow.Cells["IdTraspaso"].Value);
 
                 string sqlQuery = @"
                     SELECT 
                         traspaso AS traspaso, 
-                        idtraspasodet  AS Traspasodet, 
+                        idtraspasodet AS Traspasodet, 
                         qty AS Cantidad,
-                        producto AS Producto, 
-                        s.clave AS ClaveProducto,
-                        s.s_nombre AS NombreProducto,
+                        d.producto AS Producto, 
+                        s.clave AS Clave,
+                        s.s_nombre AS Nombre,
                         preciou AS Precio, 
                         (qty * preciou) AS Importe
                     FROM traspaso_det as d 
@@ -155,7 +191,7 @@ namespace Sisvta
 
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
-                command.Parameters.AddWithValue("@IdTraspaso", idInventario);
+                command.Parameters.AddWithValue("@idTraspaso", idTraspaso);
 
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
@@ -166,6 +202,9 @@ namespace Sisvta
                 dataGridView2.DataSource = null;
                 dataGridView2.DataSource = dataTable;
 
+                if (dataGridView2.Columns.Contains("traspaso"))
+                    dataGridView2.Columns["traspaso"].Visible = false;
+
                 dataGridView2.RowTemplate.Height = 40;
                 dataGridView2.CellBorderStyle = DataGridViewCellBorderStyle.None;
 
@@ -174,20 +213,15 @@ namespace Sisvta
                 dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
                 dataGridView2.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 12, System.Drawing.FontStyle.Bold);
 
-                dataGridView2.Columns["NombreProducto"].Width = 260;
-
-                // Ocultar columnas técnicas o de control
-                // Nota: Asegúrate de que la columna oculta en el detalle coincida con un campo devuelto en el SELECT (en este caso usamos Entrada)
-                if (dataGridView2.Columns.Contains("Entrada"))
-                    dataGridView2.Columns["Entrada"].Visible = false;
-
-                if (dataGridView2.Columns.Contains("Entradadet"))
-                    dataGridView2.Columns["Entradadet"].Visible = false;
+                if (dataGridView2.Columns.Contains("Nombre"))
+                    dataGridView2.Columns["Nombre"].Width = 260;
 
                 if (dataGridView2.Columns.Contains("Producto"))
                     dataGridView2.Columns["Producto"].Visible = false;
 
-                // Formatos y alineaciones monetarias
+                if (dataGridView2.Columns.Contains("Traspasodet"))
+                    dataGridView2.Columns["Traspasodet"].Visible = false;
+
                 if (dataGridView2.Columns.Contains("Precio"))
                 {
                     dataGridView2.Columns["Precio"].DefaultCellStyle.Format = "C2";
@@ -206,7 +240,7 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el detalle de inventario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el detalle del traspaso: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -218,6 +252,291 @@ namespace Sisvta
         private void regresabt_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private async Task CargarConceptosAsync()
+        {
+            try
+            {
+                if (_context == null || conceptotxt == null) return;
+
+                var listaConceptos = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+                    _context.Set<Sisvta.Domain.Entities.Concepto>()
+                        .Select(c => new { id_concepto = c.IdConceptosProv, descripcion = c.DescripcionConcepto })
+                );
+
+                if (listaConceptos != null && listaConceptos.Count > 0)
+                {
+                    conceptotxt.DataSource = null;
+                    conceptotxt.DisplayMember = "descripcion";
+                    conceptotxt.ValueMember = "id_concepto";
+                    conceptotxt.DataSource = listaConceptos;
+                    conceptotxt.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los conceptos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task CargarAlmacenesoriAsync()
+        {
+            try
+            {
+                if (_context == null || txalmacenorigen == null) return;
+
+                var listaAlmacenes = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+                    _context.Set<Sisvta.Domain.Entities.Almacen>()
+                        .Select(a => new { id_almacen = a.IdAlmacen, nombre = a.Nombre })
+                );
+
+                if (listaAlmacenes != null && listaAlmacenes.Count > 0)
+                {
+                    txalmacenorigen.DataSource = null;
+                    txalmacenorigen.DisplayMember = "nombre";
+                    txalmacenorigen.ValueMember = "id_almacen";
+                    txalmacenorigen.DataSource = listaAlmacenes;
+                    txalmacenorigen.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los almacenes de origen: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task CargarAlmacenesdesAsync()
+        {
+            try
+            {
+                if (_context == null || txalmacendestino == null) return;
+
+                var listaAlmacenes = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+                    _context.Set<Sisvta.Domain.Entities.Almacen>()
+                        .Select(a => new { id_almacen = a.IdAlmacen, nombre = a.Nombre })
+                );
+
+                if (listaAlmacenes != null && listaAlmacenes.Count > 0)
+                {
+                    txalmacendestino.DataSource = null;
+                    txalmacendestino.DisplayMember = "nombre";
+                    txalmacendestino.ValueMember = "id_almacen";
+                    txalmacendestino.DataSource = listaAlmacenes;
+                    txalmacendestino.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los almacenes de destino: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btagregar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_idTraspasoFiltro == 0)
+                {
+                    MessageBox.Show("Debe guardar el registro maestro del traspaso antes de agregar detalles.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (dataGridView1.CurrentRow == null ||
+                    dataGridView1.CurrentRow.Cells["IdTraspaso"].Value == null ||
+                    dataGridView1.CurrentRow.Cells["IdTraspaso"].Value == DBNull.Value)
+                {
+                    MessageBox.Show("Seleccione un traspaso de inventario válido en el catálogo maestro antes de agregar detalles.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string idMovimiento = dataGridView1.CurrentRow.Cells["IdTraspaso"].Value.ToString();
+
+                using (var fdtra = new Fdtra(_context, idMovimiento))
+                {
+                    if (fdtra.ShowDialog() == DialogResult.OK)
+                    {
+                        await CargarDetalleDoctoscpAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario de detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btborrar1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView2.CurrentRow == null ||
+                    dataGridView2.CurrentRow.Cells["Traspasodet"].Value == null ||
+                    dataGridView2.CurrentRow.Cells["Traspasodet"].Value == DBNull.Value)
+                {
+                    MessageBox.Show("Seleccione un renglón del detalle de inventario que desee eliminar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string idTraspaso = dataGridView1.CurrentRow.Cells["IdTraspaso"].Value.ToString();
+
+                if (!int.TryParse(dataGridView2.CurrentRow.Cells["Traspasodet"].Value.ToString(), out int idDetalle))
+                {
+                    MessageBox.Show("No se pudo obtener el identificador del detalle seleccionado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var confirmacion = MessageBox.Show(
+                    "¿Está seguro de eliminar el artículo seleccionado del detalle?",
+                    "Confirmar eliminación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (confirmacion != DialogResult.Yes) return;
+
+                string sqlDelete = "DELETE FROM traspaso_det WHERE idtraspasodet = @IdTraDet AND traspaso = @IdTraspaso";
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlDelete;
+                command.Parameters.Add("@IdTraDet", SqlDbType.Int).Value = idDetalle;
+                command.Parameters.Add("@IdTraspaso", SqlDbType.Int).Value = Convert.ToInt32(idTraspaso);
+
+                int filasAfectadas = await command.ExecuteNonQueryAsync();
+
+                if (filasAfectadas > 0)
+                {
+                    MessageBox.Show("Renglón eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await CargarDetalleDoctoscpAsync();
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró el registro a eliminar en la base de datos.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al intentar eliminar el registro: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btGuardar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(txfolio.Text))
+                {
+                    MessageBox.Show("El campo Folio es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txfolio.Focus();
+                    return;
+                }
+
+                if (conceptotxt.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un concepto válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    conceptotxt.Focus();
+                    return;
+                }
+
+                if (txalmacenorigen.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un almacén de origen válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txalmacenorigen.Focus();
+                    return;
+                }
+
+                if (txalmacendestino.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un almacén de destino válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txalmacendestino.Focus();
+                    return;
+                }
+
+                int idAlmacenorigen = Convert.ToInt32(txalmacenorigen.SelectedValue);
+                int idAlmacendestino = Convert.ToInt32(txalmacendestino.SelectedValue);
+                int idConcepto = Convert.ToInt32(conceptotxt.SelectedValue);
+                int idEntrada = int.TryParse(txentrada.Text, out var ent) ? ent : 0;
+                DateTime fecha = txfecha.Value;
+                string comentarios = txcomentarios.Text.Trim();
+                string folio = txfolio.Text.Trim();
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                if (_idTraspasoFiltro == 0)
+                {
+                    string sqlInsert = @"
+                        INSERT INTO traspaso (almacen_origen, almacen_destino, concepto, comentarios, entrada, fecha, folio) 
+                        VALUES (@almacenorigen, @almacendestino, @concepto, @comentarios, @entrada, @fecha, @folio);
+                        SELECT SCOPE_IDENTITY();";
+
+                    using var command = connection.CreateCommand();
+                    command.CommandText = sqlInsert;
+                    command.Parameters.Add("@almacenorigen", SqlDbType.Int).Value = idAlmacenorigen;
+                    command.Parameters.Add("@almacendestino", SqlDbType.Int).Value = idAlmacendestino;
+                    command.Parameters.Add("@concepto", SqlDbType.Int).Value = idConcepto;
+                    command.Parameters.Add("@comentarios", SqlDbType.NVarChar).Value = comentarios;
+                    command.Parameters.Add("@entrada", SqlDbType.Int).Value = idEntrada;
+                    command.Parameters.Add("@fecha", SqlDbType.DateTime).Value = fecha;
+                    command.Parameters.Add("@folio", SqlDbType.NVarChar).Value = folio;
+
+                    var nuevoIdObj = await command.ExecuteScalarAsync();
+
+                    if (nuevoIdObj != null && int.TryParse(nuevoIdObj.ToString(), out int nuevoId))
+                    {
+                        MessageBox.Show("Traspaso guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                }
+                else
+                {
+                    string sqlUpdate = @"
+                        UPDATE traspaso 
+                        SET almacen_origen = @almacen_origen, 
+                            almacen_destino = @almacendestino, 
+                            concepto = @concepto,
+                            comentarios = @comentarios, 
+                            fecha = @fecha, 
+                            folio = @folio 
+                        WHERE id_traspaso = @idTraspaso";
+
+                    using var command = connection.CreateCommand();
+                    command.CommandText = sqlUpdate;
+                    command.Parameters.Add("@almacen_origen", SqlDbType.Int).Value = idAlmacenorigen;
+                    command.Parameters.Add("@almacendestino", SqlDbType.Int).Value = idAlmacendestino;
+                    command.Parameters.Add("@concepto", SqlDbType.Int).Value = idConcepto;
+                    command.Parameters.Add("@comentarios", SqlDbType.NVarChar).Value = comentarios;
+                    command.Parameters.Add("@fecha", SqlDbType.DateTime).Value = fecha;
+                    command.Parameters.Add("@folio", SqlDbType.NVarChar).Value = folio;
+                    command.Parameters.Add("@idTraspaso", SqlDbType.Int).Value = _idTraspasoFiltro;
+
+                    int filasAfectadas = await command.ExecuteNonQueryAsync();
+
+                    if (filasAfectadas > 0)
+                    {
+                        MessageBox.Show("Traspaso actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se pudo actualizar el registro en la base de datos.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar el registro maestro: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

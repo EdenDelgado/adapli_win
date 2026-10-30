@@ -156,6 +156,7 @@
             nuevobt.Text = "Nuevo";
             nuevobt.TextImageRelation = TextImageRelation.ImageAboveText;
             nuevobt.UseVisualStyleBackColor = false;
+            nuevobt.Click += nuevobt_Click;
             // 
             // label1
             // 

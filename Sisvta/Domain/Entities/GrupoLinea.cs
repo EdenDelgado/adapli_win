@@ -1,13 +1,27 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sisvta.Domain.Entities
 {
+    [Table("gruposlineas")]
     public class GrupoLinea
     {
-        public int Id { get; set; }           // id_gruposlineas (Llave primaria)
-        public string Nombre { get; set; }      // nombre
-        public int Status { get; set; }         // status
-       // public DateTime DateRecord { get; set; }// daterecord
-       // public int IdEmpresa { get; set; }      // id_empresa
+        [Key]
+        [Column("id_gruposlineas")]
+        public int Id { get; set; }
+
+        [Column("nombre")]
+        [StringLength(100)] // Ajusta la longitud según tu esquema si es necesario
+        public string Nombre { get; set; }
+
+        [Column("status")]
+        public int Status { get; set; } = 1;
+
+        [Column("daterecord")]
+        public DateTime? DateRecord { get; set; } = DateTime.Now;
+
+        [Column("id_empresa")]
+        public int IdEmpresa { get; set; }
     }
 }

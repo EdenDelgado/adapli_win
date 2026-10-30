@@ -31,12 +31,14 @@ namespace Sisvta
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fccampre));
             splitContainer1 = new SplitContainer();
+            txlista = new ComboBox();
+            lineatxt = new ComboBox();
+            label3 = new Label();
+            label2 = new Label();
             Filtrarbt = new Button();
             panel3 = new Panel();
             regresabt = new Button();
             nuevobt = new Button();
-            btlinea = new Button();
-            btGrupos = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
@@ -58,6 +60,10 @@ namespace Sisvta
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(txlista);
+            splitContainer1.Panel1.Controls.Add(lineatxt);
+            splitContainer1.Panel1.Controls.Add(label3);
+            splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(Filtrarbt);
             splitContainer1.Panel1.Controls.Add(panel3);
             // 
@@ -67,6 +73,40 @@ namespace Sisvta
             splitContainer1.Size = new Size(953, 522);
             splitContainer1.SplitterDistance = 164;
             splitContainer1.TabIndex = 0;
+            // 
+            // txlista
+            // 
+            txlista.FormattingEnabled = true;
+            txlista.Location = new Point(469, 104);
+            txlista.Name = "txlista";
+            txlista.Size = new Size(121, 23);
+            txlista.TabIndex = 34;
+            // 
+            // lineatxt
+            // 
+            lineatxt.FormattingEnabled = true;
+            lineatxt.Location = new Point(158, 105);
+            lineatxt.Name = "lineatxt";
+            lineatxt.Size = new Size(121, 23);
+            lineatxt.TabIndex = 33;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(384, 110);
+            label3.Name = "label3";
+            label3.Size = new Size(64, 15);
+            label3.TabIndex = 32;
+            label3.Text = "ListaPrecio";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(60, 110);
+            label2.Name = "label2";
+            label2.Size = new Size(80, 15);
+            label2.TabIndex = 31;
+            label2.Text = "Linea Articulo";
             // 
             // Filtrarbt
             // 
@@ -82,8 +122,6 @@ namespace Sisvta
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
             panel3.Controls.Add(nuevobt);
-            panel3.Controls.Add(btlinea);
-            panel3.Controls.Add(btGrupos);
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
@@ -118,33 +156,6 @@ namespace Sisvta
             nuevobt.Text = "Nuevo";
             nuevobt.TextImageRelation = TextImageRelation.ImageAboveText;
             nuevobt.UseVisualStyleBackColor = false;
-            // 
-            // btlinea
-            // 
-            btlinea.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btlinea.BackColor = Color.MediumAquamarine;
-            btlinea.Image = (Image)resources.GetObject("btlinea.Image");
-            btlinea.Location = new Point(630, 6);
-            btlinea.Name = "btlinea";
-            btlinea.Size = new Size(70, 69);
-            btlinea.TabIndex = 3;
-            btlinea.Text = "Lineas";
-            btlinea.TextImageRelation = TextImageRelation.ImageAboveText;
-            btlinea.UseVisualStyleBackColor = false;
-            // 
-            // btGrupos
-            // 
-            btGrupos.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btGrupos.BackColor = Color.MediumAquamarine;
-            btGrupos.Image = (Image)resources.GetObject("btGrupos.Image");
-            btGrupos.Location = new Point(541, 6);
-            btGrupos.Name = "btGrupos";
-            btGrupos.Size = new Size(70, 69);
-            btGrupos.TabIndex = 2;
-            btGrupos.Text = "Grupos";
-            btGrupos.TextImageRelation = TextImageRelation.ImageAboveText;
-            btGrupos.UseVisualStyleBackColor = false;
-            btGrupos.Visible = false;
             // 
             // label1
             // 
@@ -184,6 +195,7 @@ namespace Sisvta
             Name = "Fccampre";
             Text = "Fccampre CAMBIO DE PRECIOS";
             splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
@@ -200,11 +212,13 @@ namespace Sisvta
         private Panel panel3;
         private Button regresabt;
         private Button nuevobt;
-        private Button btlinea;
-        private Button btGrupos;
         private Label label1;
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;
         private Button Filtrarbt;
+        private ComboBox txlista;
+        private ComboBox lineatxt;
+        private Label label3;
+        private Label label2;
     }
 }

@@ -276,6 +276,7 @@
             Controls.Add(splitContainer1);
             MdiChildrenMinimizedAnchorBottom = false;
             Name = "Fprod";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fprod Catalogo de Productos";
             WindowState = FormWindowState.Maximized;
             Load += Fprod_Load;

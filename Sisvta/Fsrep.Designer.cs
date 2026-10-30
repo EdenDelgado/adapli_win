@@ -322,6 +322,7 @@
             Controls.Add(btrepconin);
             Controls.Add(btrepinv);
             Name = "Fsrep";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fsrep";
             panel3.ResumeLayout(false);
             panel3.PerformLayout();

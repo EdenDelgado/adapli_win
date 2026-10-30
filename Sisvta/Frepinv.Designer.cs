@@ -283,6 +283,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepinv";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepinv  REPORTE INVENTARIO";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

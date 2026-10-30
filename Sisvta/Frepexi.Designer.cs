@@ -196,6 +196,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepexi";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepexi  REPORTE EXISTENCIAS";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

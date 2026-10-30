@@ -30,6 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frepsal));
             splitContainer1 = new SplitContainer();
+            txconcepto = new ComboBox();
+            txAlmacen = new ComboBox();
+            label5 = new Label();
+            label4 = new Label();
             Filtrarbt = new Button();
             label3 = new Label();
             label2 = new Label();
@@ -40,8 +44,6 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -60,8 +62,10 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(textBox2);
-            splitContainer1.Panel1.Controls.Add(textBox1);
+            splitContainer1.Panel1.Controls.Add(txconcepto);
+            splitContainer1.Panel1.Controls.Add(txAlmacen);
+            splitContainer1.Panel1.Controls.Add(label5);
+            splitContainer1.Panel1.Controls.Add(label4);
             splitContainer1.Panel1.Controls.Add(Filtrarbt);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(label2);
@@ -75,6 +79,42 @@
             splitContainer1.Size = new Size(953, 522);
             splitContainer1.SplitterDistance = 164;
             splitContainer1.TabIndex = 0;
+            // 
+            // txconcepto
+            // 
+            txconcepto.FormattingEnabled = true;
+            txconcepto.Items.AddRange(new object[] { "SALIDAS", "DEVOLUCIONES", "CANCELACIONES", "MERMA" });
+            txconcepto.Location = new Point(622, 116);
+            txconcepto.Name = "txconcepto";
+            txconcepto.Size = new Size(121, 23);
+            txconcepto.TabIndex = 34;
+            // 
+            // txAlmacen
+            // 
+            txAlmacen.FormattingEnabled = true;
+            txAlmacen.Items.AddRange(new object[] { "TODOS", "ALMACEN GENERAL", "AUTOMOTRIZ" });
+            txAlmacen.Location = new Point(476, 115);
+            txAlmacen.Name = "txAlmacen";
+            txAlmacen.Size = new Size(121, 23);
+            txAlmacen.TabIndex = 33;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(642, 92);
+            label5.Name = "label5";
+            label5.Size = new Size(59, 15);
+            label5.TabIndex = 32;
+            label5.Text = "Concepto";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(493, 92);
+            label4.Name = "label4";
+            label4.Size = new Size(54, 15);
+            label4.TabIndex = 31;
+            label4.Text = "Almacen";
             // 
             // Filtrarbt
             // 
@@ -175,20 +215,6 @@
             dataGridView1.Size = new Size(953, 354);
             dataGridView1.TabIndex = 1;
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(483, 110);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 29;
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(642, 110);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(100, 23);
-            textBox2.TabIndex = 30;
-            // 
             // Frepsal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -196,6 +222,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepsal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepsal  REPORTE SALIDAS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -222,7 +249,9 @@
         private DateTimePicker hastafechatx;
         private DateTimePicker desdefechatx;
         private Button Filtrarbt;
-        private TextBox textBox2;
-        private TextBox textBox1;
+        private ComboBox txconcepto;
+        private ComboBox txAlmacen;
+        private Label label5;
+        private Label label4;
     }
 }

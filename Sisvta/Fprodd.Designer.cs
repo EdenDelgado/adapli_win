@@ -58,11 +58,9 @@
             label26 = new Label();
             label27 = new Label();
             clavetxt = new TextBox();
-            statustxt = new TextBox();
             prodservtxt = new TextBox();
             claveproservtxt = new TextBox();
             nombretxt = new TextBox();
-            lineatxt = new TextBox();
             inventariabletxt = new TextBox();
             descripciontxt = new TextBox();
             preciotxt = new TextBox();
@@ -70,9 +68,7 @@
             maximotx = new TextBox();
             minimotx = new TextBox();
             reordentx = new TextBox();
-            textBox15 = new TextBox();
             precioptx = new TextBox();
-            impuestotx = new TextBox();
             tasatx = new TextBox();
             umedidatxt = new ComboBox();
             panel4 = new Panel();
@@ -82,10 +78,20 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
-            monedatx = new TextBox();
             almacentx = new TextBox();
             existx = new TextBox();
             dataGridView2 = new DataGridView();
+            dataGridView3 = new DataGridView();
+            dataGridView4 = new DataGridView();
+            btguardarimp = new Button();
+            impuestotx = new ComboBox();
+            listapreciotx = new ComboBox();
+            monedatx = new ComboBox();
+            btguardarprecio = new Button();
+            btnborrapre = new Button();
+            btnborraimp = new Button();
+            statustxt = new ComboBox();
+            lineatxt = new ComboBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -93,6 +99,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
             SuspendLayout();
             // 
             // label2
@@ -223,17 +231,17 @@
             // 
             label19.AutoSize = true;
             label19.ForeColor = SystemColors.ButtonFace;
-            label19.Location = new Point(350, 30);
+            label19.Location = new Point(117, 30);
             label19.Name = "label19";
-            label19.Size = new Size(31, 15);
+            label19.Size = new Size(59, 15);
             label19.TabIndex = 18;
-            label19.Text = "Exist";
+            label19.Text = "Existencia";
             // 
             // label18
             // 
             label18.AutoSize = true;
             label18.ForeColor = SystemColors.ButtonFace;
-            label18.Location = new Point(264, 30);
+            label18.Location = new Point(355, 30);
             label18.Name = "label18";
             label18.Size = new Size(51, 15);
             label18.TabIndex = 17;
@@ -243,7 +251,7 @@
             // 
             label17.AutoSize = true;
             label17.ForeColor = SystemColors.ButtonFace;
-            label17.Location = new Point(202, 30);
+            label17.Location = new Point(293, 30);
             label17.Name = "label17";
             label17.Size = new Size(49, 15);
             label17.TabIndex = 16;
@@ -253,7 +261,7 @@
             // 
             label16.AutoSize = true;
             label16.ForeColor = SystemColors.ButtonFace;
-            label16.Location = new Point(90, 30);
+            label16.Location = new Point(211, 30);
             label16.Name = "label16";
             label16.Size = new Size(51, 15);
             label16.TabIndex = 15;
@@ -339,7 +347,7 @@
             panel3.Controls.Add(label26);
             panel3.Controls.Add(label27);
             panel3.ForeColor = SystemColors.ControlDarkDark;
-            panel3.Location = new Point(750, 357);
+            panel3.Location = new Point(769, 357);
             panel3.Name = "panel3";
             panel3.Size = new Size(182, 58);
             panel3.TabIndex = 15;
@@ -381,13 +389,6 @@
             clavetxt.Size = new Size(100, 23);
             clavetxt.TabIndex = 16;
             // 
-            // statustxt
-            // 
-            statustxt.Location = new Point(292, 223);
-            statustxt.Name = "statustxt";
-            statustxt.Size = new Size(100, 23);
-            statustxt.TabIndex = 17;
-            // 
             // prodservtxt
             // 
             prodservtxt.Location = new Point(154, 140);
@@ -408,15 +409,6 @@
             nombretxt.Name = "nombretxt";
             nombretxt.Size = new Size(211, 23);
             nombretxt.TabIndex = 20;
-            // 
-            // lineatxt
-            // 
-            lineatxt.Location = new Point(680, 140);
-            lineatxt.Multiline = true;
-            lineatxt.Name = "lineatxt";
-            lineatxt.Size = new Size(233, 23);
-            lineatxt.TabIndex = 21;
-            lineatxt.DoubleClick += lineatxt_DoubleClick;
             // 
             // inventariabletxt
             // 
@@ -450,32 +442,24 @@
             // 
             // maximotx
             // 
-            maximotx.Location = new Point(138, 431);
+            maximotx.Location = new Point(229, 431);
             maximotx.Name = "maximotx";
             maximotx.Size = new Size(78, 23);
             maximotx.TabIndex = 27;
             // 
             // minimotx
             // 
-            minimotx.Location = new Point(222, 431);
+            minimotx.Location = new Point(313, 431);
             minimotx.Name = "minimotx";
             minimotx.Size = new Size(62, 23);
             minimotx.TabIndex = 28;
             // 
             // reordentx
             // 
-            reordentx.Location = new Point(292, 431);
+            reordentx.Location = new Point(383, 431);
             reordentx.Name = "reordentx";
             reordentx.Size = new Size(50, 23);
             reordentx.TabIndex = 29;
-            // 
-            // textBox15
-            // 
-            textBox15.Location = new Point(457, 431);
-            textBox15.Name = "textBox15";
-            textBox15.Size = new Size(82, 23);
-            textBox15.TabIndex = 30;
-            textBox15.Text = "Precio Publico";
             // 
             // precioptx
             // 
@@ -484,25 +468,16 @@
             precioptx.Size = new Size(82, 23);
             precioptx.TabIndex = 31;
             // 
-            // impuestotx
-            // 
-            impuestotx.Location = new Point(734, 431);
-            impuestotx.Name = "impuestotx";
-            impuestotx.Size = new Size(100, 23);
-            impuestotx.TabIndex = 33;
-            impuestotx.Text = "IVA";
-            // 
             // tasatx
             // 
-            tasatx.Location = new Point(840, 431);
+            tasatx.Location = new Point(887, 431);
             tasatx.Name = "tasatx";
-            tasatx.Size = new Size(100, 23);
+            tasatx.Size = new Size(52, 23);
             tasatx.TabIndex = 34;
             // 
             // umedidatxt
             // 
             umedidatxt.FormattingEnabled = true;
-            umedidatxt.Items.AddRange(new object[] { "PIEZA", "Kg", "HR", "TRAMO", "Caja" });
             umedidatxt.Location = new Point(157, 223);
             umedidatxt.Name = "umedidatxt";
             umedidatxt.Size = new Size(121, 23);
@@ -519,7 +494,7 @@
             panel4.Dock = DockStyle.Top;
             panel4.Location = new Point(0, 0);
             panel4.Name = "panel4";
-            panel4.Size = new Size(968, 90);
+            panel4.Size = new Size(1015, 90);
             panel4.TabIndex = 40;
             // 
             // btregresar
@@ -561,7 +536,7 @@
             btGuardar.Text = "Guardar";
             btGuardar.TextImageRelation = TextImageRelation.ImageAboveText;
             btGuardar.UseVisualStyleBackColor = false;
-            btGuardar.Click += btGuardar_Click;
+            btGuardar.Click += btguardar_Click;
             // 
             // label1
             // 
@@ -586,17 +561,10 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(351, 460);
+            dataGridView1.Location = new Point(904, 617);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(589, 111);
+            dataGridView1.Size = new Size(36, 58);
             dataGridView1.TabIndex = 41;
-            // 
-            // monedatx
-            // 
-            monedatx.Location = new Point(638, 431);
-            monedatx.Name = "monedatx";
-            monedatx.Size = new Size(82, 23);
-            monedatx.TabIndex = 42;
             // 
             // almacentx
             // 
@@ -607,35 +575,150 @@
             // 
             // existx
             // 
-            existx.Location = new Point(351, 431);
+            existx.Location = new Point(133, 431);
             existx.Name = "existx";
-            existx.Size = new Size(100, 23);
+            existx.Size = new Size(94, 23);
             existx.TabIndex = 44;
             // 
             // dataGridView2
             // 
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(14, 463);
+            dataGridView2.Location = new Point(14, 457);
             dataGridView2.Name = "dataGridView2";
-            dataGridView2.Size = new Size(317, 108);
+            dataGridView2.Size = new Size(213, 114);
             dataGridView2.TabIndex = 45;
+            // 
+            // dataGridView3
+            // 
+            dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView3.Location = new Point(456, 457);
+            dataGridView3.Name = "dataGridView3";
+            dataGridView3.Size = new Size(265, 114);
+            dataGridView3.TabIndex = 46;
+            // 
+            // dataGridView4
+            // 
+            dataGridView4.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView4.Location = new Point(769, 457);
+            dataGridView4.Name = "dataGridView4";
+            dataGridView4.Size = new Size(171, 114);
+            dataGridView4.TabIndex = 27;
+            dataGridView4.CellContentClick += dataGridView4_CellContentClick;
+            // 
+            // btguardarimp
+            // 
+            btguardarimp.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btguardarimp.BackColor = Color.MediumAquamarine;
+            btguardarimp.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btguardarimp.Image = (Image)resources.GetObject("btguardarimp.Image");
+            btguardarimp.Location = new Point(949, 412);
+            btguardarimp.Name = "btguardarimp";
+            btguardarimp.Size = new Size(38, 42);
+            btguardarimp.TabIndex = 47;
+            btguardarimp.TextImageRelation = TextImageRelation.ImageAboveText;
+            btguardarimp.UseVisualStyleBackColor = false;
+            btguardarimp.Click += btguardarimp_Click;
+            // 
+            // impuestotx
+            // 
+            impuestotx.FormattingEnabled = true;
+            impuestotx.Location = new Point(770, 429);
+            impuestotx.Name = "impuestotx";
+            impuestotx.Size = new Size(100, 23);
+            impuestotx.TabIndex = 48;
+            // 
+            // listapreciotx
+            // 
+            listapreciotx.FormattingEnabled = true;
+            listapreciotx.Location = new Point(451, 431);
+            listapreciotx.Name = "listapreciotx";
+            listapreciotx.Size = new Size(92, 23);
+            listapreciotx.TabIndex = 49;
+            // 
+            // monedatx
+            // 
+            monedatx.FormattingEnabled = true;
+            monedatx.Location = new Point(637, 428);
+            monedatx.Name = "monedatx";
+            monedatx.Size = new Size(83, 23);
+            monedatx.TabIndex = 17;
+            // 
+            // btguardarprecio
+            // 
+            btguardarprecio.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btguardarprecio.BackColor = Color.MediumAquamarine;
+            btguardarprecio.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btguardarprecio.Image = (Image)resources.GetObject("btguardarprecio.Image");
+            btguardarprecio.Location = new Point(725, 412);
+            btguardarprecio.Name = "btguardarprecio";
+            btguardarprecio.Size = new Size(38, 42);
+            btguardarprecio.TabIndex = 50;
+            btguardarprecio.TextImageRelation = TextImageRelation.ImageAboveText;
+            btguardarprecio.UseVisualStyleBackColor = false;
+            btguardarprecio.Click += btguardarpre_Click;
+            // 
+            // btnborrapre
+            // 
+            btnborrapre.BackColor = Color.MediumAquamarine;
+            btnborrapre.Location = new Point(728, 465);
+            btnborrapre.Name = "btnborrapre";
+            btnborrapre.Size = new Size(35, 34);
+            btnborrapre.TabIndex = 51;
+            btnborrapre.Text = "🗑️";
+            btnborrapre.UseVisualStyleBackColor = false;
+            btnborrapre.Click += btnborrapre_Click;
+            // 
+            // btnborraimp
+            // 
+            btnborraimp.BackColor = Color.MediumAquamarine;
+            btnborraimp.Location = new Point(952, 465);
+            btnborraimp.Name = "btnborraimp";
+            btnborraimp.Size = new Size(35, 33);
+            btnborraimp.TabIndex = 52;
+            btnborraimp.Text = "🗑️";
+            btnborraimp.UseVisualStyleBackColor = false;
+            btnborraimp.Click += btnborraimp_Click;
+            // 
+            // statustxt
+            // 
+            statustxt.FormattingEnabled = true;
+            statustxt.Location = new Point(292, 223);
+            statustxt.Name = "statustxt";
+            statustxt.Size = new Size(121, 23);
+            statustxt.TabIndex = 53;
+            // 
+            // lineatxt
+            // 
+            lineatxt.FormattingEnabled = true;
+            lineatxt.Location = new Point(697, 140);
+            lineatxt.Name = "lineatxt";
+            lineatxt.Size = new Size(218, 23);
+            lineatxt.TabIndex = 54;
             // 
             // Fprodd
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(968, 593);
+            ClientSize = new Size(1015, 602);
+            Controls.Add(lineatxt);
+            Controls.Add(statustxt);
+            Controls.Add(btnborraimp);
+            Controls.Add(btnborrapre);
+            Controls.Add(btguardarprecio);
+            Controls.Add(monedatx);
+            Controls.Add(listapreciotx);
+            Controls.Add(impuestotx);
+            Controls.Add(btguardarimp);
+            Controls.Add(dataGridView4);
+            Controls.Add(dataGridView3);
             Controls.Add(dataGridView2);
             Controls.Add(existx);
             Controls.Add(almacentx);
-            Controls.Add(monedatx);
             Controls.Add(dataGridView1);
             Controls.Add(panel4);
             Controls.Add(umedidatxt);
             Controls.Add(tasatx);
-            Controls.Add(impuestotx);
             Controls.Add(precioptx);
-            Controls.Add(textBox15);
             Controls.Add(reordentx);
             Controls.Add(minimotx);
             Controls.Add(maximotx);
@@ -643,11 +726,9 @@
             Controls.Add(preciotxt);
             Controls.Add(descripciontxt);
             Controls.Add(inventariabletxt);
-            Controls.Add(lineatxt);
             Controls.Add(nombretxt);
             Controls.Add(claveproservtxt);
             Controls.Add(prodservtxt);
-            Controls.Add(statustxt);
             Controls.Add(clavetxt);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -678,6 +759,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView4).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -711,13 +794,10 @@
         private Label label21;
         private Label label26;
         private Label label27;
-        private TextBox textBox15;
         public TextBox clavetxt;
-        public TextBox statustxt;
         public TextBox prodservtxt;
         public TextBox claveproservtxt;
         public TextBox nombretxt;
-        public TextBox lineatxt;
         public TextBox inventariabletxt;
         public TextBox descripciontxt;
         public TextBox preciotxt;
@@ -731,14 +811,23 @@
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;
         public TextBox precioptx;
-        public TextBox monedatx;
         public TextBox almacentx;
         public TextBox existx;
         public TextBox maximotx;
         public TextBox minimotx;
         public TextBox reordentx;
         public TextBox tasatx;
-        public TextBox impuestotx;
         private DataGridView dataGridView2;
+        private DataGridView dataGridView3;
+        private DataGridView dataGridView4;
+        private Button btguardarimp;
+        public ComboBox impuestotx;
+        public ComboBox listapreciotx;
+        public ComboBox monedatx;
+        private Button btguardarprecio;
+        private Button btnborrapre;
+        private Button btnborraimp;
+        public ComboBox statustxt;
+        public ComboBox lineatxt;
     }
 }

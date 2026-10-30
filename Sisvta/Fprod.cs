@@ -68,7 +68,7 @@ namespace Sisvta
 
         private async void Fprod_Load(object sender, EventArgs e)
         {
-            await CargarGridAsync();
+           // await CargarGridAsync();
         }
 
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -79,9 +79,9 @@ namespace Sisvta
                 dataGridView1.Columns["Pcompra"].Width = 60;
                 dataGridView1.Columns["Pcompra"].DefaultCellStyle.Format = "N2";
                 dataGridView1.Columns["Pcompra"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dataGridView1.Columns["Pventa"].DefaultCellStyle.Format = "N2";
-                dataGridView1.Columns["Pventa"].Width = 60;
-                dataGridView1.Columns["Pventa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+               // dataGridView1.Columns["Pventa"].DefaultCellStyle.Format = "N2";
+               // dataGridView1.Columns["Pventa"].Width = 60;
+               // dataGridView1.Columns["Pventa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             dataGridView1.Columns["Nombre"].Width = 220;
             dataGridView1.Columns["Status"].Width = 40;
@@ -95,7 +95,7 @@ namespace Sisvta
                 dataGridView1.Columns["Grupo"].Visible = false;
             }
             dataGridView1.Columns["descripcion"].Visible = false; dataGridView1.Columns["umedida"].Visible = false;
-            dataGridView1.Columns["moneda"].Visible = false; dataGridView1.Columns["inventariable"].Visible = false;
+           // dataGridView1.Columns["moneda"].Visible = false; dataGridView1.Columns["inventariable"].Visible = false;
             dataGridView1.Columns["maximo"].Visible = false; dataGridView1.Columns["minimo"].Visible = false; dataGridView1.Columns["reorden"].Visible = false;
             //dataGridView1.Columns["Clave"].Visible = false;
             if (!dataGridView1.Columns.Contains("ColMov"))
@@ -152,10 +152,10 @@ namespace Sisvta
             _finv2.inventariabletxt.Clear();
             _finv2.prodservtxt.Visible = false;
             _finv2.claveproservtxt.Clear();
-            _finv2.statustxt.Clear();
+           // _finv2.statustxt.Clear();
             _finv2.preciotxt.Text = "0.00";
-            _finv2.lineatxt.Clear();
-            _finv2.monedatx.Clear();
+           // _finv2.lineatxt.Clear();
+            //_finv2.monedatx.Clear();
             _finv2.precioptx.Text = "0.00";
             _finv2.ultimopreciotxt.Text = "0.00";
             _finv2.umedidatxt.Text = "";
@@ -164,7 +164,7 @@ namespace Sisvta
             _finv2.maximotx.Clear();
             _finv2.minimotx.Clear();
             _finv2.reordentx.Clear();
-            _finv2.impuestotx.Clear();
+            //_finv2.impuestotx.Clear();
             _finv2.tasatx.Clear();
 
             //_finv2.almacentx.Clear();
@@ -175,15 +175,6 @@ namespace Sisvta
             _finv2.BringToFront();
         }
 
-        // Al hacer doble clic en el grid, cargamos los datos en Finv2 para editarlos/verlos
-
-
-        // Al hacer doble clic en el grid, cargamos los datos en Finv2 para editarlos/verlos
-
-
-
-
-        // Botón de filtro actualizado para evaluar Línea, Status y el Prefijo de Clave (nomclatxt)
 
 
         private async void btfiltro_Click(object sender, EventArgs e)
@@ -349,15 +340,16 @@ namespace Sisvta
                     _finv2.clavetxt.Text = fila.Cells["Clave"].Value?.ToString();
                     _finv2.nombretxt.Text = fila.Cells["Nombre"].Value?.ToString();
                     _finv2.descripciontxt.Text = fila.Cells["Descripcion"].Value?.ToString();
-                    _finv2.umedidatxt.Text = fila.Cells["umedida"].Value?.ToString();
+                    _finv2.umedidatxt.Text = fila.Cells["Nommedida"].Value?.ToString();
                     _finv2.inventariabletxt.Text = fila.Cells["inventariable"].Value?.ToString();
                     _finv2.prodservtxt.Visible = true;
                     _finv2.prodservtxt.Text = fila.Cells["Prodserv"].Value?.ToString();
                     _finv2.claveproservtxt.Text = fila.Cells["ClaveProserv"].Value?.ToString();
-                    _finv2.statustxt.Text = fila.Cells["Status"].Value?.ToString();
+                    _finv2.statustxt.Text = fila.Cells["Nomstatus"].Value?.ToString();
                     _finv2.maximotx.Text = fila.Cells["Maximo"].Value?.ToString();
                     _finv2.minimotx.Text = fila.Cells["Minimo"].Value?.ToString();
                     _finv2.reordentx.Text = fila.Cells["Reorden"].Value?.ToString();
+                    _finv2.lineatxt.Text = fila.Cells["Nomlinea"].Value?.ToString();
 
                     if (fila.Cells["Pcompra"].Value != null && double.TryParse(fila.Cells["Pcompra"].Value.ToString(), out double preciocompra))
                     {
@@ -367,7 +359,7 @@ namespace Sisvta
                     {
                         _finv2.preciotxt.Text = "0.00";
                     }
-
+                    /*
                     if (fila.Cells["Pventa"].Value != null && double.TryParse(fila.Cells["Pventa"].Value.ToString(), out double precioventa))
                     {
                         _finv2.precioptx.Text = precioventa.ToString("N2");
@@ -375,15 +367,15 @@ namespace Sisvta
                     else
                     {
                         _finv2.precioptx.Text = "0.00";
-                    }
+                    }*/
 
                     if (_finv2.MdiParent == null && this.MdiParent != null)
                     {
                         _finv2.MdiParent = this.MdiParent;
                     }
 
-                    _finv2.lineatxt.Text = fila.Cells["Linea"].Value?.ToString();
-                    _finv2.monedatx.Text = fila.Cells["moneda"].Value?.ToString();
+                    //_finv2.lineatxt.Text = fila.Cells["Linea"].Value?.ToString();
+                   // _finv2.monedatx.Text = fila.Cells["moneda"].Value?.ToString();
 
                     _finv2.Show();
                     _finv2.BringToFront();

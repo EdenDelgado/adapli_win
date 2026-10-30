@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fmprod));
             panel3 = new Panel();
+            btregresar = new Button();
             btarticulo = new Button();
             button2 = new Button();
             btlinea = new Button();
             btGrupos = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
-            btregresar = new Button();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -56,6 +56,20 @@
             panel3.Name = "panel3";
             panel3.Size = new Size(894, 82);
             panel3.TabIndex = 20;
+            // 
+            // btregresar
+            // 
+            btregresar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btregresar.BackColor = Color.MediumAquamarine;
+            btregresar.Image = (Image)resources.GetObject("btregresar.Image");
+            btregresar.Location = new Point(811, 3);
+            btregresar.Name = "btregresar";
+            btregresar.Size = new Size(80, 80);
+            btregresar.TabIndex = 11;
+            btregresar.Text = "Regresar";
+            btregresar.TextImageRelation = TextImageRelation.ImageAboveText;
+            btregresar.UseVisualStyleBackColor = false;
+            btregresar.Click += btregresar_Click;
             // 
             // btarticulo
             // 
@@ -132,20 +146,6 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
-            // btregresar
-            // 
-            btregresar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btregresar.BackColor = Color.MediumAquamarine;
-            btregresar.Image = (Image)resources.GetObject("btregresar.Image");
-            btregresar.Location = new Point(811, 3);
-            btregresar.Name = "btregresar";
-            btregresar.Size = new Size(80, 80);
-            btregresar.TabIndex = 11;
-            btregresar.Text = "Regresar";
-            btregresar.TextImageRelation = TextImageRelation.ImageAboveText;
-            btregresar.UseVisualStyleBackColor = false;
-            btregresar.Click += btregresar_Click;
-            // 
             // Fmprod
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -154,6 +154,7 @@
             Controls.Add(panel3);
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "Fmprod";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fmprod";
             WindowState = FormWindowState.Maximized;
             Load += Fmprod_Load;

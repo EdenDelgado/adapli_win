@@ -193,6 +193,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepconin";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepconin  REPORTE CONSUMO INVENTARIO";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
