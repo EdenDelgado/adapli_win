@@ -44,10 +44,13 @@ namespace Sisvta
                         idsalida AS Idsalida, 
                         folio AS Folio, 
                         fecha AS Fecha,
-                        concepto AS Concepto, 
-                        cliente AS Cliente, 
-                        almacen AS IdAlmacen
-                    FROM salidainv 
+                        s.concepto AS Concepto, c.concepto as Nomconcepto,
+                        s.cliente AS Cliente, cl.nombre as Nomcliente, 
+                        s.almacen AS IdAlmacen, a.nombre as Nomalmacen, s.aquien, s.observaciones, s.proyecto
+                    FROM salidainv s 
+                    LEFT JOIN concepto as c ON s.concepto = c.id_conceptosprov
+                    LEFT JOIN Clientes as cl ON s.cliente = cl.id_empros
+                    LEFT JOIN almacen as a ON s.almacen = a.id_almacen
                     WHERE fecha >= @desde AND fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -80,26 +83,22 @@ namespace Sisvta
             }
         }
 
-        // Evento que se dispara al hacer doble clic en una fila del DataGridView
+        // Evento que se dispara al hacer doble clic en una fila del DataGridView (Modo Edición)
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0)
             {
-                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
-                    // Obtenemos el ID de la salida (o los campos que necesites)
                     int idSalida = Convert.ToInt32(rowView["Idsalida"]);
 
-                    // Instanciamos el formulario Fsal pasándole el ID (Asegúrate de que Fsal tenga un constructor que reciba este int)
-                    var formFsal = new Fsal(_context,idSalida);
+                    // Instanciamos Fsal en modo edición pasándole el ID existente
+                    var formFsal = new Fsal(_context, idSalida);
 
                     if (formFsal.ShowDialog() == DialogResult.OK)
                     {
-                        // Recargamos el grid si se realizaron cambios o guardados
                         await CargarMaestroDoctoscpAsync();
                     }
                 }
@@ -120,6 +119,27 @@ namespace Sisvta
         private async void Filtrarbt_Click(object sender, EventArgs e)
         {
             await CargarMaestroDoctoscpAsync();
+        }
+
+        private async void nuevobt_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Instanciamos Fsal sin parámetros (o pasando 0) para indicar que es un NUEVO registro
+                // Gracias a tu constructor estándar Fsal(ApplicationDbContext context), esto abrirá la forma limpia.
+                using (var formFsal = new Fsal(_context))
+                {
+                    if (formFsal.ShowDialog() == DialogResult.OK)
+                    {
+                        // Recargamos el grid para mostrar la nueva salida de almacén guardada
+                        await CargarMaestroDoctoscpAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario de nueva salida: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

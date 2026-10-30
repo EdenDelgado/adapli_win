@@ -43,11 +43,12 @@ namespace Sisvta
                     SELECT 
                         t.id_transactions AS Idtransaccion, 
                         t.whentry AS whentry,
-                        t.locationfrom AS Locationfrom, 
-                        t.locationto AS Locationto,
+                        t.locationfrom AS Locationfrom, lf.location,
+                        t.locationto AS Locationto,ld.location,
                         t.fechamov AS Fecha
                        
-                    FROM transacciones as t
+                    FROM transacciones as t left join location lf on t.locationfrom=lf.idlocation
+                    left join location ld on t.locationto=ld.idlocation
                     WHERE fechamov >= @desde AND fechamov <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();

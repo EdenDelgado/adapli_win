@@ -41,15 +41,18 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
-                        d.id_factura AS Idfactura, 
-                        d.folio AS Folio,i.id_inventario AS IdInventario, 
-                        d.fechafactura AS Fecha,
-                      i.concepto AS Concepto,
-                        d.proveedor AS Proveedor, i.proveedor as iprov, 
+                        i.id_factura AS Idfactura, 
+                        i.folio AS Folio,i.id_inventario AS IdInventario, 
+                        i.fecha AS Fecha,
+                      i.concepto AS Concepto,c.concepto as Nomconcepto,
+                        d.proveedor AS Proveedor, p.nombre as NomProveedor, 
                         i.descripcion AS Descripcion,
-                        d.almacen AS IdAlmacen
-                    FROM doctoscc as d left join inventario as i on d.id_factura = i.id_factura
-                    WHERE fechafactura >= @desde AND fechafactura <= @hasta";
+                        i.almacen AS IdAlmacen,a.nombre as NomAlmacen
+                    FROM inventario as i left join doctoscc as d on i.id_factura=d.id_factura
+                    left join proveedores as p on d.proveedor=p.id_proveedor
+                    left join almacen as a on i.almacen=a.id_almacen
+                    left join concepto as c on i.concepto=c.id_conceptosprov
+                    WHERE fecha >= @desde AND fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -82,26 +85,35 @@ namespace Sisvta
         }
 
         // Evento que se dispara al hacer doble clic en una fila del DataGridView
+
+
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
-            if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
             {
-                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
-                    // Obtenemos el ID de la entrada (o los campos que necesites)
-                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idfactura"].Value);
+                    // Leemos el valor de forma segura utilizando la columna del DataRowView
+                    var valorId = rowView["IdInventario"];
 
-                    // Instanciamos el formulario Fent pasándole el ID (Asegúrate de que Fent tenga un constructor que reciba este int)
-                    var formFent = new Fent(_context,idfactura);
-
-                    if (formFent.ShowDialog() == DialogResult.OK)
+                    // Verificamos que no sea nulo antes de convertirlo a entero
+                    if (valorId != null && valorId != DBNull.Value && int.TryParse(valorId.ToString(), out int idinventario))
                     {
-                        // Recargamos el grid si se realizaron cambios o guardados
-                        await CargarMaestroDoctoscpAsync();
+                        // Instanciamos el formulario Fent pasándole el ID de forma segura
+                        var formFent = new Fent(_context, idinventario);
+
+                        if (formFent.ShowDialog() == DialogResult.OK)
+                        {
+                            // Recargamos el grid si se realizaron cambios o guardados
+                            await CargarMaestroDoctoscpAsync();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("La fila seleccionada no contiene un ID de factura válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
@@ -121,6 +133,31 @@ namespace Sisvta
         private async void Filtrarbt_Click(object sender, EventArgs e)
         {
             await CargarMaestroDoctoscpAsync();
+        }
+
+
+
+        private async void nuevobt_Click(object sender, EventArgs e)
+        {
+            int idinventario = 999999; // debe ser el siguiente numero del ultimo id_inventario en la tabla inventario
+            try
+            {
+                // Instanciamos Fent usando el constructor estándar (sin ID), 
+                // lo que preparará el formulario en blanco para una nueva entrada.
+                using (var fent = new Fent(_context,idinventario))
+                {
+                    // Abrimos como cuadro de diálogo modal
+                    if (fent.ShowDialog() == DialogResult.OK)
+                    {
+                        // Si el usuario guarda el nuevo registro, recargamos el catálogo maestro
+                        await CargarMaestroDoctoscpAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario de nueva entrada: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
