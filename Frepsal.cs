@@ -44,10 +44,13 @@ namespace Sisvta
                         idsalida AS Idsalida, 
                         folio AS Folio, 
                         fecha AS Fecha,
-                        concepto AS Concepto, 
-                        cliente AS Cliente, 
-                        almacen AS IdAlmacen
-                    FROM salidainv 
+                        /*s.concepto AS Concepto,  almacen AS IdAlmacen,*/
+                        cl.nombre as nomcliente,
+                        a.nombre as Nomalmacen,
+                        c.concepto as Nomconcepto
+                    FROM salidainv s left join almacen a on s.almacen= a.id_almacen
+                        left join concepto as c on s.concepto=c.id_conceptosprov
+                        left join clientes as cl on s.cliente=cl.id_empros
                     WHERE fecha >= @desde AND fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();

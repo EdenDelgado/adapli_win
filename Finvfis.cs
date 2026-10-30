@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 
 namespace Sisvta
@@ -10,33 +11,47 @@ namespace Sisvta
     public partial class Finvfis : Form
     {
         private readonly ApplicationDbContext _context;
-        private readonly int _idEntradaFiltro;
+        private readonly int _idinvfisFiltro;
 
         // 1. Constructor estándar (por si se abre desde el menú principal)
         public Finvfis(ApplicationDbContext context)
         {
             InitializeComponent();
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _idEntradaFiltro = 0;
+            _idinvfisFiltro = 0;
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            _ = CargarMaestroDoctoscpAsync();
+
+            // Carga inicial segura y secuencial desde el constructor
+            _ = InicializarFormularioAsync();
         }
 
-        // 2. Constructor con parámetro (para cuando se invoca haciendo doble clic desde el catálogo)
+        // 2. Constructor con parámetro (para cuando se invoca haciendo doble clic o nuevo)
         public Finvfis(ApplicationDbContext context, int idEntrada)
         {
             InitializeComponent();
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _idEntradaFiltro = idEntrada;
+            _idinvfisFiltro = idEntrada;
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            _ = CargarMaestroDoctoscpAsync();
+
+            // Carga inicial segura y secuencial desde el constructor
+            _ = InicializarFormularioAsync();
         }
 
-        private async void Fccom_Load(object sender, EventArgs e)
+        private async Task InicializarFormularioAsync()
         {
+            // Primero cargamos los catálogos obligatoriamente para que los ComboBox tengan elementos
+            await CargarAlmacenesAsync();
+            await CargarUsuariosAsync();
+
+            // Después cargamos el maestro e intentamos asignar los valores seleccionados
             await CargarMaestroDoctoscpAsync();
+        }
+
+        private async void Finvfis_Load(object sender, EventArgs e)
+        {
+            if (DesignMode) return;
         }
 
         public async Task CargarMaestroDoctoscpAsync(string filtroProveedor = null)
@@ -49,18 +64,30 @@ namespace Sisvta
                     return;
                 }
 
-                string sqlQuery = @"    SELECT 
+                // Si el ID es 0 (Nuevo Registro), limpiamos y salimos sin mostrar datos antiguos
+                if (_idinvfisFiltro == 0)
+                {
+                    dataGridView1.DataSource = null;
+                    dataGridView2.DataSource = null;
+                    txfolio.Clear();
+                    txfecha.Value = DateTime.Now;
+                    txalmacen.SelectedIndex = -1;
+                    txusuario.SelectedIndex = -1;
+                    return;
+                }
+
+                string sqlQuery = @"    
+                    SELECT 
                         id_invfisico AS Idinvfisico, 
                         fecha AS Fecha,
-                        usuario AS Usuario, u.nombre as Nombre,u.idAlmacen as Almacen,a.nombre as Nomalmacen
-                    FROM invfisico as i left join usuarios as u on i.usuario=u.id_usuario
-                        left join almacen as a on u.idAlmacen=a.id_almacen";
-
-                // CORREGIDO: Se evalúa sobre d.id_factura para asegurar que funcione al filtrar por ID específico
-                if (_idEntradaFiltro > 0)
-                {
-                    sqlQuery += " WHERE id_invfisico = @IdEntradaFiltro";
-                }
+                        usuario AS Usuario, 
+                        u.nombre as Nombre, 
+                        u.idAlmacen as Almacen, 
+                        a.nombre as Nomalmacen
+                    FROM invfisico as i 
+                    LEFT JOIN usuarios as u ON i.usuario = u.id_usuario
+                    LEFT JOIN almacen as a ON u.idAlmacen = a.id_almacen
+                    WHERE id_invfisico = @IdinvfisFiltro";
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -70,11 +97,7 @@ namespace Sisvta
 
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
-
-                if (_idEntradaFiltro > 0)
-                {
-                    command.Parameters.AddWithValue("@IdEntradaFiltro", _idEntradaFiltro);
-                }
+                command.Parameters.AddWithValue("@IdinvfisFiltro", _idinvfisFiltro);
 
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
@@ -88,13 +111,25 @@ namespace Sisvta
                 if (dataGridView1.Rows.Count > 0 && dataGridView1.CurrentRow != null)
                 {
                     await CargarDetalleDoctoscpAsync();
+
                     txfolio.Text = dataGridView1.CurrentRow.Cells["Idinvfisico"].Value?.ToString() ?? string.Empty;
-                    txfecha.Text = dataGridView1.CurrentRow.Cells["Fecha"].Value?.ToString() ?? string.Empty;
-                    txnomalmacen.Text = dataGridView1.CurrentRow.Cells["Nomalmacen"].Value?.ToString() ?? string.Empty;
-                    //txmovinv.Text = dataGridView1.CurrentRow.Cells["IdInventario"].Value?.ToString() ?? string.Empty;
-                    txusuario.Text = dataGridView1.CurrentRow.Cells["Nombre"].Value?.ToString() ?? string.Empty;
-                   // txproveedor.Text = dataGridView1.CurrentRow.Cells["NomProveedor"].Value?.ToString() ?? string.Empty;
-                   // txobservacion.Text = dataGridView1.CurrentRow.Cells["Observacion"].Value?.ToString() ?? string.Empty;
+
+                    if (dataGridView1.CurrentRow.Cells["Fecha"].Value != DBNull.Value &&
+                        DateTime.TryParse(dataGridView1.CurrentRow.Cells["Fecha"].Value?.ToString(), out DateTime fechaReg))
+                    {
+                        txfecha.Value = fechaReg;
+                    }
+
+                    // Asignación correcta a los ComboBox usando SelectedValue
+                    if (dataGridView1.CurrentRow.Cells["Almacen"].Value != DBNull.Value)
+                    {
+                        txalmacen.SelectedValue = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Almacen"].Value);
+                    }
+
+                    if (dataGridView1.CurrentRow.Cells["Usuario"].Value != DBNull.Value)
+                    {
+                        txusuario.SelectedValue = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Usuario"].Value);
+                    }
                 }
                 else
                 {
@@ -103,7 +138,7 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el maestro inventario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el maestro invfisico: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -111,26 +146,28 @@ namespace Sisvta
         {
             try
             {
-                if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Cells["Idinvfisico"].Value == null ||
+                if (_idinvfisFiltro == 0 || dataGridView1.CurrentRow == null ||
+                    dataGridView1.CurrentRow.Cells["Idinvfisico"].Value == null ||
                     dataGridView1.CurrentRow.Cells["Idinvfisico"].Value == DBNull.Value)
                 {
                     dataGridView2.DataSource = null;
                     return;
                 }
 
-                int idInventario = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idinvfisico"].Value);
+                int idInvfisico = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idinvfisico"].Value);
 
                 string sqlQuery = @"
                     SELECT 
                         invfisico AS Invfisico, 
-                        id_invfisdet AS Ifinvfisdet, 
-                        cantidad AS Cantidad,
+                        id_invfisdet AS Idinvfisdet, 
                         articulo AS Articulo, 
                         s.clave AS ClaveProducto,
-                        s.s_nombre AS NombreProducto                       
+                        s.s_nombre AS NombreProducto,
+                        cantidad,
+                        cantidad_real                        
                     FROM invfisdet as d 
                     LEFT JOIN servicios s ON d.articulo = s.id_servicio
-                    WHERE Invfisico = @idInventario";
+                    WHERE Invfisico = @IdInvfisico";
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -140,7 +177,7 @@ namespace Sisvta
 
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
-                command.Parameters.AddWithValue("@IdInventario", idInventario);
+                command.Parameters.AddWithValue("@IdInvfisico", idInvfisico);
 
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
@@ -159,39 +196,36 @@ namespace Sisvta
                 dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
                 dataGridView2.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 12, System.Drawing.FontStyle.Bold);
 
-                dataGridView2.Columns["NombreProducto"].Width = 260;
-
-                // Ocultar columnas técnicas o de control
-                // Nota: Asegúrate de que la columna oculta en el detalle coincida con un campo devuelto en el SELECT (en este caso usamos Entrada)
-                if (dataGridView2.Columns.Contains("Entrada"))
-                    dataGridView2.Columns["Entrada"].Visible = false;
-
-              //  if (dataGridView2.Columns.Contains("Entradadet"))
-                //    dataGridView2.Columns["Entradadet"].Visible = false;
+                if (dataGridView2.Columns.Contains("NombreProducto"))
+                    dataGridView2.Columns["NombreProducto"].Width = 260;
 
                 if (dataGridView2.Columns.Contains("Articulo"))
                     dataGridView2.Columns["Articulo"].Visible = false;
 
-                // Formatos y alineaciones monetarias
-                if (dataGridView2.Columns.Contains("Precio"))
+                if (dataGridView2.Columns.Contains("Invfisico"))
+                    dataGridView2.Columns["Invfisico"].Visible = false;
+
+                if (dataGridView2.Columns.Contains("Idinvfisdet"))
+                    dataGridView2.Columns["Idinvfisdet"].Visible = false;
+
+                if (dataGridView2.Columns.Contains("cantidad_real"))
                 {
-                    dataGridView2.Columns["Precio"].DefaultCellStyle.Format = "C2";
-                    dataGridView2.Columns["Precio"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    dataGridView2.Columns["Precio"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridView2.Columns["cantidad_real"].DefaultCellStyle.Format = "N3";
+                    dataGridView2.Columns["cantidad_real"].Width = 120;
+                    dataGridView2.Columns["cantidad_real"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
 
-                if (dataGridView2.Columns.Contains("Importe"))
+                if (dataGridView2.Columns.Contains("cantidad"))
                 {
-                    dataGridView2.Columns["Importe"].DefaultCellStyle.Format = "C2";
-                    dataGridView2.Columns["Importe"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    dataGridView2.Columns["Importe"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dataGridView2.Columns["cantidad"].DefaultCellStyle.Format = "N3";
+                    dataGridView2.Columns["cantidad"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
 
                 dataGridView2.Refresh();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el detalle de inventario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el detalle de invfisico: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -203,6 +237,241 @@ namespace Sisvta
         private void regresabt_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private async Task CargarAlmacenesAsync()
+        {
+            try
+            {
+                if (_context == null) return;
+                if (txalmacen == null) return;
+
+                var listaAlmacenes = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+                    _context.Set<Sisvta.Domain.Entities.Almacen>()
+                        .Select(a => new { id_almacen = a.IdAlmacen, nombre = a.Nombre })
+                );
+
+                if (listaAlmacenes != null && listaAlmacenes.Count > 0)
+                {
+                    txalmacen.DataSource = null;
+                    txalmacen.DisplayMember = "nombre";
+                    txalmacen.ValueMember = "id_almacen";
+                    txalmacen.DataSource = listaAlmacenes;
+                    txalmacen.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los almacenes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task CargarUsuariosAsync()
+        {
+            try
+            {
+                if (_context == null) return;
+                if (txusuario == null) return;
+
+                var listaUsuarios = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+                    _context.Set<Sisvta.Domain.Entities.Usuario>()
+                        .Select(a => new { id_usuario = a.IdUsuario, nombre = a.Nombre })
+                );
+
+                if (listaUsuarios != null && listaUsuarios.Count > 0)
+                {
+                    txusuario.DataSource = null;
+                    txusuario.DisplayMember = "nombre";
+                    txusuario.ValueMember = "id_usuario";
+                    txusuario.DataSource = listaUsuarios;
+                    txusuario.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los usuarios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btagregar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView1.CurrentRow == null ||
+                    dataGridView1.CurrentRow.Cells["IdInvfisico"].Value == null ||
+                    dataGridView1.CurrentRow.Cells["IdInvfisico"].Value == DBNull.Value)
+                {
+                    MessageBox.Show("Seleccione una entrada de invfisico válida en el catálogo maestro antes de agregar detalles.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string idMovimiento = dataGridView1.CurrentRow.Cells["IdInvfisico"].Value.ToString();
+
+                if (string.IsNullOrEmpty(idMovimiento))
+                {
+                    MessageBox.Show("El identificador del movimiento de invfisico no es válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                using (var fdinvfis = new Fdinvfis(_context, idMovimiento))
+                {
+                    if (fdinvfis.ShowDialog() == DialogResult.OK)
+                    {
+                        await CargarDetalleDoctoscpAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario de detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btborrar1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView2.CurrentRow == null ||
+                    dataGridView2.CurrentRow.Cells["Idinvfisdet"].Value == null ||
+                    dataGridView2.CurrentRow.Cells["Idinvfisdet"].Value == DBNull.Value)
+                {
+                    MessageBox.Show("Seleccione un renglón del detalle de invfisico que desee eliminar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!int.TryParse(dataGridView2.CurrentRow.Cells["Idinvfisdet"].Value.ToString(), out int idDetalle))
+                {
+                    MessageBox.Show("No se pudo obtener el identificador del detalle seleccionado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                var confirmacion = MessageBox.Show(
+                    "¿Está seguro de eliminar el artículo seleccionado del detalle?",
+                    "Confirmar eliminación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (confirmacion != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                string sqlDelete = "DELETE FROM invfisdet WHERE id_invfisdet = @IdInvfisdet";
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlDelete;
+                command.Parameters.Add("@IdInvfisdet", SqlDbType.Int).Value = idDetalle;
+                int filasAfectadas = await command.ExecuteNonQueryAsync();
+
+                if (filasAfectadas > 0)
+                {
+                    MessageBox.Show("Renglón eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await CargarDetalleDoctoscpAsync();
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró el registro a eliminar en la base de datos.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al intentar eliminar el registro: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btGuardar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txalmacen.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un almacén válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txalmacen.Focus();
+                    return;
+                }
+
+                if (txusuario.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un usuario válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txusuario.Focus();
+                    return;
+                }
+
+                DateTime fecha = txfecha.Value;
+                int idUsuario = Convert.ToInt32(txusuario.SelectedValue);
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                if (_idinvfisFiltro == 0)
+                {
+                    // ==========================================
+                    // NUEVO REGISTRO (INSERT)
+                    // ==========================================
+                    string sqlInsert = @"
+                        INSERT INTO invfisico (fecha, usuario) 
+                        VALUES (@fecha, @usuario);
+                        SELECT SCOPE_IDENTITY();";
+
+                    using var command = connection.CreateCommand();
+                    command.CommandText = sqlInsert;
+                    command.Parameters.Add("@usuario", SqlDbType.Int).Value = idUsuario;
+                    command.Parameters.Add("@fecha", SqlDbType.DateTime).Value = fecha;
+
+                    var nuevoIdObj = await command.ExecuteScalarAsync();
+
+                    if (nuevoIdObj != null && int.TryParse(nuevoIdObj.ToString(), out int nuevoId))
+                    {
+                        MessageBox.Show("Entrada de inventario guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                }
+                else
+                {
+                    // ==========================================
+                    // ACTUALIZACIÓN (UPDATE) - CORREGIDO EL PARÁMETRO @idInvfisico
+                    // ==========================================
+                    string sqlUpdate = @"
+                        UPDATE invfisico 
+                        SET  
+                            fecha = @fecha, 
+                            usuario = @usuario
+                        WHERE id_invfisico = @idInvfisico";
+
+                    using var command = connection.CreateCommand();
+                    command.CommandText = sqlUpdate;
+                    command.Parameters.Add("@usuario", SqlDbType.Int).Value = idUsuario;
+                    command.Parameters.Add("@fecha", SqlDbType.DateTime).Value = fecha;
+                    command.Parameters.Add("@idInvfisico", SqlDbType.Int).Value = _idinvfisFiltro; // Corregido de idInvfisco a idInvfisico
+
+                    int filasAfectadas = await command.ExecuteNonQueryAsync();
+
+                    if (filasAfectadas > 0)
+                    {
+                        MessageBox.Show("Entrada de invfis actualizada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se pudo actualizar el registro en la base de datos.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar el registro maestro: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

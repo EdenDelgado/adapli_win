@@ -46,8 +46,8 @@ namespace Sisvta
                         fecha AS Fecha,
                         concepto AS Concepto, 
                         cliente AS Cliente, 
-                        almacen AS IdAlmacen
-                    FROM salidainv 
+                        almacen AS IdAlmacen, a.nombre as nomalmacen
+                    FROM salidainv s left join almacen as a on s.almacen=a.id_almacen
                     WHERE fecha >= @desde AND fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();

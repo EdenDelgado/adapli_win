@@ -30,9 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Ftra));
             splitContainer1 = new SplitContainer();
+            txalmacendestino = new ComboBox();
+            txalmacenorigen = new ComboBox();
+            conceptotxt = new ComboBox();
+            txfecha = new DateTimePicker();
+            label12 = new Label();
+            label9 = new Label();
             panel3 = new Panel();
             regresabt = new Button();
-            button2 = new Button();
             btGuardar = new Button();
             label8 = new Label();
             pictureBox1 = new PictureBox();
@@ -42,17 +47,13 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
-            txdoc_origen = new TextBox();
-            txunidad = new TextBox();
-            txproyecto = new TextBox();
-            txobservacion = new TextBox();
-            txmovinv = new TextBox();
-            txalmacendestino = new TextBox();
-            txalmacenorigen = new TextBox();
-            txconcept = new TextBox();
-            txfecha = new TextBox();
+            txfolio = new TextBox();
+            txcomentarios = new TextBox();
+            txentrada = new TextBox();
             txtraspaso = new TextBox();
             dataGridView1 = new DataGridView();
+            btborrar = new Button();
+            btagregar = new Button();
             dataGridView2 = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -73,6 +74,12 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(txalmacendestino);
+            splitContainer1.Panel1.Controls.Add(txalmacenorigen);
+            splitContainer1.Panel1.Controls.Add(conceptotxt);
+            splitContainer1.Panel1.Controls.Add(txfecha);
+            splitContainer1.Panel1.Controls.Add(label12);
+            splitContainer1.Panel1.Controls.Add(label9);
             splitContainer1.Panel1.Controls.Add(panel3);
             splitContainer1.Panel1.Controls.Add(label7);
             splitContainer1.Panel1.Controls.Add(label5);
@@ -80,37 +87,82 @@
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(label1);
-            splitContainer1.Panel1.Controls.Add(txdoc_origen);
-            splitContainer1.Panel1.Controls.Add(txunidad);
-            splitContainer1.Panel1.Controls.Add(txproyecto);
-            splitContainer1.Panel1.Controls.Add(txobservacion);
-            splitContainer1.Panel1.Controls.Add(txmovinv);
-            splitContainer1.Panel1.Controls.Add(txalmacendestino);
-            splitContainer1.Panel1.Controls.Add(txalmacenorigen);
-            splitContainer1.Panel1.Controls.Add(txconcept);
-            splitContainer1.Panel1.Controls.Add(txfecha);
+            splitContainer1.Panel1.Controls.Add(txfolio);
+            splitContainer1.Panel1.Controls.Add(txcomentarios);
+            splitContainer1.Panel1.Controls.Add(txentrada);
             splitContainer1.Panel1.Controls.Add(txtraspaso);
             splitContainer1.Panel1.Controls.Add(dataGridView1);
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(btborrar);
+            splitContainer1.Panel2.Controls.Add(btagregar);
             splitContainer1.Panel2.Controls.Add(dataGridView2);
-            splitContainer1.Size = new Size(882, 522);
+            splitContainer1.Size = new Size(934, 522);
             splitContainer1.SplitterDistance = 177;
             splitContainer1.TabIndex = 0;
+            // 
+            // txalmacendestino
+            // 
+            txalmacendestino.FormattingEnabled = true;
+            txalmacendestino.Location = new Point(702, 106);
+            txalmacendestino.Name = "txalmacendestino";
+            txalmacendestino.Size = new Size(149, 23);
+            txalmacendestino.TabIndex = 30;
+            // 
+            // txalmacenorigen
+            // 
+            txalmacenorigen.FormattingEnabled = true;
+            txalmacenorigen.Location = new Point(547, 106);
+            txalmacenorigen.Name = "txalmacenorigen";
+            txalmacenorigen.Size = new Size(144, 23);
+            txalmacenorigen.TabIndex = 29;
+            // 
+            // conceptotxt
+            // 
+            conceptotxt.FormattingEnabled = true;
+            conceptotxt.Location = new Point(360, 105);
+            conceptotxt.Name = "conceptotxt";
+            conceptotxt.Size = new Size(181, 23);
+            conceptotxt.TabIndex = 28;
+            // 
+            // txfecha
+            // 
+            txfecha.Format = DateTimePickerFormat.Short;
+            txfecha.Location = new Point(247, 105);
+            txfecha.Name = "txfecha";
+            txfecha.Size = new Size(107, 23);
+            txfecha.TabIndex = 27;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(172, 131);
+            label12.Name = "label12";
+            label12.Size = new Size(33, 15);
+            label12.TabIndex = 26;
+            label12.Text = "Folio";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(348, 131);
+            label9.Name = "label9";
+            label9.Size = new Size(75, 15);
+            label9.TabIndex = 23;
+            label9.Text = "Comentarios";
             // 
             // panel3
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
-            panel3.Controls.Add(button2);
             panel3.Controls.Add(btGuardar);
             panel3.Controls.Add(label8);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(882, 84);
+            panel3.Size = new Size(934, 84);
             panel3.TabIndex = 22;
             // 
             // regresabt
@@ -127,31 +179,19 @@
             regresabt.UseVisualStyleBackColor = false;
             regresabt.Click += regresabt_Click;
             // 
-            // button2
-            // 
-            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.BackColor = Color.MediumAquamarine;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(627, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(80, 80);
-            button2.TabIndex = 4;
-            button2.Text = "Nuevo";
-            button2.TextImageRelation = TextImageRelation.ImageAboveText;
-            button2.UseVisualStyleBackColor = false;
-            // 
             // btGuardar
             // 
             btGuardar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btGuardar.BackColor = Color.MediumAquamarine;
             btGuardar.Image = (Image)resources.GetObject("btGuardar.Image");
-            btGuardar.Location = new Point(541, 4);
+            btGuardar.Location = new Point(611, 4);
             btGuardar.Name = "btGuardar";
             btGuardar.Size = new Size(80, 80);
             btGuardar.TabIndex = 2;
             btGuardar.Text = "Guardar";
             btGuardar.TextImageRelation = TextImageRelation.ImageAboveText;
             btGuardar.UseVisualStyleBackColor = false;
+            btGuardar.Click += btGuardar_Click;
             // 
             // label8
             // 
@@ -176,11 +216,11 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(231, 130);
+            label7.Location = new Point(713, 134);
             label7.Name = "label7";
             label7.Size = new Size(47, 15);
             label7.TabIndex = 18;
-            label7.Text = "Movinv";
+            label7.Text = "Entrada";
             // 
             // label5
             // 
@@ -194,7 +234,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(506, 87);
+            label4.Location = new Point(564, 89);
             label4.Name = "label4";
             label4.Size = new Size(93, 15);
             label4.TabIndex = 15;
@@ -227,68 +267,26 @@
             label1.TabIndex = 12;
             label1.Text = "Traspaso";
             // 
-            // txdoc_origen
+            // txfolio
             // 
-            txdoc_origen.Location = new Point(715, 148);
-            txdoc_origen.Name = "txdoc_origen";
-            txdoc_origen.Size = new Size(102, 23);
-            txdoc_origen.TabIndex = 11;
+            txfolio.Location = new Point(148, 146);
+            txfolio.Name = "txfolio";
+            txfolio.Size = new Size(102, 23);
+            txfolio.TabIndex = 11;
             // 
-            // txunidad
+            // txcomentarios
             // 
-            txunidad.Location = new Point(575, 148);
-            txunidad.Name = "txunidad";
-            txunidad.Size = new Size(102, 23);
-            txunidad.TabIndex = 10;
+            txcomentarios.Location = new Point(321, 148);
+            txcomentarios.Name = "txcomentarios";
+            txcomentarios.Size = new Size(286, 23);
+            txcomentarios.TabIndex = 8;
             // 
-            // txproyecto
+            // txentrada
             // 
-            txproyecto.Location = new Point(454, 148);
-            txproyecto.Name = "txproyecto";
-            txproyecto.Size = new Size(102, 23);
-            txproyecto.TabIndex = 9;
-            // 
-            // txobservacion
-            // 
-            txobservacion.Location = new Point(321, 148);
-            txobservacion.Name = "txobservacion";
-            txobservacion.Size = new Size(102, 23);
-            txobservacion.TabIndex = 8;
-            // 
-            // txmovinv
-            // 
-            txmovinv.Location = new Point(191, 148);
-            txmovinv.Name = "txmovinv";
-            txmovinv.Size = new Size(102, 23);
-            txmovinv.TabIndex = 7;
-            // 
-            // txalmacendestino
-            // 
-            txalmacendestino.Location = new Point(702, 105);
-            txalmacendestino.Name = "txalmacendestino";
-            txalmacendestino.Size = new Size(139, 23);
-            txalmacendestino.TabIndex = 5;
-            // 
-            // txalmacenorigen
-            // 
-            txalmacenorigen.Location = new Point(491, 105);
-            txalmacenorigen.Name = "txalmacenorigen";
-            txalmacenorigen.Size = new Size(130, 23);
-            txalmacenorigen.TabIndex = 4;
-            // 
-            // txconcept
-            // 
-            txconcept.Location = new Point(360, 105);
-            txconcept.Name = "txconcept";
-            txconcept.Size = new Size(125, 23);
-            txconcept.TabIndex = 3;
-            // 
-            // txfecha
-            // 
-            txfecha.Location = new Point(252, 105);
-            txfecha.Name = "txfecha";
-            txfecha.Size = new Size(102, 23);
-            txfecha.TabIndex = 2;
+            txentrada.Location = new Point(697, 152);
+            txentrada.Name = "txentrada";
+            txentrada.Size = new Size(102, 23);
+            txentrada.TabIndex = 7;
             // 
             // txtraspaso
             // 
@@ -305,23 +303,47 @@
             dataGridView1.Size = new Size(133, 80);
             dataGridView1.TabIndex = 0;
             // 
+            // btborrar
+            // 
+            btborrar.BackColor = Color.Aquamarine;
+            btborrar.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btborrar.Location = new Point(789, 131);
+            btborrar.Name = "btborrar";
+            btborrar.Size = new Size(118, 36);
+            btborrar.TabIndex = 30;
+            btborrar.Text = "- Borrar Detalle";
+            btborrar.UseVisualStyleBackColor = false;
+            btborrar.Click += btborrar1_Click;
+            // 
+            // btagregar
+            // 
+            btagregar.BackColor = Color.Aquamarine;
+            btagregar.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btagregar.Location = new Point(789, 65);
+            btagregar.Name = "btagregar";
+            btagregar.Size = new Size(118, 36);
+            btagregar.TabIndex = 29;
+            btagregar.Text = "+ Agregar Detalle";
+            btagregar.UseVisualStyleBackColor = false;
+            btagregar.Click += btagregar_Click;
+            // 
             // dataGridView2
             // 
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.Dock = DockStyle.Fill;
             dataGridView2.Location = new Point(0, 0);
             dataGridView2.Name = "dataGridView2";
-            dataGridView2.Size = new Size(882, 341);
+            dataGridView2.Size = new Size(934, 341);
             dataGridView2.TabIndex = 0;
             // 
             // Ftra
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(882, 522);
+            ClientSize = new Size(934, 522);
             Controls.Add(splitContainer1);
             Name = "Ftra";
-            Text = "Fent  TRASPASOS ALMACEN";
+            Text = "Ftra  TRASPASOS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
@@ -340,16 +362,10 @@
         private SplitContainer splitContainer1;
         private DataGridView dataGridView1;
         private DataGridView dataGridView2;
-        private TextBox txdoc_origen;
-        private TextBox txunidad;
-        private TextBox txproyecto;
-        private TextBox txobservacion;
-        private TextBox txmovinv;
+        private TextBox txfolio;
+        private TextBox txcomentarios;
+        private TextBox txentrada;
         private TextBox txproveedor;
-        private TextBox txalmacendestino;
-        private TextBox txalmacenorigen;
-        private TextBox txconcept;
-        private TextBox txfecha;
         private TextBox txtraspaso;
         private Label label7;
         private Label label6;
@@ -360,9 +376,16 @@
         private Label label1;
         private Panel panel3;
         private Button regresabt;
-        private Button button2;
         private Button btGuardar;
         private Label label8;
         private PictureBox pictureBox1;
+        private Label label12;
+        private Label label9;
+        private ComboBox conceptotxt;
+        private DateTimePicker txfecha;
+        private ComboBox txalmacendestino;
+        private ComboBox txalmacenorigen;
+        private Button btborrar;
+        private Button btagregar;
     }
 }

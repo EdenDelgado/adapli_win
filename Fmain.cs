@@ -37,7 +37,7 @@ namespace Sisvta
 
         private void ConfigurarMenuLateralDinamico()
         {
-            this.Size = new Size(1100, 760);
+            this.Size = new Size(1400, 760);
             this.StartPosition = FormStartPosition.CenterScreen;
 
             // 1. Panel lateral izquierdo (empieza compacto en 70px)
