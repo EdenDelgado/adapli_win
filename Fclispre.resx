@@ -162,6 +162,7 @@
         KfkBp8664wx2XyUAAAAASUVORK5CYII=
 </value>
   </data>
+<<<<<<< HEAD
   <data name="btlinea.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEQAAABECAYAAAA4E5OyAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
@@ -193,6 +194,8 @@
         TNaw/gYWkAAAAABJRU5ErkJggg==
 </value>
   </data>
+=======
+>>>>>>> main
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6

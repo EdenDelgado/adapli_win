@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fcsug));
             splitContainer1 = new SplitContainer();
+<<<<<<< HEAD
             Filtrarbt = new Button();
             label3 = new Label();
             label2 = new Label();
@@ -41,6 +42,15 @@
             nuevobt = new Button();
             btlinea = new Button();
             btGrupos = new Button();
+=======
+            txalmacen = new ComboBox();
+            lineatxt = new ComboBox();
+            Filtrarbt = new Button();
+            label3 = new Label();
+            label2 = new Label();
+            panel3 = new Panel();
+            regresabt = new Button();
+>>>>>>> main
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
@@ -62,11 +72,19 @@
             // 
             // splitContainer1.Panel1
             // 
+<<<<<<< HEAD
             splitContainer1.Panel1.Controls.Add(Filtrarbt);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(hastafechatx);
             splitContainer1.Panel1.Controls.Add(desdefechatx);
+=======
+            splitContainer1.Panel1.Controls.Add(txalmacen);
+            splitContainer1.Panel1.Controls.Add(lineatxt);
+            splitContainer1.Panel1.Controls.Add(Filtrarbt);
+            splitContainer1.Panel1.Controls.Add(label3);
+            splitContainer1.Panel1.Controls.Add(label2);
+>>>>>>> main
             splitContainer1.Panel1.Controls.Add(panel3);
             // 
             // splitContainer1.Panel2
@@ -76,6 +94,25 @@
             splitContainer1.SplitterDistance = 164;
             splitContainer1.TabIndex = 0;
             // 
+<<<<<<< HEAD
+=======
+            // txalmacen
+            // 
+            txalmacen.FormattingEnabled = true;
+            txalmacen.Location = new Point(472, 103);
+            txalmacen.Name = "txalmacen";
+            txalmacen.Size = new Size(121, 23);
+            txalmacen.TabIndex = 30;
+            // 
+            // lineatxt
+            // 
+            lineatxt.FormattingEnabled = true;
+            lineatxt.Location = new Point(161, 104);
+            lineatxt.Name = "lineatxt";
+            lineatxt.Size = new Size(121, 23);
+            lineatxt.TabIndex = 29;
+            // 
+>>>>>>> main
             // Filtrarbt
             // 
             Filtrarbt.Location = new Point(720, 105);
@@ -89,15 +126,24 @@
             // label3
             // 
             label3.AutoSize = true;
+<<<<<<< HEAD
             label3.Location = new Point(388, 116);
             label3.Name = "label3";
             label3.Size = new Size(71, 15);
             label3.TabIndex = 27;
             label3.Text = "Hasta Fecha";
+=======
+            label3.Location = new Point(387, 109);
+            label3.Name = "label3";
+            label3.Size = new Size(54, 15);
+            label3.TabIndex = 27;
+            label3.Text = "Almacen";
+>>>>>>> main
             // 
             // label2
             // 
             label2.AutoSize = true;
+<<<<<<< HEAD
             label2.Location = new Point(64, 110);
             label2.Name = "label2";
             label2.Size = new Size(73, 15);
@@ -119,15 +165,25 @@
             desdefechatx.Name = "desdefechatx";
             desdefechatx.Size = new Size(113, 23);
             desdefechatx.TabIndex = 24;
+=======
+            label2.Location = new Point(63, 109);
+            label2.Name = "label2";
+            label2.Size = new Size(80, 15);
+            label2.TabIndex = 26;
+            label2.Text = "Linea Articulo";
+>>>>>>> main
             // 
             // panel3
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
+<<<<<<< HEAD
             panel3.Controls.Add(btarticulo);
             panel3.Controls.Add(nuevobt);
             panel3.Controls.Add(btlinea);
             panel3.Controls.Add(btGrupos);
+=======
+>>>>>>> main
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
@@ -150,6 +206,7 @@
             regresabt.UseVisualStyleBackColor = false;
             regresabt.Click += regresabt_Click;
             // 
+<<<<<<< HEAD
             // btarticulo
             // 
             btarticulo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -203,6 +260,8 @@
             btGrupos.UseVisualStyleBackColor = false;
             btGrupos.Visible = false;
             // 
+=======
+>>>>>>> main
             // label1
             // 
             label1.AutoSize = true;
@@ -257,17 +316,26 @@
         private SplitContainer splitContainer1;
         private Panel panel3;
         private Button regresabt;
+<<<<<<< HEAD
         private Button btarticulo;
         private Button nuevobt;
         private Button btlinea;
         private Button btGrupos;
+=======
+>>>>>>> main
         private Label label1;
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;
         private Label label3;
         private Label label2;
+<<<<<<< HEAD
         private DateTimePicker hastafechatx;
         private DateTimePicker desdefechatx;
         private Button Filtrarbt;
+=======
+        private Button Filtrarbt;
+        private ComboBox txalmacen;
+        private ComboBox lineatxt;
+>>>>>>> main
     }
 }

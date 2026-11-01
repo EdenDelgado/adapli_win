@@ -24,9 +24,16 @@ namespace Sisvta
             _ = CargarMaestroDoctoscpAsync();
         }
 
+<<<<<<< HEAD
         private async void Fcsal_Load(object sender, EventArgs e)
         {
             await CargarMaestroDoctoscpAsync();
+=======
+        // CORREGIDO: El nombre del Load debe coincidir con el nombre de la clase (Fctra_Load)
+        private async void Fctra_Load(object sender, EventArgs e)
+        {
+            if (DesignMode) return;
+>>>>>>> main
         }
 
         public async Task CargarMaestroDoctoscpAsync()
@@ -42,6 +49,7 @@ namespace Sisvta
                 string sqlQuery = @"
                     SELECT 
                         id_traspaso AS Idtraspaso, 
+<<<<<<< HEAD
                         almacen_origen AS AlmacenOrigen, 
                         almacen_destino AS AlmacenDestino,
                         fecha AS Fecha,
@@ -49,6 +57,17 @@ namespace Sisvta
                         entrada as Entrada                       
          
                     FROM traspaso 
+=======
+                        almacen_origen AS AlmacenOrigen, a.nombre as NomOrigen, 
+                        almacen_destino AS AlmacenDestino, d.nombre as NomDestino,
+                        fecha AS Fecha,
+                        t.concepto AS Concepto, c.concepto as Nomconcepto,
+                        entrada as Entrada                       
+                    FROM traspaso t 
+                    LEFT JOIN almacen a ON almacen_origen = a.id_almacen
+                    LEFT JOIN almacen d ON almacen_destino = d.id_almacen
+                    LEFT JOIN concepto c ON t.concepto = c.id_conceptosprov
+>>>>>>> main
                     WHERE fecha >= @desde AND fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -77,21 +96,31 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 MessageBox.Show($"Error al cargar las traspasos de almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+=======
+                MessageBox.Show($"Error al cargar los traspasos de almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+>>>>>>> main
             }
         }
 
         // Evento que se dispara al hacer doble clic en una fila del DataGridView
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+<<<<<<< HEAD
             // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0)
             {
                 // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
+=======
+            if (e.RowIndex >= 0)
+            {
+>>>>>>> main
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
+<<<<<<< HEAD
                     // Obtenemos el ID de la salida (o los campos que necesites)
                     int idTraspaso = Convert.ToInt32(rowView["Idtraspaso"]);
 
@@ -102,15 +131,31 @@ namespace Sisvta
                     {
                         // Recargamos el grid si se realizaron cambios o guardados
                         await CargarMaestroDoctoscpAsync();
+=======
+                    int idTraspaso = Convert.ToInt32(rowView["Idtraspaso"]);
+
+                    using (var formFtra = new Ftra(_context, idTraspaso))
+                    {
+                        if (formFtra.ShowDialog() == DialogResult.OK)
+                        {
+                            await CargarMaestroDoctoscpAsync();
+                        }
+>>>>>>> main
                     }
                 }
             }
         }
 
+<<<<<<< HEAD
         // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // await CargarDetalleDoctoscpAsync();
+=======
+        private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            // Lógica para detalle si aplica
+>>>>>>> main
         }
 
         private void regresabt_Click(object sender, EventArgs e)
@@ -122,5 +167,29 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
+<<<<<<< HEAD
+=======
+
+        // CORREGIDO: Implementación para dar de alta un nuevo traspaso pasando ID 0
+        private async void nuevobt_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int idTraspasoNuevo = 0; // 0 indica nuevo registro
+
+                using (var formFtra = new Ftra(_context, idTraspasoNuevo))
+                {
+                    if (formFtra.ShowDialog() == DialogResult.OK)
+                    {
+                        await CargarMaestroDoctoscpAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario de nuevo traspaso: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+>>>>>>> main
     }
 }

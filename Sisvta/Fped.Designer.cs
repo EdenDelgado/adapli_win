@@ -232,7 +232,10 @@
             Controls.Add(panel1);
             Controls.Add(dataGridView1);
             Name = "Fped";
+<<<<<<< HEAD
             StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Fped Captura de Pedidos";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             panel1.ResumeLayout(false);

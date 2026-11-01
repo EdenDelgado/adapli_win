@@ -31,10 +31,18 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Falm));
             splitContainer1 = new SplitContainer();
             btregresar = new Button();
+<<<<<<< HEAD
             button2 = new Button();
             btGuardar = new Button();
             label11 = new Label();
             pictureBox1 = new PictureBox();
+=======
+            btGuardar = new Button();
+            label11 = new Label();
+            pictureBox1 = new PictureBox();
+            paistx = new ComboBox();
+            estadotx = new ComboBox();
+>>>>>>> main
             label10 = new Label();
             label9 = new Label();
             label8 = new Label();
@@ -50,9 +58,12 @@
             clavetx = new TextBox();
             telefonotx = new TextBox();
             cptx = new TextBox();
+<<<<<<< HEAD
             textBox6 = new TextBox();
             paistx = new TextBox();
             estadotx = new TextBox();
+=======
+>>>>>>> main
             ciudadtx = new TextBox();
             calletx = new TextBox();
             nombretx = new TextBox();
@@ -73,13 +84,21 @@
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(btregresar);
+<<<<<<< HEAD
             splitContainer1.Panel1.Controls.Add(button2);
+=======
+>>>>>>> main
             splitContainer1.Panel1.Controls.Add(btGuardar);
             splitContainer1.Panel1.Controls.Add(label11);
             splitContainer1.Panel1.Controls.Add(pictureBox1);
             // 
             // splitContainer1.Panel2
             // 
+<<<<<<< HEAD
+=======
+            splitContainer1.Panel2.Controls.Add(paistx);
+            splitContainer1.Panel2.Controls.Add(estadotx);
+>>>>>>> main
             splitContainer1.Panel2.Controls.Add(label10);
             splitContainer1.Panel2.Controls.Add(label9);
             splitContainer1.Panel2.Controls.Add(label8);
@@ -95,9 +114,12 @@
             splitContainer1.Panel2.Controls.Add(clavetx);
             splitContainer1.Panel2.Controls.Add(telefonotx);
             splitContainer1.Panel2.Controls.Add(cptx);
+<<<<<<< HEAD
             splitContainer1.Panel2.Controls.Add(textBox6);
             splitContainer1.Panel2.Controls.Add(paistx);
             splitContainer1.Panel2.Controls.Add(estadotx);
+=======
+>>>>>>> main
             splitContainer1.Panel2.Controls.Add(ciudadtx);
             splitContainer1.Panel2.Controls.Add(calletx);
             splitContainer1.Panel2.Controls.Add(nombretx);
@@ -117,6 +139,7 @@
             btregresar.Text = "Regresar";
             btregresar.TextImageRelation = TextImageRelation.ImageAboveText;
             btregresar.UseVisualStyleBackColor = false;
+<<<<<<< HEAD
             // 
             // button2
             // 
@@ -130,13 +153,20 @@
             button2.Text = "Nuevo";
             button2.TextImageRelation = TextImageRelation.ImageAboveText;
             button2.UseVisualStyleBackColor = false;
+=======
+            btregresar.Click += btregresar_Click;
+>>>>>>> main
             // 
             // btGuardar
             // 
             btGuardar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btGuardar.BackColor = Color.MediumAquamarine;
             btGuardar.Image = (Image)resources.GetObject("btGuardar.Image");
+<<<<<<< HEAD
             btGuardar.Location = new Point(518, 10);
+=======
+            btGuardar.Location = new Point(621, 10);
+>>>>>>> main
             btGuardar.Name = "btGuardar";
             btGuardar.Size = new Size(80, 80);
             btGuardar.TabIndex = 8;
@@ -151,9 +181,15 @@
             label11.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label11.Location = new Point(134, 16);
             label11.Name = "label11";
+<<<<<<< HEAD
             label11.Size = new Size(251, 32);
             label11.TabIndex = 7;
             label11.Text = "LINEAS DE ARTICULOS";
+=======
+            label11.Size = new Size(147, 32);
+            label11.TabIndex = 7;
+            label11.Text = "ALMACENES";
+>>>>>>> main
             // 
             // pictureBox1
             // 
@@ -165,6 +201,25 @@
             pictureBox1.TabIndex = 6;
             pictureBox1.TabStop = false;
             // 
+<<<<<<< HEAD
+=======
+            // paistx
+            // 
+            paistx.FormattingEnabled = true;
+            paistx.Location = new Point(113, 142);
+            paistx.Name = "paistx";
+            paistx.Size = new Size(132, 23);
+            paistx.TabIndex = 24;
+            // 
+            // estadotx
+            // 
+            estadotx.FormattingEnabled = true;
+            estadotx.Location = new Point(113, 107);
+            estadotx.Name = "estadotx";
+            estadotx.Size = new Size(259, 23);
+            estadotx.TabIndex = 23;
+            // 
+>>>>>>> main
             // label10
             // 
             label10.AutoSize = true;
@@ -290,6 +345,7 @@
             cptx.Size = new Size(100, 23);
             cptx.TabIndex = 6;
             // 
+<<<<<<< HEAD
             // textBox6
             // 
             textBox6.Location = new Point(164, 145);
@@ -311,6 +367,8 @@
             estadotx.Size = new Size(259, 23);
             estadotx.TabIndex = 3;
             // 
+=======
+>>>>>>> main
             // ciudadtx
             // 
             ciudadtx.Location = new Point(113, 78);
@@ -364,7 +422,10 @@
         private Label label2;
         private Label label1;
         private Button btregresar;
+<<<<<<< HEAD
         private Button button2;
+=======
+>>>>>>> main
         private Button btGuardar;
         private Label label11;
         private PictureBox pictureBox1;
@@ -374,10 +435,17 @@
         public TextBox clavetx;
         public TextBox telefonotx;
         public TextBox cptx;
+<<<<<<< HEAD
         public TextBox textBox6;
         public TextBox paistx;
         public TextBox estadotx;
         public TextBox ciudadtx;
         public TextBox calletx;
+=======
+        public TextBox ciudadtx;
+        public TextBox calletx;
+        public ComboBox estadotx;
+        public ComboBox paistx;
+>>>>>>> main
     }
 }

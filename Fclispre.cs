@@ -1,9 +1,20 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
 using Sisvta.Infrastructure.Persistence.Contexts;
+=======
+﻿using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
+using Sisvta.Infrastructure.Persistence.Contexts;
+using System;
+using System.Data;
+using System.Drawing;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+>>>>>>> main
 
 namespace Sisvta
 {
@@ -19,6 +30,11 @@ namespace Sisvta
             // Suscripción a eventos
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
+<<<<<<< HEAD
+=======
+            dataGridView1.CellClick += dataGridView1_CellClick; // <-- Evento para capturar el clic en la columna de edición
+            dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete; // <-- Para asegurar la columna de imagen
+>>>>>>> main
 
             // FORZAMOS LA CARGA AQUÍ MISMO PARA EVITAR DEPENDER DEL EVENTO LOAD
             _ = CargarMaestroDoctoscpAsync();
@@ -26,6 +42,10 @@ namespace Sisvta
 
         private async void Fcsal_Load(object sender, EventArgs e)
         {
+<<<<<<< HEAD
+=======
+            if (DesignMode) return;
+>>>>>>> main
             await CargarMaestroDoctoscpAsync();
         }
 
@@ -40,7 +60,11 @@ namespace Sisvta
                 }
 
                 string sqlQuery = @"
+<<<<<<< HEAD
                     SELECT *                       
+=======
+                    SELECT id_listaprecio, listaprecio, condicion, porcentaje, pdv, id_empresa as empresa                       
+>>>>>>> main
                     FROM listaprecio;";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -52,11 +76,14 @@ namespace Sisvta
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
 
+<<<<<<< HEAD
                 //DateTime fechaDesde = desdefechatx.Value.Date;
                 //DateTime fechaHasta = hastafechatx.Value.Date.AddDays(1).AddSeconds(-1);
 
                 
                
+=======
+>>>>>>> main
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
                 dataTable.Load(reader);
@@ -68,6 +95,7 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
                 MessageBox.Show($"Error al cargar las entradas de almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -99,6 +127,92 @@ namespace Sisvta
         }
 
         // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
+=======
+                MessageBox.Show($"Error al cargar las listas de precios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Método auxiliar para abrir el formulario de edición de manera centralizada
+        private async void AbrirEdicionFila(DataGridViewRow fila)
+        {
+            try
+            {
+                string nombreColumnaId = "id_listaprecio";
+
+                if (dataGridView1.Columns.Contains(nombreColumnaId) &&
+                    fila.Cells[nombreColumnaId].Value != DBNull.Value)
+                {
+                    int idListaPrecio = Convert.ToInt32(fila.Cells[nombreColumnaId].Value);
+
+                    string listaprecio = fila.Cells["listaprecio"].Value?.ToString() ?? string.Empty;
+                    string condicion = fila.Cells["condicion"].Value?.ToString() ?? string.Empty;
+                    string porcentaje = fila.Cells["porcentaje"].Value?.ToString() ?? string.Empty;
+                    string pdv = fila.Cells["pdv"].Value?.ToString() ?? string.Empty;
+                    string empresa = fila.Cells["empresa"].Value?.ToString() ?? string.Empty;
+
+                    using (var formDetalle = new Flispre(_context, listaprecio, condicion, porcentaje, pdv, empresa, idListaPrecio))
+                    {
+                        if (formDetalle.ShowDialog() == DialogResult.OK)
+                        {
+                            await CargarMaestroDoctoscpAsync();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el detalle de la lista de precios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Evento que se dispara al hacer doble clic en una fila
+        private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex >= 0 && dataGridView1.CurrentRow != null)
+            {
+                AbrirEdicionFila(dataGridView1.CurrentRow);
+            }
+        }
+
+        // Evento para capturar el clic sobre la columna de imagen/icono de edición
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Verificamos que se haya hecho clic en la última columna (la de edición) y en una fila válida
+            if (e.RowIndex >= 0 && e.ColumnIndex == dataGridView1.Columns.Count - 1)
+            {
+                DataGridViewRow filaSeleccionada = dataGridView1.Rows[e.RowIndex];
+                AbrirEdicionFila(filaSeleccionada);
+            }
+        }
+
+        // Agregamos la columna de imagen automáticamente cada vez que el grid enlaza sus datos
+ 
+        private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            string nombreColumnaBtn = "ColEditar";
+
+            // Si la columna ya existe, evitamos duplicarla
+            if (!dataGridView1.Columns.Contains(nombreColumnaBtn))
+            {
+                // Cambiamos a ButtonColumn para usar texto/emojis sin necesidad de imágenes
+                var btnColumna = new DataGridViewButtonColumn();
+                btnColumna.Name = nombreColumnaBtn;
+                btnColumna.HeaderText = "Editar";
+                btnColumna.Text = "✏️";
+                btnColumna.UseColumnTextForButtonValue = true; // Muestra el texto/emoji en cada renglón
+
+                dataGridView1.Columns.Add(btnColumna);
+            }
+
+            // Ajustar el ancho de la columna de edición
+            if (dataGridView1.Columns.Contains(nombreColumnaBtn))
+            {
+                dataGridView1.Columns[nombreColumnaBtn].Width = 60;
+                dataGridView1.Columns[nombreColumnaBtn].DisplayIndex = dataGridView1.Columns.Count - 1;
+            }
+        }
+
+>>>>>>> main
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // await CargarDetalleDoctoscpAsync();
@@ -113,5 +227,27 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
+<<<<<<< HEAD
+=======
+
+        private void dataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private async void nuevobt_Click(object sender, EventArgs e)
+        {
+            using (var formDetalle = new Flispre(_context))
+            {
+                if (formDetalle.ShowDialog() == DialogResult.OK)
+                {
+                    await CargarMaestroDoctoscpAsync();
+                }
+            }
+        }
+>>>>>>> main
     }
 }

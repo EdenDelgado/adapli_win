@@ -339,7 +339,10 @@
             ClientSize = new Size(1034, 522);
             Controls.Add(splitContainer1);
             Name = "Fent";
+<<<<<<< HEAD
             StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Fent  ENTRADAS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
