@@ -1,0 +1,217 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\falm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\falm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\infrastructure\\persistence\\contexts\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\infrastructure\\persistence\\contexts\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fcalm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fcalm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\sisvta\\fcalm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fcalm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\sisvta\\falm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\falm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\domain\\entities\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\domain\\entities\\cliente.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fsal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fsal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fprodd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fprodd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fccampre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fccampre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|c:\\users\\pedro\\onedrive\\documentos\\github\\adapli_win\\sisvta\\fdev.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{222F340F-E388-9911-B0E1-A3C43B9DAE3A}|Sisvta\\sisvta.csproj|solutionrelative:sisvta\\fdev.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Fmain.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fmain.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fmain.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fmain.cs [Dise\u00F1o]",
+              "RelativeToolTip": "Sisvta\\Fmain.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T01:19:18.615Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Fcalm.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fcalm.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fcalm.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fcalm.cs",
+              "RelativeToolTip": "Sisvta\\Fcalm.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAuwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:58:26.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Falm.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Falm.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Falm.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Falm.cs [Dise\u00F1o]",
+              "RelativeToolTip": "Sisvta\\Falm.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:58:12.641Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Falm.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Falm.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Falm.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Falm.cs",
+              "RelativeToolTip": "Sisvta\\Falm.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAIwFYAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:12:19.12Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Infrastructure\\Persistence\\Contexts\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Infrastructure\\Persistence\\Contexts\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Infrastructure\\Persistence\\Contexts\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Sisvta\\Infrastructure\\Persistence\\Contexts\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAK4AAAAAAAAAAAAswMoAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:59:54.395Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Fmain.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fmain.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fmain.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fmain.cs",
+              "RelativeToolTip": "Sisvta\\Fmain.cs",
+              "ViewState": "AgIAAEQBAAAAAAAAAAAkwGoBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T01:19:23.398Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Cliente.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Domain\\Entities\\Cliente.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Domain\\Entities\\Cliente.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Domain\\Entities\\Cliente.cs",
+              "RelativeToolTip": "Sisvta\\Domain\\Entities\\Cliente.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:55:06.386Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Fsal.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fsal.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fsal.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fsal.cs",
+              "RelativeToolTip": "Sisvta\\Fsal.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMMBAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:55:31.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Fprodd.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fprodd.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fprodd.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fprodd.cs",
+              "RelativeToolTip": "Sisvta\\Fprodd.cs",
+              "ViewState": "AgIAAEYBAAAAAAAAAAAIwFcBAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:26:55.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Fcalm.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fcalm.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fcalm.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fcalm.cs [Dise\u00F1o]",
+              "RelativeToolTip": "Sisvta\\Fcalm.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:11:41.261Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Fdev.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fdev.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fdev.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fdev.cs",
+              "RelativeToolTip": "Sisvta\\Fdev.cs",
+              "ViewState": "AgIAABACAAAAAAAAAAArwCMCAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:24:12.46Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Fccampre.cs",
+              "DocumentMoniker": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fccampre.cs",
+              "RelativeDocumentMoniker": "Sisvta\\Fccampre.cs",
+              "ToolTip": "C:\\Users\\pedro\\OneDrive\\Documentos\\GitHub\\adapli_win\\Sisvta\\Fccampre.cs",
+              "RelativeToolTip": "Sisvta\\Fccampre.cs",
+              "ViewState": "AgIAAMUAAAAAAAAAAAAjwNcAAABjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T00:22:30.624Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
