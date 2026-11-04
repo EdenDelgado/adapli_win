@@ -1,4 +1,9 @@
-﻿public class Cliente
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Sisvta.Domain.Entities;
+public class Cliente
 {
     public int Id { get; set; }
     public string Nombre { get; set; }
