@@ -11,22 +11,22 @@ namespace Sisvta
     {
         private readonly IServiceProvider? _serviceProvider;
 
-        // Contenedores y Timer del menú lateral estilo Form2
+        // Contenedores y Timer del menú lateral
         private FlowLayoutPanel flpMenuLateral;
         private Panel panelContenedor;
         private System.Windows.Forms.Timer timerEfectoMenu;
 
-        private const int AnchoMinimo = 70;   // Solo iconos
-        private const int AnchoMaximo = 220;  // Iconos + Textos
+        private const int AnchoMinimo = 70;   // Ancho colapsado del menú (espacio fijo reservado)
+        private const int AnchoMaximo = 220;  // Ancho expandido del menú al hacer hover
 
         // Botones principales y submenús
-        private Button btnPDV, btnCxP, btnCxC, btnBancos, btnInventarios, btnCRM, btnRH, btnReportes, btnTransporte, btnProyectos, btnTareas, btnVarios, btnViaticos;
-        private Panel pnlSubmenuPDV, pnlSubmenuCxP, pnlSubmenuCxC, pnlSubmenuBancos, pnlSubmenuInventarios, pnlSubmenuCRM, pnlSubmenuRH, pnlSubmenuReportes, pnlSubmenuTransporte, pnlSubmenuProyectos, pnlSubmenuTareas, pnlSubmenuVarios, pnlSubmenuViaticos;
+        private Button btnPDV, btnCxP, btnCxC, btnBancos, btnInventarios, btnReportes;
+        private Panel pnlSubmenuPDV, pnlSubmenuCxP, pnlSubmenuCxC, pnlSubmenuBancos, pnlSubmenuInventarios, pnlSubmenuReportes;
 
         public Fmain()
         {
             InitializeComponent();
-            this.IsMdiContainer = true;
+            this.IsMdiContainer = false;
         }
 
         public Fmain(IServiceProvider serviceProvider) : this()
@@ -39,8 +39,9 @@ namespace Sisvta
         {
             this.Size = new Size(1400, 760);
             this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "Sisvta - Sistema de Control de Almacén y Ventas";
 
-            // 1. Panel lateral izquierdo (empieza compacto en 70px)
+            // 1. Panel lateral izquierdo (menú flotante que empieza en 70px)
             flpMenuLateral = new FlowLayoutPanel();
             flpMenuLateral.Dock = DockStyle.Left;
             flpMenuLateral.Width = AnchoMinimo;
@@ -51,13 +52,16 @@ namespace Sisvta
             this.Controls.Add(flpMenuLateral);
 
             // 2. Panel contenedor central donde se cargarán los formularios hijos vía DI
+            // Se posiciona explícitamente a partir de X = 70 para que las pantallas hijas inicien exactamente ahí
             panelContenedor = new Panel();
-            panelContenedor.Dock = DockStyle.Fill;
+            panelContenedor.Location = new Point(AnchoMinimo, 0);
+            panelContenedor.Size = new Size(this.ClientSize.Width - AnchoMinimo, this.ClientSize.Height);
+            panelContenedor.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelContenedor.BackColor = Color.FromArgb(245, 247, 245);
             this.Controls.Add(panelContenedor);
 
+            // Aseguramos que el menú flote por encima del panel contenedor al expandirse
             flpMenuLateral.BringToFront();
-            panelContenedor.BringToFront();
 
             // --- CONSTRUCCIÓN DE SECCIONES Y SUBMENÚS ---
 
@@ -83,12 +87,9 @@ namespace Sisvta
             pnlSubmenuCxP = CrearPanelSubmenu();
             var btnCompras = CrearBotonSubmenu("🛒", "Compras");
             var btnPagos = CrearBotonSubmenu("💳", "Pagos");
-            var btnProveedores = CrearBotonSubmenu("💳", "Proveedores");
+            var btnProveedores = CrearBotonSubmenu("👥", "Proveedores");
 
-            //btnCompras.Click += (s, e) => AbrirFormularioEnPanel(new Form2());
-            //btnPagos.Click += (s, e) => AbrirFormularioEnPanel(new Form2());
             btnProveedores.Click += (s, e) => AbrirFormularioEnPanel<Fcprov>();
-            //btntransacciones.Click += (s, e) => AbrirFormularioEnPanel<Fctac>();
 
             pnlSubmenuCxP.Controls.Add(btnPagos);
             pnlSubmenuCxP.Controls.Add(btnCompras);
@@ -101,16 +102,11 @@ namespace Sisvta
             flpMenuLateral.Controls.Add(btnCxC);
 
             pnlSubmenuCxC = CrearPanelSubmenu();
-            var btnVentas = CrearBotonSubmenu("🛒", "Ventas");
+            var btnVentasCxC = CrearBotonSubmenu("🛒", "Ventas");
             var btnCobranza = CrearBotonSubmenu("💳", "Cobranza");
-            //var btnClientes = CrearBotonSubmenu("💳", "Clientes");
-
-           // btnVentas.Click += (s, e) => AbrirFormularioEnPanel(new Form2());
-           // btnCobranza.Click += (s, e) => AbrirFormularioEnPanel(new Form2());
 
             pnlSubmenuCxC.Controls.Add(btnCobranza);
-            pnlSubmenuCxC.Controls.Add(btnVentas);
-            //pnlSubmenuCxC.Controls.Add(btnClientes);
+            pnlSubmenuCxC.Controls.Add(btnVentasCxC);
             flpMenuLateral.Controls.Add(pnlSubmenuCxC);
 
             // --- SECCIÓN INVENTARIOS ---
@@ -124,42 +120,38 @@ namespace Sisvta
             var btnCambioPrecio = CrearBotonSubmenu("🏷️", "Cambio de Precio");
             var btnDevoluciones = CrearBotonSubmenu("↩️", "Devoluciones");
             var btnEntradas = CrearBotonSubmenu("📥", "Entradas");
+            var btnSalidas = CrearBotonSubmenu("📤", "Salidas");
             var btnGrupos = CrearBotonSubmenu("📁", "Grupos");
             var btnLineas = CrearBotonSubmenu("📑", "Líneas");
             var btnListaPrecios = CrearBotonSubmenu("💲", "Lista de Precios");
             var btnReportesInv = CrearBotonSubmenu("📊", "Reportes de Inventario");
-
             var btninvfis = CrearBotonSubmenu("📋", "Inventario Físico");
             var btnimpinv = CrearBotonSubmenu("📂", "Importar Inventario");
-            var btnSalidas = CrearBotonSubmenu("📤", "Salidas");
             var btnsugerencias = CrearBotonSubmenu("💡", "Sugerencias de Compra");
             var btntraspasos = CrearBotonSubmenu("🔀", "Traspasos");
             var btntransacciones = CrearBotonSubmenu("🔄", "Transacciones");
 
-            // Enlazamos con tus formularios reales usando DI
+            // Enlaces con formularios usando DI (Entradas y Salidas integradas)
             btnAlmacenes.Click += (s, e) => AbrirFormularioEnPanel<Fcalm>();
             btnArticulos.Click += (s, e) => AbrirFormularioEnPanel<Fprod>();
             btnEntradas.Click += (s, e) => AbrirFormularioEnPanel<Fcent>();
+            btnSalidas.Click += (s, e) => AbrirFormularioEnPanel<Fcsal>();
             btnGrupos.Click += (s, e) => AbrirFormularioEnPanel<Fcgru>();
             btnLineas.Click += (s, e) => AbrirFormularioEnPanel<Fclin>();
-            btnListaPrecios.Click += (s, e) => AbrirFormularioEnPanel<Fcprod>();
-            btnSalidas.Click += (s, e) => AbrirFormularioEnPanel<Fcsal>();
-            btntraspasos.Click += (s, e) => AbrirFormularioEnPanel<Fctra>();
-            btnsugerencias.Click += (s, e) => AbrirFormularioEnPanel<Fcsug>();
-            btntransacciones.Click += (s, e) => AbrirFormularioEnPanel<Fctac>();
             btnListaPrecios.Click += (s, e) => AbrirFormularioEnPanel<Fclispre>();
             btnCambioPrecio.Click += (s, e) => AbrirFormularioEnPanel<Fccampre>();
-            btninvfis.Click += (s, e) => AbrirFormularioEnPanel<Fcinvfis>();
+            btntransacciones.Click += (s, e) => AbrirFormularioEnPanel<Fctac>();
+            btntraspasos.Click += (s, e) => AbrirFormularioEnPanel<Fctra>();
+            btnsugerencias.Click += (s, e) => AbrirFormularioEnPanel<Fcsug>();
             btnimpinv.Click += (s, e) => AbrirFormularioEnPanel<Fimpinv>();
+            btninvfis.Click += (s, e) => AbrirFormularioEnPanel<Fcinvfis>();
             btnDevoluciones.Click += (s, e) => AbrirFormularioEnPanel<Fcdev>();
             btnReportesInv.Click += (s, e) => AbrirFormularioEnPanel<Fsrep>();
 
             pnlSubmenuInventarios.Controls.Add(btnListaPrecios);
-            
             pnlSubmenuInventarios.Controls.Add(btnCambioPrecio);
             pnlSubmenuInventarios.Controls.Add(btntransacciones);
             pnlSubmenuInventarios.Controls.Add(btnSalidas);
-            pnlSubmenuInventarios.Controls.Add(btnCambioPrecio);
             pnlSubmenuInventarios.Controls.Add(btnDevoluciones);
             pnlSubmenuInventarios.Controls.Add(btnReportesInv);
             pnlSubmenuInventarios.Controls.Add(btntraspasos);
@@ -167,13 +159,11 @@ namespace Sisvta
             pnlSubmenuInventarios.Controls.Add(btnimpinv);
             pnlSubmenuInventarios.Controls.Add(btninvfis);
             pnlSubmenuInventarios.Controls.Add(btnLineas);
-           
-
             pnlSubmenuInventarios.Controls.Add(btnGrupos);
             pnlSubmenuInventarios.Controls.Add(btnEntradas);
             pnlSubmenuInventarios.Controls.Add(btnArticulos);
             pnlSubmenuInventarios.Controls.Add(btnAlmacenes);
-           
+
             flpMenuLateral.Controls.Add(pnlSubmenuInventarios);
 
             // --- SECCIÓN PDV ---
@@ -253,7 +243,6 @@ namespace Sisvta
             {
                 if (ctrl is Button btn && btn.Tag is Tuple<string, string> datosBoton)
                 {
-                    // datosBoton.Item1 = Icono, datosBoton.Item2 = Texto descriptivo
                     btn.Text = mostrar ? $"{datosBoton.Item1}    {datosBoton.Item2}" : datosBoton.Item1;
                 }
                 else if (ctrl is Panel pnl)
@@ -307,9 +296,8 @@ namespace Sisvta
         private Button CrearBotonPrincipal(string icono, string texto)
         {
             Button btn = new Button();
-            // Almacenamos ambos valores de forma segura en una Tupla dentro del Tag
             btn.Tag = new Tuple<string, string>(icono, texto);
-            btn.Text = icono; // Inicialmente compacto solo muestra el icono
+            btn.Text = icono;
             btn.Size = new Size(AnchoMaximo, 45);
             btn.BackColor = Color.FromArgb(50, 50, 50);
             btn.ForeColor = Color.White;
@@ -333,9 +321,8 @@ namespace Sisvta
         private Button CrearBotonSubmenu(string icono, string texto)
         {
             Button btn = new Button();
-            // Almacenamos ambos valores en el Tag
             btn.Tag = new Tuple<string, string>(icono, texto);
-            btn.Text = icono; // Inicialmente compacto solo muestra el icono
+            btn.Text = icono;
             btn.Dock = DockStyle.Top;
             btn.Height = 35;
             btn.BackColor = Color.FromArgb(60, 60, 60);

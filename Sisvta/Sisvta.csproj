@@ -115,9 +115,7 @@
 		<Compile Update="Fsal.cs">
 		  <SubType>Form</SubType>
 		</Compile>
-		<Compile Update="Fmain.cs">
-			<SubType>Form</SubType>
-		</Compile>
+		<Compile Update="Fmain.cs" />
 		<Compile Update="Fccli.cs">
 			<SubType>Form</SubType>
 		</Compile>
