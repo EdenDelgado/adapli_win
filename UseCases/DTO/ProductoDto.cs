@@ -14,11 +14,12 @@
         public int? Grupo { get; set; }
         public string? Nomgrupo { get; set; }
         public int? Status { get; set; }
+        public string? Nomstatus { get; set; }
         public double? Pcompra { get; set; }
         public decimal? Pventa { get; set; }
         public string Descripcion { get; set; }
         public int? Umedida { get; set; }
-        //public string? Almacen { get; set; }
+        public string? Nommedida { get; set; }
           public String? Moneda { get; set; }
         public bool? Inventariable { get; set; }
 
