@@ -151,6 +151,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "Fpedet";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fpedet Captura detalle";
             ResumeLayout(false);
             PerformLayout();

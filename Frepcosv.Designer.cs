@@ -37,7 +37,6 @@
             desdefechatx = new DateTimePicker();
             panel3 = new Panel();
             regresabt = new Button();
-            nuevobt = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
@@ -75,12 +74,14 @@
             // 
             // Filtrarbt
             // 
-            Filtrarbt.Location = new Point(720, 105);
+            Filtrarbt.BackColor = Color.MediumAquamarine;
+            Filtrarbt.Image = (Image)resources.GetObject("Filtrarbt.Image");
+            Filtrarbt.Location = new Point(720, 89);
             Filtrarbt.Name = "Filtrarbt";
-            Filtrarbt.Size = new Size(89, 22);
+            Filtrarbt.Size = new Size(89, 72);
             Filtrarbt.TabIndex = 28;
             Filtrarbt.Text = "Filtrar";
-            Filtrarbt.UseVisualStyleBackColor = true;
+            Filtrarbt.UseVisualStyleBackColor = false;
             Filtrarbt.Click += Filtrarbt_Click;
             // 
             // label3
@@ -121,7 +122,6 @@
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
-            panel3.Controls.Add(nuevobt);
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
@@ -143,19 +143,6 @@
             regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
             regresabt.UseVisualStyleBackColor = false;
             regresabt.Click += regresabt_Click;
-            // 
-            // nuevobt
-            // 
-            nuevobt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nuevobt.BackColor = Color.MediumAquamarine;
-            nuevobt.Image = (Image)resources.GetObject("nuevobt.Image");
-            nuevobt.Location = new Point(706, 5);
-            nuevobt.Name = "nuevobt";
-            nuevobt.Size = new Size(70, 70);
-            nuevobt.TabIndex = 4;
-            nuevobt.Text = "Nuevo";
-            nuevobt.TextImageRelation = TextImageRelation.ImageAboveText;
-            nuevobt.UseVisualStyleBackColor = false;
             // 
             // label1
             // 
@@ -193,6 +180,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepcosv";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepcosv  REPORTE COSTO VENTAS";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -211,7 +199,6 @@
         private SplitContainer splitContainer1;
         private Panel panel3;
         private Button regresabt;
-        private Button nuevobt;
         private Label label1;
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;

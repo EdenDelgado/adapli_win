@@ -178,6 +178,7 @@
             Controls.Add(toolStrip1);
             Controls.Add(dataGridView1);
             Name = "Fclin";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fclin Catalogo Lineas-Articulos";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             panel3.ResumeLayout(false);

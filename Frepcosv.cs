@@ -44,12 +44,16 @@ namespace Sisvta
                         d.id_factura AS Idfactura, 
                         d.folio AS Folio,i.id_inventario AS IdInventario, 
                         d.fechafactura AS Fecha,
-                      i.concepto AS Concepto,
-                        d.proveedor AS Proveedor, i.proveedor as iprov, 
+                      i.concepto AS Concepto,c.concepto as Nomconcepto,
+                        d.proveedor AS Proveedor, i.proveedor as iprov, p.nombre as Nomproveedor,
                         i.descripcion AS Descripcion,
-                        d.almacen AS IdAlmacen
+                        d.almacen AS IdAlmacen, a.nombre as nomalmacen
                     FROM doctoscc as d left join inventario as i on d.id_factura = i.id_factura
-                    WHERE fechafactura >= @desde AND fechafactura <= @hasta";
+                    left join almacen as a on d.almacen=a.id_almacen
+                    left join concepto as c on i.concepto=c.id_conceptosprov
+                    left join proveedores as p on d.proveedor=p.id_proveedor
+                    WHERE d.fechafactura >= @desde AND d.fechafactura <= @hasta";
+              
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -73,6 +77,11 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+                dataGridView1.Columns["Idfactura"].Visible = false;
+                dataGridView1.Columns["IdInventario"].Visible = false; dataGridView1.Columns["Concepto"].Visible = false;
+                dataGridView1.Columns["iprov"].Visible = false;
+                dataGridView1.Columns["proveedor"].Visible = false; dataGridView1.Columns["idalmacen"].Visible = false;
+
                 dataGridView1.Refresh();
             }
             catch (Exception ex)

@@ -268,8 +268,8 @@ namespace Sisvta
                         id_invdet AS Entradadet, 
                         cantidad AS Cantidad,
                         articulo AS Articulo, 
-                        s.clave AS ClaveProducto,
-                        s.s_nombre AS NombreProducto,
+                        s.clave AS Clave,
+                        s.s_nombre AS Nombre,
                         preciou AS Precio, 
                         (cantidad * preciou) AS Importe
                     FROM inventario_detalles as d 

@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fprod));
             splitContainer1 = new SplitContainer();
+            statustxt = new ComboBox();
             btfiltro = new Button();
-            statustxt = new TextBox();
             grupotxt = new TextBox();
             lineatxt = new TextBox();
             nomclatxt = new TextBox();
@@ -65,8 +65,8 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(btfiltro);
             splitContainer1.Panel1.Controls.Add(statustxt);
+            splitContainer1.Panel1.Controls.Add(btfiltro);
             splitContainer1.Panel1.Controls.Add(grupotxt);
             splitContainer1.Panel1.Controls.Add(lineatxt);
             splitContainer1.Panel1.Controls.Add(nomclatxt);
@@ -83,6 +83,14 @@
             splitContainer1.SplitterDistance = 160;
             splitContainer1.TabIndex = 14;
             // 
+            // statustxt
+            // 
+            statustxt.FormattingEnabled = true;
+            statustxt.Location = new Point(847, 103);
+            statustxt.Name = "statustxt";
+            statustxt.Size = new Size(121, 23);
+            statustxt.TabIndex = 40;
+            // 
             // btfiltro
             // 
             btfiltro.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -95,13 +103,6 @@
             btfiltro.TextImageRelation = TextImageRelation.ImageAboveText;
             btfiltro.UseVisualStyleBackColor = false;
             btfiltro.Click += btfiltro_Click;
-            // 
-            // statustxt
-            // 
-            statustxt.Location = new Point(850, 103);
-            statustxt.Name = "statustxt";
-            statustxt.Size = new Size(100, 23);
-            statustxt.TabIndex = 38;
             // 
             // grupotxt
             // 
@@ -276,6 +277,7 @@
             Controls.Add(splitContainer1);
             MdiChildrenMinimizedAnchorBottom = false;
             Name = "Fprod";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fprod Catalogo de Productos";
             WindowState = FormWindowState.Maximized;
             Load += Fprod_Load;
@@ -294,7 +296,6 @@
         #endregion
         private SplitContainer splitContainer1;
         private Button btfiltro;
-        private TextBox statustxt;
         private TextBox grupotxt;
         private TextBox lineatxt;
         private TextBox nomclatxt;
@@ -310,5 +311,6 @@
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;
         private Button btregresar;
+        private ComboBox statustxt;
     }
 }

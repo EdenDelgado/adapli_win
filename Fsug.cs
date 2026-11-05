@@ -3,7 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
-using sisvta;
+using Sisvta;
 using Sisvta.Infrastructure.Persistence.Contexts;
 
 namespace Sisvta

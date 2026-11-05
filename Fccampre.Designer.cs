@@ -31,22 +31,20 @@ namespace Sisvta
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fccampre));
             splitContainer1 = new SplitContainer();
-<<<<<<< HEAD
-=======
+
             txlista = new ComboBox();
             lineatxt = new ComboBox();
             label3 = new Label();
             label2 = new Label();
->>>>>>> main
+
             Filtrarbt = new Button();
             panel3 = new Panel();
             regresabt = new Button();
             nuevobt = new Button();
-<<<<<<< HEAD
+
             btlinea = new Button();
             btGrupos = new Button();
-=======
->>>>>>> main
+
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
@@ -68,13 +66,12 @@ namespace Sisvta
             // 
             // splitContainer1.Panel1
             // 
-<<<<<<< HEAD
-=======
+
             splitContainer1.Panel1.Controls.Add(txlista);
             splitContainer1.Panel1.Controls.Add(lineatxt);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(label2);
->>>>>>> main
+
             splitContainer1.Panel1.Controls.Add(Filtrarbt);
             splitContainer1.Panel1.Controls.Add(panel3);
             // 
@@ -85,8 +82,7 @@ namespace Sisvta
             splitContainer1.SplitterDistance = 164;
             splitContainer1.TabIndex = 0;
             // 
-<<<<<<< HEAD
-=======
+
             // txlista
             // 
             txlista.FormattingEnabled = true;
@@ -121,7 +117,7 @@ namespace Sisvta
             label2.TabIndex = 31;
             label2.Text = "Linea Articulo";
             // 
->>>>>>> main
+
             // Filtrarbt
             // 
             Filtrarbt.Location = new Point(720, 105);
@@ -136,11 +132,10 @@ namespace Sisvta
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
             panel3.Controls.Add(nuevobt);
-<<<<<<< HEAD
+
             panel3.Controls.Add(btlinea);
             panel3.Controls.Add(btGrupos);
-=======
->>>>>>> main
+
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
@@ -176,7 +171,7 @@ namespace Sisvta
             nuevobt.TextImageRelation = TextImageRelation.ImageAboveText;
             nuevobt.UseVisualStyleBackColor = false;
             // 
-<<<<<<< HEAD
+
             // btlinea
             // 
             btlinea.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -204,8 +199,7 @@ namespace Sisvta
             btGrupos.UseVisualStyleBackColor = false;
             btGrupos.Visible = false;
             // 
-=======
->>>>>>> main
+
             // label1
             // 
             label1.AutoSize = true;
@@ -244,10 +238,9 @@ namespace Sisvta
             Name = "Fccampre";
             Text = "Fccampre CAMBIO DE PRECIOS";
             splitContainer1.Panel1.ResumeLayout(false);
-<<<<<<< HEAD
-=======
+
             splitContainer1.Panel1.PerformLayout();
->>>>>>> main
+
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
@@ -264,21 +257,19 @@ namespace Sisvta
         private Panel panel3;
         private Button regresabt;
         private Button nuevobt;
-<<<<<<< HEAD
+
         private Button btlinea;
         private Button btGrupos;
-=======
->>>>>>> main
+
         private Label label1;
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;
         private Button Filtrarbt;
-<<<<<<< HEAD
-=======
+
         private ComboBox txlista;
         private ComboBox lineatxt;
         private Label label3;
         private Label label2;
->>>>>>> main
+
     }
 }

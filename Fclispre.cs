@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
-using Sisvta.Infrastructure.Persistence.Contexts;
-=======
 ﻿using Microsoft.EntityFrameworkCore;
 using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
@@ -14,7 +6,6 @@ using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
->>>>>>> main
 
 namespace Sisvta
 {
@@ -29,12 +20,9 @@ namespace Sisvta
 
             // Suscripción a eventos
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
-<<<<<<< HEAD
-=======
+            //dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
             dataGridView1.CellClick += dataGridView1_CellClick; // <-- Evento para capturar el clic en la columna de edición
             dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete; // <-- Para asegurar la columna de imagen
->>>>>>> main
 
             // FORZAMOS LA CARGA AQUÍ MISMO PARA EVITAR DEPENDER DEL EVENTO LOAD
             _ = CargarMaestroDoctoscpAsync();
@@ -42,10 +30,7 @@ namespace Sisvta
 
         private async void Fcsal_Load(object sender, EventArgs e)
         {
-<<<<<<< HEAD
-=======
             if (DesignMode) return;
->>>>>>> main
             await CargarMaestroDoctoscpAsync();
         }
 
@@ -60,11 +45,7 @@ namespace Sisvta
                 }
 
                 string sqlQuery = @"
-<<<<<<< HEAD
-                    SELECT *                       
-=======
                     SELECT id_listaprecio, listaprecio, condicion, porcentaje, pdv, id_empresa as empresa                       
->>>>>>> main
                     FROM listaprecio;";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -76,14 +57,6 @@ namespace Sisvta
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
 
-<<<<<<< HEAD
-                //DateTime fechaDesde = desdefechatx.Value.Date;
-                //DateTime fechaHasta = hastafechatx.Value.Date.AddDays(1).AddSeconds(-1);
-
-                
-               
-=======
->>>>>>> main
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
                 dataTable.Load(reader);
@@ -95,39 +68,6 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
-<<<<<<< HEAD
-                MessageBox.Show($"Error al cargar las entradas de almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // Evento que se dispara al hacer doble clic en una fila del DataGridView
-        private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
-            if (e.RowIndex >= 0)
-            {
-                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
-                var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
-
-                if (rowView != null)
-                {
-                    // Obtenemos el ID de la entrada (o los campos que necesites)
-                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idfactura"].Value);
-
-                    // Instanciamos el formulario Fent pasándole el ID (Asegúrate de que Fent tenga un constructor que reciba este int)
-                    var formFent = new Fent(_context,idfactura);
-
-                    if (formFent.ShowDialog() == DialogResult.OK)
-                    {
-                        // Recargamos el grid si se realizaron cambios o guardados
-                        await CargarMaestroDoctoscpAsync();
-                    }
-                }
-            }
-        }
-
-        // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
-=======
                 MessageBox.Show($"Error al cargar las listas de precios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -212,7 +152,6 @@ namespace Sisvta
             }
         }
 
->>>>>>> main
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // await CargarDetalleDoctoscpAsync();
@@ -227,8 +166,6 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
-<<<<<<< HEAD
-=======
 
         private void dataGridView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -248,6 +185,5 @@ namespace Sisvta
                 }
             }
         }
->>>>>>> main
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using System;
 using System.Data;
@@ -23,12 +24,14 @@ namespace Sisvta
 
             // FORZAMOS LA CARGA AQUÍ MISMO PARA EVITAR DEPENDER DEL EVENTO LOAD
             _ = CargarMaestroDoctoscpAsync();
+            _ = CargarAlmacenesAsync();
         }
 
         private async void Frepinv_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
             await CargarMaestroDoctoscpAsync();
+            await CargarAlmacenesAsync();
         }
 
  
@@ -45,7 +48,7 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
-                        i.articulo AS Idarticulo, 
+                        i.articulo AS Idarticulo,s.clave AS Clave,  
                         i.entradas AS Entradas,
                         i.salidas AS Salidas, 
                         i.saldo AS Saldo,
@@ -57,7 +60,7 @@ namespace Sisvta
                     LEFT JOIN almacen AS a ON i.almacen = a.id_almacen";
 
                 // Opcional: Si deseas filtrar solo cuando se especifique un almacén
-                string nombreAlmacen = txnomalmacen?.Text?.Trim() ?? string.Empty;
+                string nombreAlmacen = txalmacen?.Text?.Trim() ?? string.Empty;
                 bool filtrarPorAlmacen = !string.IsNullOrEmpty(nombreAlmacen);
 
                 if (filtrarPorAlmacen)
@@ -86,6 +89,8 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+                dataGridView1.Columns["Almacen"].Visible = false;
+                dataGridView1.Columns["Idarticulo"].Visible = false;
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
@@ -122,5 +127,32 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
+        private async Task CargarAlmacenesAsync()
+        {
+            try
+            {
+                if (_context == null) return;
+                if (txalmacen == null) return;
+
+                var listaAlmacenes = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
+                    _context.Set<Sisvta.Domain.Entities.Almacen>()
+                        .Select(a => new { id_almacen = a.IdAlmacen, nombre = a.Nombre })
+                );
+
+                if (listaAlmacenes != null && listaAlmacenes.Count > 0)
+                {
+                    txalmacen.DataSource = null;
+                    txalmacen.DisplayMember = "nombre";
+                    txalmacen.ValueMember = "id_almacen";
+                    txalmacen.DataSource = listaAlmacenes;
+                    txalmacen.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los almacenes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }

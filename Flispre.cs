@@ -26,7 +26,7 @@ namespace Sisvta
             InitializeComponent();
         }
 
-        // Constructor con DI y parámetros (colocando los opcionales al final para evitar errores de compilación)
+        // Constructor con DI y parámetros (el encadenamiento : this() ya inicializa los componentes una sola vez)
         public Flispre(ApplicationDbContext context,
                        string listaprecio = "",
                        string condicion = "",
@@ -35,7 +35,6 @@ namespace Sisvta
                        string empresa = "",
                        int idlispre = 0) : this()
         {
-            InitializeComponent();
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _idListaPrecio = idlispre;
             _esEdicion = _idListaPrecio > 0;
@@ -57,7 +56,7 @@ namespace Sisvta
             }
         }
 
-        private void Falm_Load(object sender, EventArgs e)
+        private void Flispre_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
         }
@@ -153,7 +152,6 @@ namespace Sisvta
 
         private void btregresar_Click(object sender, EventArgs e)
         {
-            //DialogResult = DialogResult.Cancel;
             Close();
         }
     }

@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-<<<<<<< HEAD
-using sisvta;
-=======
 using Sisvta;
->>>>>>> main
 using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using System;
@@ -21,6 +17,13 @@ namespace Sisvta
         {
             InitializeComponent();
             _context = context ?? throw new ArgumentNullException(nameof(context));
+
+            // Suscripción a eventos
+            dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
+            dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
+
+            // Usamos CellContentClick para detectar el clic directo sobre el botón del lápiz
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
         }
 
         private void Fcalm_Load(object sender, EventArgs e)
@@ -32,10 +35,6 @@ namespace Sisvta
         {
             try
             {
-<<<<<<< HEAD
-                var listaAlmacenes = _context.Almacenes
-                    .AsNoTracking()
-=======
                 // Realizamos un Join entre Almacen y Estado para mostrar el nombre del estado
                 var listaAlmacenes = _context.Almacenes
                     .AsNoTracking()
@@ -61,15 +60,37 @@ namespace Sisvta
                             x.Almacen.Default
                         }
                     )
->>>>>>> main
                     .ToList();
 
                 dataGridView1.DataSource = listaAlmacenes;
+                AgregarColumnaEditar();
                 FormatearGrid();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar los almacenes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AgregarColumnaEditar()
+        {
+            // Verificamos si ya existe para evitar duplicarla
+            if (!dataGridView1.Columns.Contains("ColEditar"))
+            {
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dataGridView1.Columns.Add(btnColumn);
+            }
+
+            // Forzamos que la columna quede siempre al final, sin importar las columnas de SQL
+            if (dataGridView1.Columns.Contains("ColEditar"))
+            {
+                dataGridView1.Columns["ColEditar"].DisplayIndex = dataGridView1.Columns.Count - 1;
             }
         }
 
@@ -83,10 +104,6 @@ namespace Sisvta
                 dataGridView1.Columns["Calle"].HeaderText = "Calle";
             if (dataGridView1.Columns["Ciudad"] != null)
                 dataGridView1.Columns["Ciudad"].HeaderText = "Ciudad";
-<<<<<<< HEAD
-            if (dataGridView1.Columns["Estado"] != null)
-                dataGridView1.Columns["Estado"].HeaderText = "Estado";
-=======
             if (dataGridView1.Columns["NombreEstado"] != null)
                 dataGridView1.Columns["NombreEstado"].HeaderText = "Estado";
 
@@ -94,7 +111,6 @@ namespace Sisvta
             if (dataGridView1.Columns["EstadoIdOriginal"] != null)
                 dataGridView1.Columns["EstadoIdOriginal"].Visible = false;
 
->>>>>>> main
             if (dataGridView1.Columns["Telefono"] != null)
                 dataGridView1.Columns["Telefono"].HeaderText = "Teléfono";
             if (dataGridView1.Columns["Leyendatickt"] != null)
@@ -108,38 +124,29 @@ namespace Sisvta
             CargarDatosAlmacen();
         }
 
+        // Se activa con UN SOLO CLIC directo sobre el botón del lápiz en la columna "ColEditar"
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["ColEditar"]?.Index && e.RowIndex >= 0)
+            {
+                AbrirEdicionAlmacen(e.RowIndex);
+            }
+        }
+
+        // Opcional: Se conserva por si el usuario prefiere seguir usando doble clic en el resto de la fila
         private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0)
             {
-<<<<<<< HEAD
-                // Obtener el objeto de la fila seleccionada (mapeado desde Entity Framework)
-                var almacenSeleccionado = dataGridView1.Rows[e.RowIndex].DataBoundItem as Almacen;
+                AbrirEdicionAlmacen(e.RowIndex);
+            }
+        }
 
-                if (almacenSeleccionado != null)
-                {
-                    // Abrir el formulario Falm pasándole el ID seleccionado
-                    var idalmacen = almacenSeleccionado.IdAlmacen;
-                    var formFalm = new Falm(_context, idalmacen);
-                    formFalm.nombretx.Text = almacenSeleccionado.Nombre;
-                    formFalm.calletx.Text = almacenSeleccionado.Calle;
-                    formFalm.ciudadtx.Text = almacenSeleccionado.Ciudad;
-                    formFalm.estadotx.Text = almacenSeleccionado.Estado.ToString();
-                    formFalm.paistx.Text = almacenSeleccionado.Pais.ToString();
-                    formFalm.cptx.Text = almacenSeleccionado.cp;
-                    formFalm.telefonotx.Text = almacenSeleccionado.Telefono;
-                    formFalm.leyendatx.Text = almacenSeleccionado.Leyendatickt.ToString();
-                    formFalm.almdefaultx.Text = almacenSeleccionado.Default.ToString();
-
-                    if (formFalm.ShowDialog() == DialogResult.OK)
-                    {
-                        // Recargar la tabla si se guardaron cambios
-
-
-                        CargarDatosAlmacen();
-=======
-                var row = dataGridView1.Rows[e.RowIndex];
+        private void AbrirEdicionAlmacen(int rowIndex)
+        {
+            try
+            {
+                var row = dataGridView1.Rows[rowIndex];
 
                 if (row.Cells["IdAlmacen"].Value != null)
                 {
@@ -173,18 +180,24 @@ namespace Sisvta
                             // Recargar la tabla si se guardaron cambios
                             CargarDatosAlmacen();
                         }
->>>>>>> main
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el almacén para edición: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            // Opcional para eventos de selección
         }
 
         private void btregresar_Click(object sender, EventArgs e)
         {
             Close();
         }
-<<<<<<< HEAD
-=======
 
         private void btnuevo_Click(object sender, EventArgs e)
         {
@@ -205,6 +218,5 @@ namespace Sisvta
                 MessageBox.Show($"Error al abrir el formulario de nuevo almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
->>>>>>> main
     }
 }

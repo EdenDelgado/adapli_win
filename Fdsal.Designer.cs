@@ -151,6 +151,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Name = "Fdsal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fdsal  Captura detalle Salida";
             ResumeLayout(false);
             PerformLayout();

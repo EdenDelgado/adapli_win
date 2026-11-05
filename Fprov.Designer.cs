@@ -38,7 +38,7 @@
             label2 = new Label();
             label1 = new Label();
             Clave = new Label();
-            proveedortxt = new TextBox(); // <--- Actualizado a proveedortxt
+            proveedortxt = new TextBox();
             btguardar = new Button();
             statusStrip1 = new StatusStrip();
             panel2 = new Panel();
@@ -59,12 +59,12 @@
             panel1.Controls.Add(label2);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(Clave);
-            panel1.Controls.Add(proveedortxt); // <--- Actualizado a proveedortxt
+            panel1.Controls.Add(proveedortxt);
             panel1.Controls.Add(btguardar);
-            panel1.Dock = DockStyle.Top;
+            panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(466, 167);
+            panel1.Size = new Size(466, 220);
             panel1.TabIndex = 11;
             panel1.Paint += panel1_Paint;
             // 
@@ -86,7 +86,7 @@
             // 
             // btBaja
             // 
-            btBaja.Location = new Point(318, 131);
+            btBaja.Location = new Point(318, 144);
             btBaja.Name = "btBaja";
             btBaja.Size = new Size(75, 23);
             btBaja.TabIndex = 18;
@@ -96,7 +96,7 @@
             // 
             // btactualiza
             // 
-            btactualiza.Location = new Point(146, 131);
+            btactualiza.Location = new Point(146, 144);
             btactualiza.Name = "btactualiza";
             btactualiza.Size = new Size(75, 23);
             btactualiza.TabIndex = 17;
@@ -151,11 +151,11 @@
             proveedortxt.Name = "proveedortxt";
             proveedortxt.Size = new Size(124, 23);
             proveedortxt.TabIndex = 11;
-            proveedortxt.Leave += proveedortxt_Leave; // <--- Evento Leave apuntando al método correcto
+            proveedortxt.Leave += proveedortxt_Leave;
             // 
             // btguardar
             // 
-            btguardar.Location = new Point(227, 131);
+            btguardar.Location = new Point(227, 144);
             btguardar.Name = "btguardar";
             btguardar.Size = new Size(75, 23);
             btguardar.TabIndex = 10;
@@ -165,7 +165,7 @@
             // 
             // statusStrip1
             // 
-            statusStrip1.Location = new Point(0, 463);
+            statusStrip1.Location = new Point(0, 198);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(466, 22);
             statusStrip1.TabIndex = 12;
@@ -175,18 +175,17 @@
             // 
             panel2.Controls.Add(dataGridView1);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 160);
+            panel2.Location = new Point(0, 185);
             panel2.Name = "panel2";
-            panel2.Size = new Size(466, 303);
+            panel2.Size = new Size(466, 13);
             panel2.TabIndex = 13;
             // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.Location = new Point(0, 0);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(466, 303);
+            dataGridView1.Size = new Size(43, 10);
             dataGridView1.TabIndex = 11;
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             dataGridView1.Click += dataGridView1_Click;
@@ -196,14 +195,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(466, 485);
+            ClientSize = new Size(466, 220);
             Controls.Add(panel2);
             Controls.Add(statusStrip1);
             Controls.Add(panel1);
             Name = "Fprov";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Fprov Captura de Proveedores";
-            Load += Fcli_Load;
+            //Load += Fcli_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);

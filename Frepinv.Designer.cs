@@ -32,7 +32,7 @@
             splitContainer1 = new SplitContainer();
             comboBox3 = new ComboBox();
             comboBox2 = new ComboBox();
-            txnomalmacen = new ComboBox();
+            txalmacen = new ComboBox();
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
@@ -41,10 +41,6 @@
             desdefechatx = new DateTimePicker();
             panel3 = new Panel();
             regresabt = new Button();
-            btarticulo = new Button();
-            nuevobt = new Button();
-            btlinea = new Button();
-            btGrupos = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
@@ -68,7 +64,7 @@
             // 
             splitContainer1.Panel1.Controls.Add(comboBox3);
             splitContainer1.Panel1.Controls.Add(comboBox2);
-            splitContainer1.Panel1.Controls.Add(txnomalmacen);
+            splitContainer1.Panel1.Controls.Add(txalmacen);
             splitContainer1.Panel1.Controls.Add(label6);
             splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(label4);
@@ -100,15 +96,15 @@
             comboBox2.Size = new Size(121, 23);
             comboBox2.TabIndex = 33;
             // 
-            // txnomalmacen
+            // txalmacen
             // 
-            txnomalmacen.FormattingEnabled = true;
-            txnomalmacen.Items.AddRange(new object[] { "ALMACEN GENERAL", "AUTOMOTRIZ" });
-            txnomalmacen.Location = new Point(259, 113);
-            txnomalmacen.Name = "txnomalmacen";
-            txnomalmacen.Size = new Size(121, 23);
-            txnomalmacen.TabIndex = 32;
-            txnomalmacen.Text = "JUAREZ";
+            txalmacen.FormattingEnabled = true;
+            txalmacen.Items.AddRange(new object[] { "ALMACEN GENERAL", "AUTOMOTRIZ" });
+            txalmacen.Location = new Point(259, 113);
+            txalmacen.Name = "txalmacen";
+            txalmacen.Size = new Size(121, 23);
+            txalmacen.TabIndex = 32;
+            txalmacen.Text = "JUAREZ";
             // 
             // label6
             // 
@@ -139,12 +135,14 @@
             // 
             // Filtrarbt
             // 
-            Filtrarbt.Location = new Point(838, 116);
+            Filtrarbt.BackColor = Color.MediumAquamarine;
+            Filtrarbt.Image = (Image)resources.GetObject("Filtrarbt.Image");
+            Filtrarbt.Location = new Point(838, 89);
             Filtrarbt.Name = "Filtrarbt";
-            Filtrarbt.Size = new Size(89, 22);
+            Filtrarbt.Size = new Size(76, 72);
             Filtrarbt.TabIndex = 28;
             Filtrarbt.Text = "Filtrar";
-            Filtrarbt.UseVisualStyleBackColor = true;
+            Filtrarbt.UseVisualStyleBackColor = false;
             Filtrarbt.Click += Filtrarbt_Click;
             // 
             // label2
@@ -168,10 +166,6 @@
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
-            panel3.Controls.Add(btarticulo);
-            panel3.Controls.Add(nuevobt);
-            panel3.Controls.Add(btlinea);
-            panel3.Controls.Add(btGrupos);
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
@@ -193,59 +187,6 @@
             regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
             regresabt.UseVisualStyleBackColor = false;
             regresabt.Click += regresabt_Click;
-            // 
-            // btarticulo
-            // 
-            btarticulo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btarticulo.BackColor = Color.MediumAquamarine;
-            btarticulo.Image = (Image)resources.GetObject("btarticulo.Image");
-            btarticulo.Location = new Point(465, 6);
-            btarticulo.Name = "btarticulo";
-            btarticulo.Size = new Size(70, 69);
-            btarticulo.TabIndex = 5;
-            btarticulo.Text = "Articulos";
-            btarticulo.TextImageRelation = TextImageRelation.ImageAboveText;
-            btarticulo.UseVisualStyleBackColor = false;
-            // 
-            // nuevobt
-            // 
-            nuevobt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            nuevobt.BackColor = Color.MediumAquamarine;
-            nuevobt.Image = (Image)resources.GetObject("nuevobt.Image");
-            nuevobt.Location = new Point(706, 5);
-            nuevobt.Name = "nuevobt";
-            nuevobt.Size = new Size(70, 70);
-            nuevobt.TabIndex = 4;
-            nuevobt.Text = "Nuevo";
-            nuevobt.TextImageRelation = TextImageRelation.ImageAboveText;
-            nuevobt.UseVisualStyleBackColor = false;
-            // 
-            // btlinea
-            // 
-            btlinea.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btlinea.BackColor = Color.MediumAquamarine;
-            btlinea.Image = (Image)resources.GetObject("btlinea.Image");
-            btlinea.Location = new Point(630, 6);
-            btlinea.Name = "btlinea";
-            btlinea.Size = new Size(70, 69);
-            btlinea.TabIndex = 3;
-            btlinea.Text = "Lineas";
-            btlinea.TextImageRelation = TextImageRelation.ImageAboveText;
-            btlinea.UseVisualStyleBackColor = false;
-            // 
-            // btGrupos
-            // 
-            btGrupos.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btGrupos.BackColor = Color.MediumAquamarine;
-            btGrupos.Image = (Image)resources.GetObject("btGrupos.Image");
-            btGrupos.Location = new Point(541, 6);
-            btGrupos.Name = "btGrupos";
-            btGrupos.Size = new Size(70, 69);
-            btGrupos.TabIndex = 2;
-            btGrupos.Text = "Grupos";
-            btGrupos.TextImageRelation = TextImageRelation.ImageAboveText;
-            btGrupos.UseVisualStyleBackColor = false;
-            btGrupos.Visible = false;
             // 
             // label1
             // 
@@ -283,6 +224,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepinv";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepinv  REPORTE INVENTARIO";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -301,10 +243,6 @@
         private SplitContainer splitContainer1;
         private Panel panel3;
         private Button regresabt;
-        private Button btarticulo;
-        private Button nuevobt;
-        private Button btlinea;
-        private Button btGrupos;
         private Label label1;
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;
@@ -316,6 +254,6 @@
         private Label label4;
         private ComboBox comboBox3;
         private ComboBox comboBox2;
-        private ComboBox txnomalmacen;
+        private ComboBox txalmacen;
     }
 }

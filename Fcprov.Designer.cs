@@ -93,6 +93,7 @@
             regresabt.Text = "Regresar";
             regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
             regresabt.UseVisualStyleBackColor = false;
+            regresabt.Click += regresabt_Click;
             // 
             // button2
             // 
@@ -126,7 +127,7 @@
             label8.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label8.Location = new Point(123, 12);
             label8.Name = "label8";
-            label8.Size = new Size(185, 32);
+            label8.Size = new Size(171, 32);
             label8.TabIndex = 1;
             label8.Text = "PROVEEDORES";
             // 
@@ -148,7 +149,6 @@
             dgvProveedores.Name = "dgvProveedores";
             dgvProveedores.Size = new Size(796, 297);
             dgvProveedores.TabIndex = 3;
-            //dgvProveedores.CellDoubleClick += dgvProveedores_CellDoubleClick;
             // 
             // Fcprov
             // 
@@ -156,6 +156,7 @@
             Controls.Add(splitContainer1);
             MdiChildrenMinimizedAnchorBottom = false;
             Name = "Fcprov";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "fcprov Consulta Proveedores";
             Load += Fcprov_Load;
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();

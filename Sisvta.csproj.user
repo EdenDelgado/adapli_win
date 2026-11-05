@@ -7,6 +7,9 @@
     <Compile Update="Fcalm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Fccampre.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Fccli.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -28,31 +31,22 @@
     <Compile Update="Fdent.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Fclin.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Fdped.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Fgru.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Fclin.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Flin.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Fmain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Fmprod.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Fped.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Fpedet.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Fprod.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Fprodd.cs">
@@ -62,9 +56,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Fsrep.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Fvta.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

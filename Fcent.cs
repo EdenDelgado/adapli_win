@@ -18,7 +18,7 @@ namespace Sisvta
 
             // Suscripción a eventos
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
+            dataGridView1.CellClick += dataGridView1_CellClick; // Evento para manejar el clic en el botón de edición
 
             // FORZAMOS LA CARGA AQUÍ MISMO PARA EVITAR DEPENDER DEL EVENTO LOAD
             _ = CargarMaestroDoctoscpAsync();
@@ -41,30 +41,20 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
-<<<<<<< HEAD
-                        d.id_factura AS Idfactura, 
-                        d.folio AS Folio,i.id_inventario AS IdInventario, 
-                        d.fechafactura AS Fecha,
-                      i.concepto AS Concepto,
-                        d.proveedor AS Proveedor, i.proveedor as iprov, 
-                        i.descripcion AS Descripcion,
-                        d.almacen AS IdAlmacen
-                    FROM doctoscc as d left join inventario as i on d.id_factura = i.id_factura
-                    WHERE fechafactura >= @desde AND fechafactura <= @hasta";
-=======
                         i.id_factura AS Idfactura, 
-                        i.folio AS Folio,i.id_inventario AS IdInventario, 
+                        i.folio AS Folio, 
+                        i.id_inventario AS IdInventario, 
                         i.fecha AS Fecha,
-                      i.concepto AS Concepto,c.concepto as Nomconcepto,
+                        i.concepto AS Concepto, c.concepto as Nomconcepto,
                         d.proveedor AS Proveedor, p.nombre as NomProveedor, 
                         i.descripcion AS Descripcion,
-                        i.almacen AS IdAlmacen,a.nombre as NomAlmacen
-                    FROM inventario as i left join doctoscc as d on i.id_factura=d.id_factura
-                    left join proveedores as p on d.proveedor=p.id_proveedor
-                    left join almacen as a on i.almacen=a.id_almacen
-                    left join concepto as c on i.concepto=c.id_conceptosprov
+                        i.almacen AS IdAlmacen, a.nombre as NomAlmacen
+                    FROM inventario as i 
+                    LEFT JOIN doctoscc as d ON i.id_factura = d.id_factura
+                    LEFT JOIN proveedores as p ON d.proveedor = p.id_proveedor
+                    LEFT JOIN almacen as a ON i.almacen = a.id_almacen
+                    LEFT JOIN concepto as c ON i.concepto = c.id_conceptosprov
                     WHERE fecha >= @desde AND fecha <= @hasta";
->>>>>>> main
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -88,6 +78,15 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+
+                // Ocultar columnas técnicas
+                if (dataGridView1.Columns["Concepto"] != null) dataGridView1.Columns["Concepto"].Visible = false;
+                if (dataGridView1.Columns["Idalmacen"] != null) dataGridView1.Columns["Idalmacen"].Visible = false;
+                if (dataGridView1.Columns["Proveedor"] != null) dataGridView1.Columns["Proveedor"].Visible = false;
+
+                // AGREGAR O ASEGURAR LA COLUMNA DE EDICIÓN CON EL LÁPIZ AL FINAL
+                AgregarColumnaEditar();
+
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
@@ -96,64 +95,69 @@ namespace Sisvta
             }
         }
 
-        // Evento que se dispara al hacer doble clic en una fila del DataGridView
-<<<<<<< HEAD
-        private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void AgregarColumnaEditar()
         {
-            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
-            if (e.RowIndex >= 0)
+            // Evitamos duplicar la columna si ya existe al recargar el grid
+            if (!dataGridView1.Columns.Contains("ColEditar"))
             {
-                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
-=======
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dataGridView1.Columns.Add(btnColumn);
+            }
+            if (dataGridView1.Columns.Contains("ColEditar"))
+            {
+                dataGridView1.Columns["ColEditar"].DisplayIndex = dataGridView1.Columns.Count - 1;
+            }
+        }
 
+        // Evento que se dispara al hacer clic en cualquier celda, incluyendo nuestra columna de edición del lápiz
+        private async void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Validar que se hizo clic en la columna "ColEditar" y en una fila válida
+            if (e.ColumnIndex == dataGridView1.Columns["ColEditar"]?.Index && e.RowIndex >= 0)
+            {
+                await AbrirEdicionFila(e.RowIndex);
+            }
+        }
 
+        // Evento que se mantenía opcional para doble clic en la fila
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
             {
->>>>>>> main
-                var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
+                await AbrirEdicionFila(e.RowIndex);
+            }
+        }
 
-                if (rowView != null)
+        private async Task AbrirEdicionFila(int rowIndex)
+        {
+            var rowView = dataGridView1.Rows[rowIndex].DataBoundItem as DataRowView;
+
+            if (rowView != null)
+            {
+                var valorId = rowView["IdInventario"];
+
+                if (valorId != null && valorId != DBNull.Value && int.TryParse(valorId.ToString(), out int idinventario))
                 {
-<<<<<<< HEAD
-                    // Obtenemos el ID de la entrada (o los campos que necesites)
-                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idfactura"].Value);
-
-                    // Instanciamos el formulario Fent pasándole el ID (Asegúrate de que Fent tenga un constructor que reciba este int)
-                    var formFent = new Fent(_context,idfactura);
+                    var formFent = new Fent(_context, idinventario);
 
                     if (formFent.ShowDialog() == DialogResult.OK)
                     {
-                        // Recargamos el grid si se realizaron cambios o guardados
                         await CargarMaestroDoctoscpAsync();
-=======
-                    // Leemos el valor de forma segura utilizando la columna del DataRowView
-                    var valorId = rowView["IdInventario"];
-
-                    // Verificamos que no sea nulo antes de convertirlo a entero
-                    if (valorId != null && valorId != DBNull.Value && int.TryParse(valorId.ToString(), out int idinventario))
-                    {
-                        // Instanciamos el formulario Fent pasándole el ID de forma segura
-                        var formFent = new Fent(_context, idinventario);
-
-                        if (formFent.ShowDialog() == DialogResult.OK)
-                        {
-                            // Recargamos el grid si se realizaron cambios o guardados
-                            await CargarMaestroDoctoscpAsync();
-                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("La fila seleccionada no contiene un ID de factura válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
->>>>>>> main
-                    }
+                }
+                else
+                {
+                    MessageBox.Show("La fila seleccionada no contiene un ID de inventario válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
 
-        // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // await CargarDetalleDoctoscpAsync();
@@ -168,24 +172,16 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
-<<<<<<< HEAD
-=======
-
-
 
         private async void nuevobt_Click(object sender, EventArgs e)
         {
-            int idinventario = 999999; // debe ser el siguiente numero del ultimo id_inventario en la tabla inventario
+            int idinventario = 999999;
             try
             {
-                // Instanciamos Fent usando el constructor estándar (sin ID), 
-                // lo que preparará el formulario en blanco para una nueva entrada.
-                using (var fent = new Fent(_context,idinventario))
+                using (var fent = new Fent(_context, idinventario))
                 {
-                    // Abrimos como cuadro de diálogo modal
                     if (fent.ShowDialog() == DialogResult.OK)
                     {
-                        // Si el usuario guarda el nuevo registro, recargamos el catálogo maestro
                         await CargarMaestroDoctoscpAsync();
                     }
                 }
@@ -195,6 +191,5 @@ namespace Sisvta
                 MessageBox.Show($"Error al abrir el formulario de nueva entrada: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
->>>>>>> main
     }
 }

@@ -19,32 +19,18 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fcalm));
             splitContainer1 = new SplitContainer();
-<<<<<<< HEAD
-            dataGridView1 = new DataGridView();
-            btregresar = new Button();
-            button2 = new Button();
-            btGuardar = new Button();
-            label1 = new Label();
-            pictureBox1 = new PictureBox();
-=======
             btregresar = new Button();
             btnuevo = new Button();
             btGuardar = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
->>>>>>> main
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
-<<<<<<< HEAD
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-=======
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
->>>>>>> main
             SuspendLayout();
             // 
             // splitContainer1
@@ -57,11 +43,7 @@
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(btregresar);
-<<<<<<< HEAD
-            splitContainer1.Panel1.Controls.Add(button2);
-=======
             splitContainer1.Panel1.Controls.Add(btnuevo);
->>>>>>> main
             splitContainer1.Panel1.Controls.Add(btGuardar);
             splitContainer1.Panel1.Controls.Add(label1);
             splitContainer1.Panel1.Controls.Add(pictureBox1);
@@ -73,19 +55,6 @@
             splitContainer1.SplitterDistance = 87;
             splitContainer1.TabIndex = 1;
             // 
-<<<<<<< HEAD
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Dock = DockStyle.Fill;
-            dataGridView1.Location = new Point(0, 0);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(934, 359);
-            dataGridView1.TabIndex = 1;
-            dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
-            // 
-=======
->>>>>>> main
             // btregresar
             // 
             btregresar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -100,20 +69,6 @@
             btregresar.UseVisualStyleBackColor = false;
             btregresar.Click += btregresar_Click;
             // 
-<<<<<<< HEAD
-            // button2
-            // 
-            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.BackColor = Color.MediumAquamarine;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(706, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(80, 80);
-            button2.TabIndex = 9;
-            button2.Text = "Nuevo";
-            button2.TextImageRelation = TextImageRelation.ImageAboveText;
-            button2.UseVisualStyleBackColor = false;
-=======
             // btnuevo
             // 
             btnuevo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -127,7 +82,6 @@
             btnuevo.TextImageRelation = TextImageRelation.ImageAboveText;
             btnuevo.UseVisualStyleBackColor = false;
             btnuevo.Click += btnuevo_Click;
->>>>>>> main
             // 
             // btGuardar
             // 
@@ -162,8 +116,6 @@
             pictureBox1.TabIndex = 6;
             pictureBox1.TabStop = false;
             // 
-<<<<<<< HEAD
-=======
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -174,7 +126,6 @@
             dataGridView1.TabIndex = 1;
             dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
             // 
->>>>>>> main
             // Fcalm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -189,13 +140,8 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-<<<<<<< HEAD
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-=======
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
->>>>>>> main
             ResumeLayout(false);
         }
 
@@ -204,11 +150,7 @@
         private SplitContainer splitContainer1;
         private DataGridView dataGridView1;
         private Button btregresar;
-<<<<<<< HEAD
-        private Button button2;
-=======
         private Button btnuevo;
->>>>>>> main
         private Button btGuardar;
         private Label label1;
         private PictureBox pictureBox1;

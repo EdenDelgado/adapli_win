@@ -1,19 +1,10 @@
-<<<<<<< HEAD
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
-using Sisvta.Infrastructure.Persistence.Contexts;
-=======
-﻿using Microsoft.EntityFrameworkCore;
 using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
->>>>>>> main
 
 namespace Sisvta
 {
@@ -29,12 +20,6 @@ namespace Sisvta
             // Suscripción de eventos
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
-<<<<<<< HEAD
-            Filtrarbt.Click += Filtrarbt_Click;
-
-            // Carga inicial
-            _ = CargarMaestroDoctoscpAsync();
-=======
             dataGridView1.CellContentClick += dataGridView1_CellContentClick; // <-- Evento para el botón de editar
             Filtrarbt.Click += Filtrarbt_Click;
 
@@ -47,16 +32,11 @@ namespace Sisvta
             await CargarAlmacenesAsync();
             await CargarLineasArticuloAsync();
             await CargarMaestroDoctoscpAsync();
->>>>>>> main
         }
 
         private async void Fccampre_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
-<<<<<<< HEAD
-            await CargarMaestroDoctoscpAsync();
-=======
->>>>>>> main
         }
 
         public async Task CargarMaestroDoctoscpAsync()
@@ -69,12 +49,6 @@ namespace Sisvta
                     return;
                 }
 
-<<<<<<< HEAD
-                string sqlQuery = @"
-                    SELECT id_servicio,clave,s_nombre,preciocompra ,p.precioventa,l.listaprecio                      
-                    FROM servicios as s left join preciosarticulo as p on s.id_servicio=p.articulo
-                    left join listaprecio as l on p.listaprecio=l.id_listaprecio;";
-=======
                 // Aseguramos incluir tanto el ID numérico de la lista como el nombre si se requiere
                 string sqlQuery = @"
                     SELECT id_servicio, clave, s_nombre as Nombre, s.lineaarticulo, la.nombre as Nomlinea,
@@ -84,7 +58,6 @@ namespace Sisvta
                     LEFT JOIN listaprecio as l ON p.listaprecio = l.id_listaprecio
                     LEFT JOIN lineaarticulo as la ON s.lineaarticulo = la.id_lineasarticulos
                     WHERE (@linea = 0 OR s.lineaarticulo = @linea) AND (@lista = 0 OR p.listaprecio = @lista);";
->>>>>>> main
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -95,8 +68,6 @@ namespace Sisvta
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
 
-<<<<<<< HEAD
-=======
                 // Extracción segura de los valores seleccionados en los ComboBox
                 int lineaId = (lineatxt.SelectedValue != null && int.TryParse(lineatxt.SelectedValue.ToString(), out int l)) ? l : 0;
                 int listaId = (txlista.SelectedValue != null && int.TryParse(txlista.SelectedValue.ToString(), out int a)) ? a : 0;
@@ -104,7 +75,6 @@ namespace Sisvta
                 command.Parameters.Add("@linea", SqlDbType.Int).Value = lineaId;
                 command.Parameters.Add("@lista", SqlDbType.Int).Value = listaId;
 
->>>>>>> main
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
                 dataTable.Load(reader);
@@ -112,8 +82,6 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
-<<<<<<< HEAD
-=======
 
                 // =========================================================================
                 // AGREGAR COLUMNA DE BOTÓN "EDITAR" (Si no existe previamente)
@@ -147,7 +115,7 @@ namespace Sisvta
                 // Ocultamos la columna técnica id_listaprecio si se prefiere no mostrar en bruto
                 if (dataGridView1.Columns.Contains("listaprecio"))
                 {
-                   
+
                     dataGridView1.Columns["listaprecio"].Visible = false;
                 }
                 dataGridView1.Columns["id_servicio"].Visible = false;
@@ -165,7 +133,6 @@ namespace Sisvta
                     dataGridView1.Columns["precioventa"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
 
->>>>>>> main
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
@@ -174,16 +141,6 @@ namespace Sisvta
             }
         }
 
-<<<<<<< HEAD
-        private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-            {
-                var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
-                if (rowView != null)
-                {
-                    // Lógica para abrir detalle al hacer doble clic
-=======
         // Método auxiliar centralizado para procesar la edición de un registro
         private async Task EditarRegistroSeleccionadoAsync(int rowIndex)
         {
@@ -204,7 +161,7 @@ namespace Sisvta
                     double precioventa = (rowView["precioventa"] != DBNull.Value) ? Convert.ToDouble(rowView["precioventa"]) : 0.0;
 
                     // Instanciamos el formulario pasando el contexto y los datos del registro
-                    using (var formEdicion = new Fcampre(_context, idServicio, clave, nombre, listaPrecio,NomlistaPrecio, precioventa))
+                    using (var formEdicion = new Fcampre(_context, idServicio, clave, nombre, listaPrecio, NomlistaPrecio, precioventa))
                     {
                         if (formEdicion.ShowDialog() == DialogResult.OK)
                         {
@@ -212,13 +169,10 @@ namespace Sisvta
                             await CargarMaestroDoctoscpAsync();
                         }
                     }
->>>>>>> main
                 }
             }
         }
 
-<<<<<<< HEAD
-=======
         // Evento que se dispara al hacer clic en el botón dentro del DataGridView
         private async void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -235,7 +189,6 @@ namespace Sisvta
             await EditarRegistroSeleccionadoAsync(e.RowIndex);
         }
 
->>>>>>> main
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // Lógica al cambiar de selección
@@ -250,8 +203,6 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
-<<<<<<< HEAD
-=======
 
         private async Task CargarAlmacenesAsync()
         {
@@ -306,6 +257,5 @@ namespace Sisvta
                 MessageBox.Show($"Error al cargar las líneas de artículos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
->>>>>>> main
     }
 }

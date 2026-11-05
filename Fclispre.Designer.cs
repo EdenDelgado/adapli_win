@@ -34,11 +34,6 @@
             panel3 = new Panel();
             regresabt = new Button();
             nuevobt = new Button();
-<<<<<<< HEAD
-            btlinea = new Button();
-            btGrupos = new Button();
-=======
->>>>>>> main
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
@@ -72,12 +67,14 @@
             // 
             // Filtrarbt
             // 
-            Filtrarbt.Location = new Point(720, 105);
+            Filtrarbt.BackColor = Color.MediumAquamarine;
+            Filtrarbt.Image = (Image)resources.GetObject("Filtrarbt.Image");
+            Filtrarbt.Location = new Point(720, 89);
             Filtrarbt.Name = "Filtrarbt";
-            Filtrarbt.Size = new Size(89, 22);
+            Filtrarbt.Size = new Size(89, 72);
             Filtrarbt.TabIndex = 28;
             Filtrarbt.Text = "Filtrar";
-            Filtrarbt.UseVisualStyleBackColor = true;
+            Filtrarbt.UseVisualStyleBackColor = false;
             Filtrarbt.Click += Filtrarbt_Click;
             // 
             // panel3
@@ -85,11 +82,6 @@
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
             panel3.Controls.Add(nuevobt);
-<<<<<<< HEAD
-            panel3.Controls.Add(btlinea);
-            panel3.Controls.Add(btGrupos);
-=======
->>>>>>> main
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Top;
@@ -124,37 +116,7 @@
             nuevobt.Text = "Nuevo";
             nuevobt.TextImageRelation = TextImageRelation.ImageAboveText;
             nuevobt.UseVisualStyleBackColor = false;
-<<<<<<< HEAD
-            // 
-            // btlinea
-            // 
-            btlinea.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btlinea.BackColor = Color.MediumAquamarine;
-            btlinea.Image = (Image)resources.GetObject("btlinea.Image");
-            btlinea.Location = new Point(630, 6);
-            btlinea.Name = "btlinea";
-            btlinea.Size = new Size(70, 69);
-            btlinea.TabIndex = 3;
-            btlinea.Text = "Lineas";
-            btlinea.TextImageRelation = TextImageRelation.ImageAboveText;
-            btlinea.UseVisualStyleBackColor = false;
-            // 
-            // btGrupos
-            // 
-            btGrupos.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btGrupos.BackColor = Color.MediumAquamarine;
-            btGrupos.Image = (Image)resources.GetObject("btGrupos.Image");
-            btGrupos.Location = new Point(541, 6);
-            btGrupos.Name = "btGrupos";
-            btGrupos.Size = new Size(70, 69);
-            btGrupos.TabIndex = 2;
-            btGrupos.Text = "Grupos";
-            btGrupos.TextImageRelation = TextImageRelation.ImageAboveText;
-            btGrupos.UseVisualStyleBackColor = false;
-            btGrupos.Visible = false;
-=======
             nuevobt.Click += nuevobt_Click;
->>>>>>> main
             // 
             // label1
             // 
@@ -184,12 +146,9 @@
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(953, 354);
             dataGridView1.TabIndex = 1;
-<<<<<<< HEAD
-=======
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
             dataGridView1.MouseDoubleClick += dataGridView1_MouseDoubleClick;
->>>>>>> main
             // 
             // Fclispre
             // 
@@ -198,6 +157,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Fclispre";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fclispre LISTA DE PRECIOS";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
@@ -216,11 +176,6 @@
         private Panel panel3;
         private Button regresabt;
         private Button nuevobt;
-<<<<<<< HEAD
-        private Button btlinea;
-        private Button btGrupos;
-=======
->>>>>>> main
         private Label label1;
         private PictureBox pictureBox1;
         private DataGridView dataGridView1;

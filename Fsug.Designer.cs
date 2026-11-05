@@ -339,6 +339,7 @@
             ClientSize = new Size(1034, 522);
             Controls.Add(splitContainer1);
             Name = "Fsug";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fsug  SUGERENCIAS DE COMPRA";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

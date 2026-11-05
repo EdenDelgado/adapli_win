@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fimpinv));
             splitContainer1 = new SplitContainer();
+            txtNombreArchivo = new TextBox();
             ImportaInventario = new Button();
             panel3 = new Panel();
             regresabt = new Button();
@@ -47,7 +48,6 @@
             txfolio = new TextBox();
             dataGridView1 = new DataGridView();
             dataGridView2 = new DataGridView();
-            txtNombreArchivo = new TextBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -86,6 +86,13 @@
             splitContainer1.Size = new Size(827, 522);
             splitContainer1.SplitterDistance = 177;
             splitContainer1.TabIndex = 0;
+            // 
+            // txtNombreArchivo
+            // 
+            txtNombreArchivo.Location = new Point(488, 141);
+            txtNombreArchivo.Name = "txtNombreArchivo";
+            txtNombreArchivo.Size = new Size(152, 23);
+            txtNombreArchivo.TabIndex = 24;
             // 
             // ImportaInventario
             // 
@@ -252,13 +259,6 @@
             dataGridView2.Size = new Size(827, 341);
             dataGridView2.TabIndex = 0;
             // 
-            // txtNombreArchivo
-            // 
-            txtNombreArchivo.Location = new Point(488, 141);
-            txtNombreArchivo.Name = "txtNombreArchivo";
-            txtNombreArchivo.Size = new Size(152, 23);
-            txtNombreArchivo.TabIndex = 24;
-            // 
             // Fimpinv
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -266,6 +266,7 @@
             ClientSize = new Size(827, 522);
             Controls.Add(splitContainer1);
             Name = "Fimpinv";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fimpinv  IMPORTA INVENTARIO";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

@@ -102,7 +102,7 @@
             // txfecha
             // 
             txfecha.Format = DateTimePickerFormat.Short;
-            txfecha.Location = new Point(247, 105);
+            txfecha.Location = new Point(186, 105);
             txfecha.Name = "txfecha";
             txfecha.Size = new Size(107, 23);
             txfecha.TabIndex = 28;
@@ -110,7 +110,7 @@
             // conceptotxt
             // 
             conceptotxt.FormattingEnabled = true;
-            conceptotxt.Location = new Point(360, 104);
+            conceptotxt.Location = new Point(312, 104);
             conceptotxt.Name = "conceptotxt";
             conceptotxt.Size = new Size(228, 23);
             conceptotxt.TabIndex = 27;
@@ -135,9 +135,9 @@
             // txalmacen
             // 
             txalmacen.FormattingEnabled = true;
-            txalmacen.Location = new Point(594, 105);
+            txalmacen.Location = new Point(546, 105);
             txalmacen.Name = "txalmacen";
-            txalmacen.Size = new Size(121, 23);
+            txalmacen.Size = new Size(169, 23);
             txalmacen.TabIndex = 24;
             // 
             // txobservacion
@@ -226,7 +226,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(231, 130);
+            label7.Location = new Point(99, 129);
             label7.Name = "label7";
             label7.Size = new Size(47, 15);
             label7.TabIndex = 18;
@@ -262,7 +262,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(297, 87);
+            label2.Location = new Point(240, 89);
             label2.Name = "label2";
             label2.Size = new Size(38, 15);
             label2.TabIndex = 13;
@@ -271,7 +271,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(172, 86);
+            label1.Location = new Point(97, 89);
             label1.Name = "label1";
             label1.Size = new Size(33, 15);
             label1.TabIndex = 12;
@@ -279,14 +279,14 @@
             // 
             // txmovinv
             // 
-            txmovinv.Location = new Point(191, 148);
+            txmovinv.Location = new Point(59, 147);
             txmovinv.Name = "txmovinv";
             txmovinv.Size = new Size(102, 23);
             txmovinv.TabIndex = 7;
             // 
             // txfolio
             // 
-            txfolio.Location = new Point(139, 105);
+            txfolio.Location = new Point(59, 104);
             txfolio.Name = "txfolio";
             txfolio.Size = new Size(102, 23);
             txfolio.TabIndex = 1;
@@ -296,7 +296,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(0, 89);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(133, 80);
+            dataGridView1.Size = new Size(12, 24);
             dataGridView1.TabIndex = 0;
             // 
             // btborrar
@@ -339,6 +339,7 @@
             ClientSize = new Size(1034, 522);
             Controls.Add(splitContainer1);
             Name = "Fent";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fent  ENTRADAS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
+using Sisvta.Infrastructure.Persistence.Contexts;
+using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
-using Sisvta.Infrastructure.Persistence.Contexts;
 
 namespace Sisvta
 {
     public partial class Frepexi : Form
     {
         private readonly ApplicationDbContext _context;
+        private bool _isInitialized = false;
 
         public Frepexi(ApplicationDbContext context)
         {
@@ -20,13 +23,31 @@ namespace Sisvta
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
             dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
 
-            // FORZAMOS LA CARGA AQUÍ MISMO PARA EVITAR DEPENDER DEL EVENTO LOAD
-            _ = CargarMaestroDoctoscpAsync();
+            // Inicialización unificada en el evento Shown para evitar conflictos de concurrencia
+            this.Shown += Frepexi_Shown;
         }
 
-        private async void Fcsal_Load(object sender, EventArgs e)
+        private async void Frepexi_Shown(object sender, EventArgs e)
         {
-            await CargarMaestroDoctoscpAsync();
+            try
+            {
+                // 1. Primero cargamos los almacenes para poblar el ComboBox
+                await CargarAlmacenesAsync();
+
+                // 2. Después cargamos las existencias en el Grid
+                await CargarMaestroDoctoscpAsync();
+
+                _isInitialized = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al inicializar el reporte de existencias: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Frepexi_Load(object sender, EventArgs e)
+        {
+            // Vinculado correctamente al ciclo de vida del formulario
         }
 
         public async Task CargarMaestroDoctoscpAsync()
@@ -39,77 +60,86 @@ namespace Sisvta
                     return;
                 }
 
-                string sqlQuery = @"
+                // Consulta SQL adaptada para existencias actuales con filtro opcional de almacén
+                string sqlQuery = @"   
                     SELECT 
-                        idsalida AS Idsalida, 
-                        folio AS Folio, 
-                        fecha AS Fecha,
-                        concepto AS Concepto, 
-                        cliente AS Cliente, 
-                        almacen AS IdAlmacen, a.nombre as nomalmacen
-                    FROM salidainv s left join almacen as a on s.almacen=a.id_almacen
-                    WHERE fecha >= @desde AND fecha <= @hasta";
+                        s.id_servicio AS Idservicio, 
+                        s.clave AS Clave,
+                        s.descripcion AS Descripcion,
+                       
+                        i.almacen AS IdAlmacen, 
+                        a.nombre AS NomAlmacen, i.saldo AS SaldoActual,
+                        s.preciocompra AS PrecioCompra, 0 as Ultimoprecio
+                    FROM servicios s 
+                    LEFT JOIN inventarioactual AS i ON s.id_servicio = i.articulo  
+                    LEFT JOIN almacen AS a ON i.almacen = a.id_almacen
+                    WHERE i.saldo > 0 
+                      AND (@Almacen = 0 OR i.almacen = @Almacen)";
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
 
-                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                using var connection = new SqlConnection(connectionString);
                 await connection.OpenAsync();
 
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
 
-                DateTime fechaDesde = desdefechatx.Value.Date;
-                DateTime fechaHasta = hastafechatx.Value.Date.AddDays(1).AddSeconds(-1);
-
-                command.Parameters.Add("@desde", SqlDbType.DateTime).Value = fechaDesde;
-                command.Parameters.Add("@hasta", SqlDbType.DateTime).Value = fechaHasta;
+                // Manejo seguro del almacén seleccionado (si es -1 o nulo, enviamos 0 para mostrar todos)
+                int idAlmacenFiltro = 0;
+                if (txalmacen?.SelectedValue != null && int.TryParse(txalmacen.SelectedValue.ToString(), out int valAlmacen))
+                {
+                    idAlmacenFiltro = valAlmacen;
+                }
+                command.Parameters.Add("@Almacen", SqlDbType.Int).Value = idAlmacenFiltro;
 
                 using var reader = await command.ExecuteReaderAsync();
-                var dataTable = new System.Data.DataTable();
+                var dataTable = new DataTable();
                 dataTable.Load(reader);
 
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+
+                // Ocultamos únicamente las columnas internas que existen en el SELECT
+                if (dataGridView1.Columns["IdAlmacen"] != null)
+                    dataGridView1.Columns["IdAlmacen"].Visible = false;
+
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las salidas de almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el reporte de existencias: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         // Evento que se dispara al hacer doble clic en una fila del DataGridView
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0)
             {
-                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
-                    // Obtenemos el ID de la salida (o los campos que necesites)
-                    int idSalida = Convert.ToInt32(rowView["Idsalida"]);
+                    // Si necesitas abrir un detalle por servicio, asegúrate de pasar el ID correcto
+                    int idServicio = Convert.ToInt32(rowView["Idservicio"]);
 
-                    // Instanciamos el formulario Fsal pasándole el ID (Asegúrate de que Fsal tenga un constructor que reciba este int)
-                    var formFsal = new Fsal(_context,idSalida);
-
-                    if (formFsal.ShowDialog() == DialogResult.OK)
+                    // Ejemplo si quisieras abrir movimientos de ese artículo específico:
+                    var fcmovForm = new Fcmov(_context, idServicio.ToString());
+                    if (fcmovForm.MdiParent == null && this.MdiParent != null)
                     {
-                        // Recargamos el grid si se realizaron cambios o guardados
-                        await CargarMaestroDoctoscpAsync();
+                        fcmovForm.MdiParent = this.MdiParent;
                     }
+                    fcmovForm.Show();
+                    fcmovForm.BringToFront();
                 }
             }
         }
 
-        // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
-            // await CargarDetalleDoctoscpAsync();
+            if (!_isInitialized) return;
         }
 
         private void regresabt_Click(object sender, EventArgs e)
@@ -120,6 +150,32 @@ namespace Sisvta
         private async void Filtrarbt_Click(object sender, EventArgs e)
         {
             await CargarMaestroDoctoscpAsync();
+        }
+
+        private async Task CargarAlmacenesAsync()
+        {
+            try
+            {
+                if (_context == null || txalmacen == null) return;
+
+                var listaAlmacenes = await _context.Set<Sisvta.Domain.Entities.Almacen>()
+                    .AsNoTracking()
+                    .Select(a => new { id_almacen = a.IdAlmacen, nombre = a.Nombre })
+                    .ToListAsync();
+
+                if (listaAlmacenes != null && listaAlmacenes.Count > 0)
+                {
+                    txalmacen.DataSource = null;
+                    txalmacen.DisplayMember = "nombre";
+                    txalmacen.ValueMember = "id_almacen";
+                    txalmacen.DataSource = listaAlmacenes;
+                    txalmacen.SelectedIndex = -1; // Sin selección inicial por defecto
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los almacenes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

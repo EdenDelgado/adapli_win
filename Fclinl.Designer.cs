@@ -53,7 +53,7 @@
             ClientSize = new Size(400, 450);
             Controls.Add(dataGridView1);
             Name = "Fclinl";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Seleccionar Línea";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

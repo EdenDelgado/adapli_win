@@ -37,16 +37,8 @@
             btrepsal = new Button();
             btsugcompra = new Button();
             label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
-            label4 = new Label();
-            label5 = new Label();
-            dateTimePicker1 = new DateTimePicker();
-            dateTimePicker2 = new DateTimePicker();
             comboBox1 = new ComboBox();
             comboBox2 = new ComboBox();
-            comboBox3 = new ComboBox();
-            comboBox4 = new ComboBox();
             panel3 = new Panel();
             regresabt = new Button();
             label8 = new Label();
@@ -110,7 +102,7 @@
             // 
             // btrepsal
             // 
-            btrepsal.Location = new Point(547, 338);
+            btrepsal.Location = new Point(524, 255);
             btrepsal.Name = "btrepsal";
             btrepsal.Size = new Size(106, 30);
             btrepsal.TabIndex = 5;
@@ -139,58 +131,6 @@
             label1.TabIndex = 7;
             label1.Text = "INVENTARIO SALIDAS POR CONCEPTO";
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(165, 286);
-            label2.Name = "label2";
-            label2.Size = new Size(47, 15);
-            label2.TabIndex = 8;
-            label2.Text = "INICIAL";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(381, 286);
-            label3.Name = "label3";
-            label3.Size = new Size(39, 15);
-            label3.TabIndex = 9;
-            label3.Text = "FINAL";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(35, 333);
-            label4.Name = "label4";
-            label4.Size = new Size(63, 15);
-            label4.TabIndex = 10;
-            label4.Text = "ALMACEN";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(305, 338);
-            label5.Name = "label5";
-            label5.Size = new Size(68, 15);
-            label5.TabIndex = 11;
-            label5.Text = "CONCEPTO";
-            // 
-            // dateTimePicker1
-            // 
-            dateTimePicker1.Format = DateTimePickerFormat.Short;
-            dateTimePicker1.Location = new Point(258, 280);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(73, 23);
-            dateTimePicker1.TabIndex = 12;
-            // 
-            // dateTimePicker2
-            // 
-            dateTimePicker2.Format = DateTimePickerFormat.Short;
-            dateTimePicker2.Location = new Point(442, 286);
-            dateTimePicker2.Name = "dateTimePicker2";
-            dateTimePicker2.Size = new Size(73, 23);
-            dateTimePicker2.TabIndex = 13;
-            // 
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
@@ -208,24 +148,6 @@
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(121, 23);
             comboBox2.TabIndex = 15;
-            // 
-            // comboBox3
-            // 
-            comboBox3.FormattingEnabled = true;
-            comboBox3.Items.AddRange(new object[] { "ALMACEN GENERAL", "AUTOMOTRIZ" });
-            comboBox3.Location = new Point(144, 330);
-            comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(121, 23);
-            comboBox3.TabIndex = 16;
-            // 
-            // comboBox4
-            // 
-            comboBox4.FormattingEnabled = true;
-            comboBox4.Items.AddRange(new object[] { "DEVOLUCION COMPRA", "AJUSTE DE INVENTARIOS", "VENTAS", "MERMA", "TRASPASO" });
-            comboBox4.Location = new Point(394, 335);
-            comboBox4.Name = "comboBox4";
-            comboBox4.Size = new Size(121, 23);
-            comboBox4.TabIndex = 17;
             // 
             // panel3
             // 
@@ -303,16 +225,8 @@
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(panel3);
-            Controls.Add(comboBox4);
-            Controls.Add(comboBox3);
             Controls.Add(comboBox2);
             Controls.Add(comboBox1);
-            Controls.Add(dateTimePicker2);
-            Controls.Add(dateTimePicker1);
-            Controls.Add(label5);
-            Controls.Add(label4);
-            Controls.Add(label3);
-            Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(btsugcompra);
             Controls.Add(btrepsal);
@@ -322,6 +236,7 @@
             Controls.Add(btrepconin);
             Controls.Add(btrepinv);
             Name = "Fsrep";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fsrep";
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
@@ -340,16 +255,8 @@
         private Button btrepsal;
         private Button btsugcompra;
         private Label label1;
-        private Label label2;
-        private Label label3;
-        private Label label4;
-        private Label label5;
-        private DateTimePicker dateTimePicker1;
-        private DateTimePicker dateTimePicker2;
         private ComboBox comboBox1;
         private ComboBox comboBox2;
-        private ComboBox comboBox3;
-        private ComboBox comboBox4;
         private Panel panel3;
         private Button regresabt;
         private Label label8;
