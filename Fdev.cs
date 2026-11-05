@@ -1,10 +1,16 @@
 ﻿using System;
+<<<<<<< HEAD
+=======
 using System.ComponentModel;
+>>>>>>> main
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
+=======
 using Sisvta.Domain.Entities;
+>>>>>>> main
 using Sisvta.Infrastructure.Persistence.Contexts;
 
 namespace Sisvta
@@ -22,7 +28,11 @@ namespace Sisvta
             _idEntradaFiltro = 0;
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
+<<<<<<< HEAD
+            _ = CargarMaestroDoctoscpAsync();
+=======
             _ = InicializarFormularioAsync();
+>>>>>>> main
         }
 
         // 2. Constructor con parámetro (para cuando se invoca haciendo doble clic desde el catálogo)
@@ -33,6 +43,9 @@ namespace Sisvta
             _idEntradaFiltro = idEntrada;
 
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
+<<<<<<< HEAD
+            _ = CargarMaestroDoctoscpAsync();
+=======
             _ = InicializarFormularioAsync();
         }
 
@@ -42,11 +55,16 @@ namespace Sisvta
             await CargarConceptosAsync();
             await CargarUsuariosAsync();
             await CargarMaestroDoctoscpAsync();
+>>>>>>> main
         }
 
         private async void Fccom_Load(object sender, EventArgs e)
         {
+<<<<<<< HEAD
+            await CargarMaestroDoctoscpAsync();
+=======
             if (DesignMode) return;
+>>>>>>> main
         }
 
         public async Task CargarMaestroDoctoscpAsync(string filtroProveedor = null)
@@ -59,6 +77,27 @@ namespace Sisvta
                     return;
                 }
 
+<<<<<<< HEAD
+                string sqlQuery = @"
+                 
+                    SELECT 
+                        d.id_Devolucion AS Iddevolucion, 
+                        d.foliodevolucion AS Folio,d.id_VentaDcc AS VentaDcc, 
+                        d.fecha AS Fecha,
+                      d.id_Entrada AS Entrada, 
+                        i.id_inventario as Idinventario,
+                        i.usercreator as usuario,
+                        a.nombre as NomAlmacen,
+                       d.id_NotaCredito as NotaCredito                        
+                    FROM devolucion as d left join inventario as i on d.id_Entrada=i.id_inventario
+                        left join almacen as a on i.almacen=a.id_almacen ";                   
+
+                // CORREGIDO: Se evalúa sobre d.id_factura para asegurar que funcione al filtrar por ID específico
+                if (_idEntradaFiltro > 0)
+                {
+                    sqlQuery += " WHERE d.id_Devolucion = @IdEntradaFiltro";
+                }
+=======
                 // =========================================================================
                 // SI ES UN NUEVO REGISTRO (ID = 0), LIMPIAMOS CONTROLES Y SALIMOS
                 // =========================================================================
@@ -98,6 +137,7 @@ namespace Sisvta
                     LEFT JOIN usuarios as u ON d.usercreator = u.id_usuario
                     LEFT JOIN concepto c ON i.concepto = c.id_conceptosprov
                     WHERE d.id_Devolucion = @IdEntradaFiltro";
+>>>>>>> main
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -107,7 +147,15 @@ namespace Sisvta
 
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
+<<<<<<< HEAD
+
+                if (_idEntradaFiltro > 0)
+                {
+                    command.Parameters.AddWithValue("@IdEntradaFiltro", _idEntradaFiltro);
+                }
+=======
                 command.Parameters.AddWithValue("@IdEntradaFiltro", _idEntradaFiltro);
+>>>>>>> main
 
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new System.Data.DataTable();
@@ -121,6 +169,15 @@ namespace Sisvta
                 if (dataGridView1.Rows.Count > 0 && dataGridView1.CurrentRow != null)
                 {
                     await CargarDetalleDoctoscpAsync();
+<<<<<<< HEAD
+                    txfolio.Text = dataGridView1.CurrentRow.Cells["Folio"].Value?.ToString() ?? string.Empty;
+                    txfecha.Text = dataGridView1.CurrentRow.Cells["Fecha"].Value?.ToString() ?? string.Empty;
+                    txusuario.Text = dataGridView1.CurrentRow.Cells["usuario"].Value?.ToString() ?? string.Empty;
+                    txmovinv.Text = dataGridView1.CurrentRow.Cells["IdInventario"].Value?.ToString() ?? string.Empty;
+                    txalmacen.Text = dataGridView1.CurrentRow.Cells["NomAlmacen"].Value?.ToString() ?? string.Empty;
+                   // txproveedor.Text = dataGridView1.CurrentRow.Cells["NomProveedor"].Value?.ToString() ?? string.Empty;
+                    //txobservacion.Text = dataGridView1.CurrentRow.Cells["Observacion"].Value?.ToString() ?? string.Empty;
+=======
 
                     txfolio.Text = dataGridView1.CurrentRow.Cells["Folio"].Value?.ToString() ?? string.Empty;
 
@@ -146,6 +203,7 @@ namespace Sisvta
                     }
 
                     txobservacion.Text = dataGridView1.CurrentRow.Cells["Observaciones"].Value?.ToString() ?? string.Empty;
+>>>>>>> main
                 }
                 else
                 {
@@ -154,7 +212,11 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
+                MessageBox.Show($"Error al cargar el maestro inventario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+=======
                 MessageBox.Show($"Error al cargar el maestro de devoluciones: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+>>>>>>> main
             }
         }
 
@@ -162,15 +224,24 @@ namespace Sisvta
         {
             try
             {
+<<<<<<< HEAD
+                if (dataGridView1.CurrentRow == null || dataGridView1.CurrentRow.Cells["IdInventario"].Value == null ||
+                    dataGridView1.CurrentRow.Cells["IdInventario"].Value == DBNull.Value)
+=======
                 if (_idEntradaFiltro == 0 || dataGridView1.CurrentRow == null ||
                     dataGridView1.CurrentRow.Cells["Idinventario"].Value == null ||
                     dataGridView1.CurrentRow.Cells["Idinventario"].Value == DBNull.Value)
+>>>>>>> main
                 {
                     dataGridView2.DataSource = null;
                     return;
                 }
 
+<<<<<<< HEAD
+                int idInventario = Convert.ToInt32(dataGridView1.CurrentRow.Cells["IdInventario"].Value);
+=======
                 int idInventario = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idinventario"].Value);
+>>>>>>> main
 
                 string sqlQuery = @"
                     SELECT 
@@ -213,6 +284,22 @@ namespace Sisvta
                 dataGridView2.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White;
                 dataGridView2.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 12, System.Drawing.FontStyle.Bold);
 
+<<<<<<< HEAD
+                dataGridView2.Columns["NombreProducto"].Width = 260;
+
+                // Ocultar columnas técnicas o de control
+                // Nota: Asegúrate de que la columna oculta en el detalle coincida con un campo devuelto en el SELECT (en este caso usamos Entrada)
+                if (dataGridView2.Columns.Contains("Entrada"))
+                    dataGridView2.Columns["Entrada"].Visible = false;
+
+              //  if (dataGridView2.Columns.Contains("Entradadet"))
+                //    dataGridView2.Columns["Entradadet"].Visible = false;
+
+                if (dataGridView2.Columns.Contains("Articulo"))
+                    dataGridView2.Columns["Articulo"].Visible = false;
+
+                // Formatos y alineaciones monetarias
+=======
                 if (dataGridView2.Columns.Contains("NombreProducto"))
                     dataGridView2.Columns["NombreProducto"].Width = 260;
 
@@ -222,6 +309,7 @@ namespace Sisvta
                 if (dataGridView2.Columns.Contains("Articulo"))
                     dataGridView2.Columns["Articulo"].Visible = false;
 
+>>>>>>> main
                 if (dataGridView2.Columns.Contains("Precio"))
                 {
                     dataGridView2.Columns["Precio"].DefaultCellStyle.Format = "C2";
@@ -253,6 +341,8 @@ namespace Sisvta
         {
             Close();
         }
+<<<<<<< HEAD
+=======
 
         private async Task CargarUsuariosAsync()
         {
@@ -589,5 +679,6 @@ namespace Sisvta
                 MessageBox.Show($"Error al cargar los almacenes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+>>>>>>> main
     }
 }

@@ -338,6 +338,10 @@
             ClientSize = new Size(1034, 522);
             Controls.Add(splitContainer1);
             Name = "Ftac";
+<<<<<<< HEAD
+            StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Ftac  TRANSAACCIONES";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

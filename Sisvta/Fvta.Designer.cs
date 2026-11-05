@@ -54,7 +54,10 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(859, 59);
             panel1.TabIndex = 11;
+<<<<<<< HEAD
+=======
            // panel1.Paint += panel1_Paint;
+>>>>>>> main
             // 
             // label1
             // 
@@ -133,8 +136,13 @@
             Controls.Add(dgvVentas);
             Controls.Add(panel1);
             Name = "Fvta";
+<<<<<<< HEAD
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Fvta";
+=======
             Text = "Fvta";
            // Load += Fvta_Load_1;
+>>>>>>> main
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).EndInit();

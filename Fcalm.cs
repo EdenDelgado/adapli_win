@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+<<<<<<< HEAD
+using sisvta;
+=======
 using Sisvta;
+>>>>>>> main
 using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using System;
@@ -28,6 +32,10 @@ namespace Sisvta
         {
             try
             {
+<<<<<<< HEAD
+                var listaAlmacenes = _context.Almacenes
+                    .AsNoTracking()
+=======
                 // Realizamos un Join entre Almacen y Estado para mostrar el nombre del estado
                 var listaAlmacenes = _context.Almacenes
                     .AsNoTracking()
@@ -53,6 +61,7 @@ namespace Sisvta
                             x.Almacen.Default
                         }
                     )
+>>>>>>> main
                     .ToList();
 
                 dataGridView1.DataSource = listaAlmacenes;
@@ -74,6 +83,10 @@ namespace Sisvta
                 dataGridView1.Columns["Calle"].HeaderText = "Calle";
             if (dataGridView1.Columns["Ciudad"] != null)
                 dataGridView1.Columns["Ciudad"].HeaderText = "Ciudad";
+<<<<<<< HEAD
+            if (dataGridView1.Columns["Estado"] != null)
+                dataGridView1.Columns["Estado"].HeaderText = "Estado";
+=======
             if (dataGridView1.Columns["NombreEstado"] != null)
                 dataGridView1.Columns["NombreEstado"].HeaderText = "Estado";
 
@@ -81,6 +94,7 @@ namespace Sisvta
             if (dataGridView1.Columns["EstadoIdOriginal"] != null)
                 dataGridView1.Columns["EstadoIdOriginal"].Visible = false;
 
+>>>>>>> main
             if (dataGridView1.Columns["Telefono"] != null)
                 dataGridView1.Columns["Telefono"].HeaderText = "Teléfono";
             if (dataGridView1.Columns["Leyendatickt"] != null)
@@ -99,6 +113,32 @@ namespace Sisvta
             // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0)
             {
+<<<<<<< HEAD
+                // Obtener el objeto de la fila seleccionada (mapeado desde Entity Framework)
+                var almacenSeleccionado = dataGridView1.Rows[e.RowIndex].DataBoundItem as Almacen;
+
+                if (almacenSeleccionado != null)
+                {
+                    // Abrir el formulario Falm pasándole el ID seleccionado
+                    var idalmacen = almacenSeleccionado.IdAlmacen;
+                    var formFalm = new Falm(_context, idalmacen);
+                    formFalm.nombretx.Text = almacenSeleccionado.Nombre;
+                    formFalm.calletx.Text = almacenSeleccionado.Calle;
+                    formFalm.ciudadtx.Text = almacenSeleccionado.Ciudad;
+                    formFalm.estadotx.Text = almacenSeleccionado.Estado.ToString();
+                    formFalm.paistx.Text = almacenSeleccionado.Pais.ToString();
+                    formFalm.cptx.Text = almacenSeleccionado.cp;
+                    formFalm.telefonotx.Text = almacenSeleccionado.Telefono;
+                    formFalm.leyendatx.Text = almacenSeleccionado.Leyendatickt.ToString();
+                    formFalm.almdefaultx.Text = almacenSeleccionado.Default.ToString();
+
+                    if (formFalm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Recargar la tabla si se guardaron cambios
+
+
+                        CargarDatosAlmacen();
+=======
                 var row = dataGridView1.Rows[e.RowIndex];
 
                 if (row.Cells["IdAlmacen"].Value != null)
@@ -133,6 +173,7 @@ namespace Sisvta
                             // Recargar la tabla si se guardaron cambios
                             CargarDatosAlmacen();
                         }
+>>>>>>> main
                     }
                 }
             }
@@ -142,6 +183,8 @@ namespace Sisvta
         {
             Close();
         }
+<<<<<<< HEAD
+=======
 
         private void btnuevo_Click(object sender, EventArgs e)
         {
@@ -162,5 +205,6 @@ namespace Sisvta
                 MessageBox.Show($"Error al abrir el formulario de nuevo almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+>>>>>>> main
     }
 }

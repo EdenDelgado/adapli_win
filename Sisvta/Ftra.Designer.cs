@@ -343,6 +343,10 @@
             ClientSize = new Size(934, 522);
             Controls.Add(splitContainer1);
             Name = "Ftra";
+<<<<<<< HEAD
+            StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Ftra  TRASPASOS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

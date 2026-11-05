@@ -19,7 +19,16 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
         public DbSet<InvFisDet> InvFisDets => Set<InvFisDet>();
         // Añade el DbSet junto a los demás conjuntos:
         public DbSet<InvFisico> InvFisicos => Set<InvFisico>();
-
+        public DbSet<UnidadMedida> UnidadMedidas { get; set; }
+        public DbSet<Impuesto> Impuesto { get; set; }
+        public DbSet<ListaPrecio> ListaPrecio { get; set; }
+        public DbSet<Moneda> Moneda { get; set; }
+        public DbSet<StatusServicio> StatusServicio { get; set; }
+        public DbSet<Servicio> Servicios { get; set; }
+        public DbSet<Concepto> Conceptos { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Estado> Estado { get; set; }
+        public DbSet<Pais> Pais { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>(entity =>
@@ -141,6 +150,60 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
 
                 // Opcional: Configurar el índice único compuesto si lo requiere EF Core para restricciones lógicas
                 entity.HasIndex(e => new { e.Articulo, e.InvFisico }).IsUnique();
+            });
+
+            modelBuilder.Entity<Sisvta.Domain.Entities.StatusServicio>(entity =>
+            {
+                entity.ToTable("status_servicios");
+                entity.HasKey(e => e.IdStatusServicios);
+
+                entity.Property(e => e.IdStatusServicios)
+                      .HasColumnName("id_status_servicios");
+
+                entity.Property(e => e.Status)
+                      .HasColumnName("status")
+                      .HasMaxLength(15);
+                //.HasCollation("Modern_Spanish_CI_AS");
+
+                entity.Property(e => e.Descripcion)
+                      .HasColumnName("descripcion")
+                      .HasMaxLength(50);
+                      //.HasCollation("Modern_Spanish_CI_AS");
+
+                entity.Property(e => e.Daterecord)
+                      .HasColumnName("daterecord")
+                      .HasDefaultValueSql("getdate()");
+            });
+
+            modelBuilder.Entity<Servicio>(entity =>
+            {
+                entity.ToTable("servicios");
+                entity.HasKey(e => e.IdServicio);
+
+                entity.Property(e => e.IdServicio).HasColumnName("id_servicio");
+                entity.Property(e => e.Clave).HasColumnName("clave").IsRequired();
+                entity.Property(e => e.Nombre).HasColumnName("s_nombre").IsRequired();
+                entity.Property(e => e.Descripcion).HasColumnName("descripcion");
+                entity.Property(e => e.LineaArticulo).HasColumnName("lineaarticulo");
+                entity.Property(e => e.UMedidaCompra).HasColumnName("umedidacompra");
+                entity.Property(e => e.UMedidaVenta).HasColumnName("umedidaventa");
+                entity.Property(e => e.Inventariable).HasColumnName("inventariable");
+                entity.Property(e => e.Status).HasColumnName("status");
+                entity.Property(e => e.ClaveProServ).HasColumnName("ClaveProServ");
+                // Agrega el resto de propiedades si prefieres mapearlas explícitamente aquí 
+                // en lugar de usar los atributos [Column] en la entidad.
+            });
+
+            modelBuilder.Entity<Concepto>(entity =>
+            {
+                entity.ToTable("concepto");
+                entity.HasKey(e => e.IdConceptosProv);
+                entity.Property(e => e.IdConceptosProv).HasColumnName("id_conceptosprov");
+                entity.Property(e => e.DescripcionConcepto).HasColumnName("concepto");
+                entity.Property(e => e.ConceptoAbreviado).HasColumnName("conceptoabreviado");
+                entity.Property(e => e.Naturaleza).HasColumnName("naturaleza");
+                entity.Property(e => e.Status).HasColumnName("status");
+                entity.Property(e => e.DateRecord).HasColumnName("DateRecord");
             });
         }
     }

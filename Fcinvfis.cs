@@ -24,10 +24,16 @@ namespace Sisvta
             _ = CargarMaestroDoctoscpAsync();
         }
 
+<<<<<<< HEAD
+        private async void Fcsal_Load(object sender, EventArgs e)
+        {
+            await CargarMaestroDoctoscpAsync();
+=======
         // CORREGIDO: El nombre del evento Load debe coincidir con la clase (Fcinvfis_Load)
         private async void Fcinvfis_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
+>>>>>>> main
         }
 
         public async Task CargarMaestroDoctoscpAsync()
@@ -44,10 +50,16 @@ namespace Sisvta
                     SELECT 
                         id_invfisico AS Idinvfisico, 
                         fecha AS Fecha,
+<<<<<<< HEAD
+                        usuario AS Usuario, u.nombre as Nombre,u.idAlmacen as Almacen,a.nombre as Nomalmacen
+                    FROM invfisico as i left join usuarios as u on i.usuario=u.id_usuario
+                        left join almacen as a on u.idAlmacen=a.id_almacen
+=======
                         usuario AS Usuario, u.nombre as Nombre, u.idAlmacen as Almacen, a.nombre as Nomalmacen
                     FROM invfisico as i 
                     LEFT JOIN usuarios as u ON i.usuario = u.id_usuario
                     LEFT JOIN almacen as a ON u.idAlmacen = a.id_almacen
+>>>>>>> main
                     WHERE fecha >= @desde AND fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -76,31 +88,58 @@ namespace Sisvta
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
+                MessageBox.Show($"Error al cargar las entradas de almacén: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+=======
                 MessageBox.Show($"Error al cargar los inventarios físicos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+>>>>>>> main
             }
         }
 
         // Evento que se dispara al hacer doble clic en una fila del DataGridView
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+<<<<<<< HEAD
+            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0)
             {
+                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
+=======
+            if (e.RowIndex >= 0)
+            {
+>>>>>>> main
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
+<<<<<<< HEAD
+                    // Obtenemos el ID de la entrada (o los campos que necesites)
+                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idinvfisico"].Value);
+
+                    // Instanciamos el formulario Finvfis pasándole el ID (Asegúrate de que Finvfis tenga un constructor que reciba este int)
+                    var formFinvfis = new Finvfis(_context,idfactura);
+
+                    if (formFinvfis.ShowDialog() == DialogResult.OK)
+                    {
+                        // Recargamos el grid si se realizaron cambios o guardados
+=======
                     int idinvfisico = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idinvfisico"].Value);
 
                     var formFinvfis = new Finvfis(_context, idinvfisico);
 
                     if (formFinvfis.ShowDialog() == DialogResult.OK)
                     {
+>>>>>>> main
                         await CargarMaestroDoctoscpAsync();
                     }
                 }
             }
         }
 
+<<<<<<< HEAD
+        // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
+=======
+>>>>>>> main
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // await CargarDetalleDoctoscpAsync();
@@ -115,6 +154,8 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
+<<<<<<< HEAD
+=======
 
         private async void nuevobt_Click(object sender, EventArgs e)
         {
@@ -128,5 +169,6 @@ namespace Sisvta
                 await CargarMaestroDoctoscpAsync();
             }
         }
+>>>>>>> main
     }
 }

@@ -30,6 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frepsal));
             splitContainer1 = new SplitContainer();
+<<<<<<< HEAD
+            txconcepto = new ComboBox();
+            txAlmacen = new ComboBox();
+            label5 = new Label();
+            label4 = new Label();
+=======
+>>>>>>> main
             Filtrarbt = new Button();
             label3 = new Label();
             label2 = new Label();
@@ -40,10 +47,13 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
+<<<<<<< HEAD
+=======
             label4 = new Label();
             label5 = new Label();
             txAlmacen = new ComboBox();
             txconcepto = new ComboBox();
+>>>>>>> main
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -80,6 +90,45 @@
             splitContainer1.SplitterDistance = 164;
             splitContainer1.TabIndex = 0;
             // 
+<<<<<<< HEAD
+            // txconcepto
+            // 
+            txconcepto.FormattingEnabled = true;
+            txconcepto.Items.AddRange(new object[] { "SALIDAS", "DEVOLUCIONES", "CANCELACIONES", "MERMA" });
+            txconcepto.Location = new Point(622, 116);
+            txconcepto.Name = "txconcepto";
+            txconcepto.Size = new Size(121, 23);
+            txconcepto.TabIndex = 34;
+            // 
+            // txAlmacen
+            // 
+            txAlmacen.FormattingEnabled = true;
+            txAlmacen.Items.AddRange(new object[] { "TODOS", "ALMACEN GENERAL", "AUTOMOTRIZ" });
+            txAlmacen.Location = new Point(476, 115);
+            txAlmacen.Name = "txAlmacen";
+            txAlmacen.Size = new Size(121, 23);
+            txAlmacen.TabIndex = 33;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(642, 92);
+            label5.Name = "label5";
+            label5.Size = new Size(59, 15);
+            label5.TabIndex = 32;
+            label5.Text = "Concepto";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(493, 92);
+            label4.Name = "label4";
+            label4.Size = new Size(54, 15);
+            label4.TabIndex = 31;
+            label4.Text = "Almacen";
+            // 
+=======
+>>>>>>> main
             // Filtrarbt
             // 
             Filtrarbt.Location = new Point(787, 116);
@@ -179,6 +228,8 @@
             dataGridView1.Size = new Size(953, 354);
             dataGridView1.TabIndex = 1;
             // 
+<<<<<<< HEAD
+=======
             // label4
             // 
             label4.AutoSize = true;
@@ -215,6 +266,7 @@
             txconcepto.Size = new Size(121, 23);
             txconcepto.TabIndex = 34;
             // 
+>>>>>>> main
             // Frepsal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -222,6 +274,10 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepsal";
+<<<<<<< HEAD
+            StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Frepsal  REPORTE SALIDAS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

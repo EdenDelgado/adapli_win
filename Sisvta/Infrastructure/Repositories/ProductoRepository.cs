@@ -37,15 +37,19 @@ namespace Sisvta.Infrastructure.Repositories
 
         public async Task<IEnumerable<ProductoDto>> BuscarAsync(string filtro)
         {
-            var sql = @"SELECT claveproserv, clave, id_servicio as Prodserv, s_nombre as nombre, descripcion as Descripcion,
-                        inventariable, lineaArticulo as Linea, l.nombre as nomlinea, l.grupolinea as grupo, g.nombre as nomgrupo, umedidacompra as umedida, 
-                        status, ISNULL(preciocompra, 0.00) as Pcompra, ISNULL(p.precioventa, 0.00) as Pventa, p.moneda as idmoneda, m.moneda as Moneda,
-                        maximo as Maximo, minimo as Minimo, reorden as Reorden
+            var sql = @"SELECT claveproserv, clave, id_servicio as Prodserv, s_nombre as nombre, s.descripcion as Descripcion,
+                        inventariable, lineaArticulo as Linea, l.nombre as nomlinea, l.grupolinea as grupo, g.nombre as nomgrupo, umedidacompra as umedida,
+                        
+                        status,ss.status as Nomstatus, ISNULL(preciocompra, 0.00) as Pcompra, 
+                        ISNULL(p.precioventa, 0.00) as Pventa, /* p.moneda as idmoneda, m.moneda as Moneda,*/
+                        maximo as Maximo, minimo as Minimo, reorden as Reorden,u.nombre as Nommedida
                         FROM dbo.servicios 
                         LEFT JOIN lineaarticulo as l ON servicios.lineaarticulo = l.id_lineasarticulos 
                         LEFT JOIN grupolinea as g ON l.grupolinea = g.id_gruposlineas
                         LEFT JOIN preciosarticulo as p ON servicios.id_servicio = p.articulo
-                        LEFT JOIN moneda as m ON p.moneda = m.id_moneda 
+                        /*LEFT JOIN moneda as m ON p.moneda = m.id_moneda*/
+                        left join status_servicios as ss on s.status=ss.id_status_servicios
+                        left join unidadmedida as u on s.umedidacompra=u.id_um
                         WHERE @p0 = '' OR clave LIKE '%' + @p0 + '%' OR s_nombre LIKE '%' + @p0 + '%' OR CONVERT(varchar, g.id_gruposlineas) LIKE @p0 + '%'";
 
             return await _context.Database
@@ -126,17 +130,20 @@ namespace Sisvta.Infrastructure.Repositories
         // Método robusto para filtrar por texto de línea, status, prefijo de clave y nombre de grupo opcional
         public async Task<IEnumerable<ProductoDto>> ObtenerFiltradosDtoAsync(string lineaFiltro, int? status, string clavePrefix, string grupoFiltro = null)
         {
-            var sql = @"SELECT claveproserv, clave, id_servicio as Prodserv, s_nombre as nombre, descripcion as Descripcion,
+            var sql = @"SELECT claveproserv, clave, id_servicio as Prodserv, s_nombre as nombre, s.descripcion as Descripcion,
                         umedidacompra as umedida,
                         inventariable, s.lineaArticulo as Linea, l.nombre as nomlinea, l.grupolinea as grupo, g.nombre as nomgrupo, s.status as status,
-                       
-                        ISNULL(preciocompra, 0.00) as Pcompra, ISNULL(p.precioventa, 0.00) as Pventa, p.moneda as idmoneda, m.moneda as Moneda,
-                        s.maximo as Maximo, s.minimo as Minimo, s.reorden as Reorden
+                       ss.status as Nomstatus,
+                        ISNULL(preciocompra, 0.00) as Pcompra, 
+                        ISNULL(p.precioventa, 0.00) as Pventa, /* p.moneda as idmoneda, m.moneda as Moneda,*/
+                        s.maximo as Maximo, s.minimo as Minimo, s.reorden as Reorden,u.nombre as Nommedida
                         FROM dbo.servicios as s
                         LEFT JOIN lineaarticulo as l ON s.lineaArticulo = l.id_lineasarticulos 
                         LEFT JOIN grupolinea as g ON l.grupolinea = g.id_gruposlineas
                         LEFT JOIN preciosarticulo as p ON s.id_servicio = p.articulo AND p.listaprecio = 5
-                        LEFT JOIN moneda as m ON p.moneda = m.id_moneda
+                        left join status_servicios as ss on s.status=ss.id_status_servicios
+                       /* LEFT JOIN moneda as m ON p.moneda = m.id_moneda*/
+                        left join unidadmedida as u on s.umedidacompra=u.id_um
                         WHERE (@p0 = '' OR CONVERT(varchar, s.lineaArticulo) = @p0 OR l.nombre LIKE '%' + @p0 + '%') 
                           AND (@p1 IS NULL OR s.status = @p1) 
                           AND (@p2 = '' OR s.clave LIKE @p2 + '%') 

@@ -41,6 +41,17 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
+<<<<<<< HEAD
+                        d.id_factura AS Idfactura, 
+                        d.folio AS Folio,i.id_inventario AS IdInventario, 
+                        d.fechafactura AS Fecha,
+                      i.concepto AS Concepto,
+                        d.proveedor AS Proveedor, i.proveedor as iprov, 
+                        i.descripcion AS Descripcion,
+                        d.almacen AS IdAlmacen
+                    FROM doctoscc as d left join inventario as i on d.id_factura = i.id_factura
+                    WHERE fechafactura >= @desde AND fechafactura <= @hasta";
+=======
                         i.id_factura AS Idfactura, 
                         i.folio AS Folio,i.id_inventario AS IdInventario, 
                         i.fecha AS Fecha,
@@ -53,6 +64,7 @@ namespace Sisvta
                     left join almacen as a on i.almacen=a.id_almacen
                     left join concepto as c on i.concepto=c.id_conceptosprov
                     WHERE fecha >= @desde AND fecha <= @hasta";
+>>>>>>> main
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
@@ -85,6 +97,14 @@ namespace Sisvta
         }
 
         // Evento que se dispara al hacer doble clic en una fila del DataGridView
+<<<<<<< HEAD
+        private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
+            if (e.RowIndex >= 0)
+            {
+                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
+=======
 
 
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -92,10 +112,23 @@ namespace Sisvta
             // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
             if (e.RowIndex >= 0 && e.RowIndex < dataGridView1.Rows.Count)
             {
+>>>>>>> main
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
+<<<<<<< HEAD
+                    // Obtenemos el ID de la entrada (o los campos que necesites)
+                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idfactura"].Value);
+
+                    // Instanciamos el formulario Fent pasándole el ID (Asegúrate de que Fent tenga un constructor que reciba este int)
+                    var formFent = new Fent(_context,idfactura);
+
+                    if (formFent.ShowDialog() == DialogResult.OK)
+                    {
+                        // Recargamos el grid si se realizaron cambios o guardados
+                        await CargarMaestroDoctoscpAsync();
+=======
                     // Leemos el valor de forma segura utilizando la columna del DataRowView
                     var valorId = rowView["IdInventario"];
 
@@ -114,6 +147,7 @@ namespace Sisvta
                     else
                     {
                         MessageBox.Show("La fila seleccionada no contiene un ID de factura válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+>>>>>>> main
                     }
                 }
             }
@@ -134,6 +168,8 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
+<<<<<<< HEAD
+=======
 
 
 
@@ -159,5 +195,6 @@ namespace Sisvta
                 MessageBox.Show($"Error al abrir el formulario de nueva entrada: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+>>>>>>> main
     }
 }

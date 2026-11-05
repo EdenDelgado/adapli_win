@@ -24,9 +24,15 @@ namespace Sisvta
             _ = CargarMaestroDoctoscpAsync();
         }
 
+<<<<<<< HEAD
+        private async void Fcsal_Load(object sender, EventArgs e)
+        {
+            await CargarMaestroDoctoscpAsync();
+=======
         private async void Fcdev_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
+>>>>>>> main
         }
 
         public async Task CargarMaestroDoctoscpAsync()
@@ -41,6 +47,18 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
+<<<<<<< HEAD
+                        d.id_Devolucion AS Iddevolucion, 
+                        d.foliodevolucion AS Folio,d.id_VentaDcc AS VentaDcc, 
+                        d.fecha AS fechadev,
+                        i.fecha as fechamov,
+                      d.id_Entrada AS Entrada,                      
+                       d.id_NotaCredito as NotaCredito,
+                        d.usercreator as Usuario, u.nombre as nomusuario, d.idempresa,d.idsucursal,
+                    i.observaciones as Observacion
+                    FROM devolucion as d left join inventario as i on d.id_Entrada=i.id_inventario
+                        left join usuarios as u on d.usercreator=u.id_usuario
+=======
                         d.id_Devolucion AS Iddevolucion,  
                         d.foliodevolucion AS Folio, d.fecha AS fechadev, d.id_VentaDcc AS Docto_Origen, 
                         d.id_Entrada AS Entrada,                      
@@ -49,6 +67,7 @@ namespace Sisvta
                     FROM devolucion as d 
                     LEFT JOIN inventario as i ON d.id_Entrada = i.id_inventario
                     LEFT JOIN usuarios as u ON d.usercreator = u.id_usuario
+>>>>>>> main
                     WHERE d.fecha >= @desde AND d.fecha <= @hasta";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -73,6 +92,8 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+<<<<<<< HEAD
+=======
 
                 // =========================================================================
                 // OCULTAR COLUMNA TÉCNICA "Usuario"
@@ -82,6 +103,7 @@ namespace Sisvta
                     dataGridView1.Columns["Usuario"].Visible = false;
                 }
 
+>>>>>>> main
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
@@ -90,27 +112,53 @@ namespace Sisvta
             }
         }
 
+<<<<<<< HEAD
+        // Evento que se dispara al hacer doble clic en una fila del DataGridView
+        private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            // Validar que se haya hecho clic sobre una fila válida (y no en la cabecera)
+            if (e.RowIndex >= 0)
+            {
+                // Como el DataSource es un DataTable, cada fila se mapea como DataRowView
+=======
         // Evento que se dispara al hacer doble clic en una fila del DataGridView (Editar)
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
+>>>>>>> main
                 var rowView = dataGridView1.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
                 if (rowView != null)
                 {
+<<<<<<< HEAD
+                    // Obtenemos el ID de la entrada (o los campos que necesites)
+                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Iddevolucion"].Value);
+
+                    // Instanciamos el formulario Fent pasándole el ID (Asegúrate de que Fent tenga un constructor que reciba este int)
+                    var formFdev = new Fdev(_context,idfactura);
+
+                    if (formFdev.ShowDialog() == DialogResult.OK)
+                    {
+                        // Recargamos el grid si se realizaron cambios o guardados
+=======
                     int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Iddevolucion"].Value);
 
                     var formFdev = new Fdev(_context, idfactura);
 
                     if (formFdev.ShowDialog() == DialogResult.OK)
                     {
+>>>>>>> main
                         await CargarMaestroDoctoscpAsync();
                     }
                 }
             }
         }
 
+<<<<<<< HEAD
+        // Evento que se dispara al cambiar de fila en el DataGridView1 (Maestro)
+=======
+>>>>>>> main
         private async void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             // await CargarDetalleDoctoscpAsync();
@@ -125,6 +173,8 @@ namespace Sisvta
         {
             await CargarMaestroDoctoscpAsync();
         }
+<<<<<<< HEAD
+=======
 
         private async void nuevobt_Click(object sender, EventArgs e)
         {
@@ -145,5 +195,6 @@ namespace Sisvta
                 MessageBox.Show($"Error al abrir el formulario de nueva devolución: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+>>>>>>> main
     }
 }

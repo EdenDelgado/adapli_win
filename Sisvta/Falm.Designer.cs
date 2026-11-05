@@ -318,6 +318,10 @@
             ClientSize = new Size(800, 450);
             Controls.Add(splitContainer1);
             Name = "Falm";
+<<<<<<< HEAD
+            StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Falm";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

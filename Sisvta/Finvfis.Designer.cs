@@ -276,6 +276,10 @@
             ClientSize = new Size(827, 522);
             Controls.Add(splitContainer1);
             Name = "Finvfis";
+<<<<<<< HEAD
+            StartPosition = FormStartPosition.CenterScreen;
+=======
+>>>>>>> main
             Text = "Finvfis  INVENTARIO FISICO";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
