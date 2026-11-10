@@ -24,7 +24,6 @@ namespace Sisvta
             _ = CargarMaestroDoctoscpAsync();
         }
 
-        // CORREGIDO: El nombre del evento Load debe coincidir con la clase (Fcinvfis_Load)
         private async void Fcinvfis_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
@@ -72,11 +71,40 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+
+                if (dataGridView1.Columns["Usuario"] != null) dataGridView1.Columns["Usuario"].Visible = false;
+                if (dataGridView1.Columns["Almacen"] != null) dataGridView1.Columns["Almacen"].Visible = false;
+
+                // Agregamos y posicionamos la columna al final
+                AgregarColumnaEditar();
+
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar los inventarios físicos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AgregarColumnaEditar()
+        {
+            // Verificamos si ya existe para evitar duplicarla
+            if (!dataGridView1.Columns.Contains("ColEditar"))
+            {
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dataGridView1.Columns.Add(btnColumn);
+            }
+
+            // Forzamos que la columna quede siempre al final, sin importar las columnas de SQL
+            if (dataGridView1.Columns.Contains("ColEditar"))
+            {
+                dataGridView1.Columns["ColEditar"].DisplayIndex = dataGridView1.Columns.Count - 1;
             }
         }
 
@@ -124,7 +152,6 @@ namespace Sisvta
 
             if (formFinvfis.ShowDialog() == DialogResult.OK)
             {
-                // CORREGIDO: Se descomenta para recargar el grid al crear un nuevo registro exitosamente
                 await CargarMaestroDoctoscpAsync();
             }
         }

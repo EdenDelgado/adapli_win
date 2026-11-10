@@ -37,10 +37,31 @@ namespace Sisvta
 
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = listaResultado;
+                AgregarColumnaEditar();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error detallado al cargar grupos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AgregarColumnaEditar()
+        {
+            // Evitamos duplicar la columna si ya existe al recargar el grid
+            if (!dataGridView1.Columns.Contains("ColEditar"))
+            {
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dataGridView1.Columns.Add(btnColumn);
+            }
+            if (dataGridView1.Columns.Contains("ColEditar"))
+            {
+                dataGridView1.Columns["ColEditar"].DisplayIndex = dataGridView1.Columns.Count - 1;
             }
         }
 
@@ -52,6 +73,7 @@ namespace Sisvta
                 dataGridView1.Columns["Grupo"].HeaderText = "Grupo";
                 dataGridView1.Columns["Grupo"].Width = 50; // Ancho ajustado para ~6 caracteres (puedes probar entre 60 y 70 píxeles)
                 dataGridView1.Columns["Grupo"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter; // Opcional: centrado
+                dataGridView1.Columns["Grupo"].Visible = false;
                 dataGridView1.Columns["Nombre"].Width = 140;
             }
             if (dataGridView1.Columns["DateRecord"] != null)

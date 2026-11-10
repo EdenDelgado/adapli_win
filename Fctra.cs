@@ -75,7 +75,10 @@ namespace Sisvta
 
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
-                dataGridView1.DataSource = dataTable;
+                dataGridView1.DataSource = dataTable; 
+                dataGridView1.Columns["Almacenorigen"].Visible = false;
+                dataGridView1.Columns["Almacendestino"].Visible = false; dataGridView1.Columns["Concepto"].Visible = false;
+                AgregarColumnaEditar();
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
@@ -84,6 +87,25 @@ namespace Sisvta
             }
         }
 
+        private void AgregarColumnaEditar()
+        {
+            // Verificamos si ya existe para evitar duplicarla
+            if (!dataGridView1.Columns.Contains("ColEditar"))
+            {
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dataGridView1.Columns.Add(btnColumn);
+            }
+            if (dataGridView1.Columns.Contains("ColEditar"))
+            {
+                dataGridView1.Columns["ColEditar"].DisplayIndex = dataGridView1.Columns.Count - 1;
+            }
+        }
         // Evento que se dispara al hacer doble clic en una fila del DataGridView
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {

@@ -19,14 +19,13 @@
         public decimal? Pventa { get; set; }
         public string Descripcion { get; set; }
         public int? Umedida { get; set; }
-        
-          public String? Nommedida { get; set; }
+        public string? Nommedida { get; set; }
+          public String? Moneda { get; set; }
         public bool? Inventariable { get; set; }
 
         public int? Maximo { get; set; }
         public int? Minimo { get; set; }
         public int? Reorden { get; set; }
-       
 
     }
 }

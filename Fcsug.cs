@@ -155,13 +155,13 @@ namespace Sisvta
                 if (rowView != null)
                 {
                     int idservicio = Convert.ToInt32(dataGridView1.CurrentRow.Cells["id_servicio"].Value);
-
+                    /*
                     var fsug = new Fsug(_context, idservicio);
 
                     if (fsug.ShowDialog() == DialogResult.OK)
                     {
-                        await CargarMaestroDoctoscpAsync();
-                    }
+                       // await CargarMaestroDoctoscpAsync();
+                    }*/
                 }
             }
         }

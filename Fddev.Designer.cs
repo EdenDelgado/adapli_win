@@ -151,6 +151,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Name = "Fddev";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fddev  Captura detalle devoluciones";
             ResumeLayout(false);
             PerformLayout();

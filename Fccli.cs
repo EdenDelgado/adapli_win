@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sisvta.Domain.Entities;
-using Sisvta.Infrastructure.Repositories;
 using Sisvta.UseCases;
-using Sisvta.UseCases.DTOs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,23 +12,26 @@ namespace Sisvta
     public partial class Fccli : Form
     {
         private Fcli? _fcli;
+        private IServiceScope? _fcliScope;
         private readonly IConsultarClientesUseCase _useCase;
-        private readonly IServiceProvider _serviceProvider; // Declarado correctamente
+        private readonly IServiceProvider _serviceProvider;
         private readonly BindingSource _bindingSource = new();
-        private bool _isCargando = false; // Candado anti-concurrencia
+        private bool _isCargando = false;
 
         public string ClienteIdSeleccionado { get; private set; } = string.Empty;
 
-        // Constructor con Inyección de Dependencias (recibe useCase y serviceProvider)
         public Fccli(IConsultarClientesUseCase useCase, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _useCase = useCase;
+            _useCase = useCase ?? throw new ArgumentNullException(nameof(useCase));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             this.Load += Fccli_Load;
             this.dgvClientes.CellDoubleClick += dgvClientes_CellDoubleClick;
             this.dgvClientes.CellMouseDoubleClick += dgvClientes_CellMouseDoubleClick;
+
+            // Blindaje contra errores de formato o valores nulos en el DataGridView
+            this.dgvClientes.DataError += dgvClientes_DataError;
 
             if (this.Controls.Find("txtBuscar", true).FirstOrDefault() is TextBox txt)
             {
@@ -43,36 +45,56 @@ namespace Sisvta
             await CargarClientesAsync();
         }
 
+      
         private async Task CargarClientesAsync()
         {
-            if (_isCargando || _bindingSource.DataSource != null) return;
+            if (_isCargando) return;
 
             try
             {
                 _isCargando = true;
 
                 var clientes = await _useCase.ObtenerTodosAsync();
-                var lista = clientes.ToList();
-
-                if (!lista.Any())
-                {
-                    MessageBox.Show("La consulta se ejecutó pero la tabla no contiene registros.", "Sin Datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                var lista = clientes?.Where(c => c != null).ToList() ?? new List<Cliente>();
 
                 dgvClientes.DataSource = null;
                 dgvClientes.AutoGenerateColumns = true;
                 _bindingSource.DataSource = lista;
                 dgvClientes.DataSource = _bindingSource;
+                AgregarColumnaEditar();
                 dgvClientes.Refresh();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al consultar la base de datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // 👇 Pon un punto de interrupción (Breakpoint) aquí o lee el mensaje completo
+                string mensajeCompleto = ex.ToString();
+                MessageBox.Show($"Error detallado: {mensajeCompleto}", "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _isCargando = false;
+            }
+        }
+
+        private void AgregarColumnaEditar()
+        {
+            // Verificamos si ya existe para evitar duplicarla
+            if (!dgvClientes.Columns.Contains("ColEditar"))
+            {
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dgvClientes.Columns.Add(btnColumn);
+            }
+
+            // Forzamos que la columna quede siempre al final, sin importar las columnas de SQL
+            if (dgvClientes.Columns.Contains("ColEditar"))
+            {
+                dgvClientes.Columns["ColEditar"].DisplayIndex = dgvClientes.Columns.Count - 1;
             }
         }
 
@@ -93,22 +115,38 @@ namespace Sisvta
             }
         }
 
-        private void AsegurarFcliVivo(int clienteId)
+        private void AsegurarFcliVivo()
         {
             if (_fcli == null || _fcli.IsDisposed)
             {
-                // Resolvemos Fcli directamente a través de DI mediante un scope limpio
-                var scope = _serviceProvider.CreateScope();
-                _fcli = scope.ServiceProvider.GetRequiredService<Fcli>();
+                _fcliScope?.Dispose();
+                _fcliScope = null;
 
-                // Liberamos el scope cuando se cierre el formulario secundario
-                _fcli.FormClosed += (s, e) => scope.Dispose();
+                // 1. Creamos un scope independiente para aislar el DbContext de Fcli
+                _fcliScope = _serviceProvider.CreateScope();
 
-                // Obtenemos la ventana principal (Fmain) de forma segura como propietaria
-                var formPrincipal = this.TopLevelControl as Form;
-                if (formPrincipal != null)
+                // 2. Resolvemos la instancia de Fcli mediante el contenedor DI
+                _fcli = _fcliScope.ServiceProvider.GetRequiredService<Fcli>();
+
+                // 3. Nos suscribimos al evento para refrescar automáticamente la consulta SQL del grid
+                _fcli.ClienteModificado += async () =>
                 {
-                    _fcli.Owner = formPrincipal;
+                    await CargarClientesAsync();
+                };
+
+                // 4. Limpiamos el scope y referencias al cerrar la ventana
+                _fcli.FormClosed += (s, e) =>
+                {
+                    _fcliScope?.Dispose();
+                    _fcliScope = null;
+                    _fcli = null;
+                };
+
+                // 5. Configuramos el contenedor MdiParent si aplica
+                var formPrincipal = this.MdiParent ?? this.TopLevelControl as Form;
+                if (formPrincipal != null && formPrincipal.IsMdiContainer)
+                {
+                    _fcli.MdiParent = formPrincipal;
                 }
             }
         }
@@ -123,10 +161,11 @@ namespace Sisvta
             AbrirFormularioCliente(e.RowIndex);
         }
 
- 
         private void AbrirFormularioCliente(int rowIndex)
         {
-            if (rowIndex >= 0 && rowIndex < dgvClientes.Rows.Count)
+            if (rowIndex < 0 || rowIndex >= dgvClientes.Rows.Count) return;
+
+            try
             {
                 var row = dgvClientes.Rows[rowIndex];
                 var item = row.DataBoundItem;
@@ -134,8 +173,6 @@ namespace Sisvta
                 if (item != null)
                 {
                     int clienteId = 0;
-
-                    // Extraemos la propiedad 'Id' dinámicamente sin importar si es el modelo Cliente o ClienteDto
                     var propId = item.GetType().GetProperty("Id");
                     if (propId != null)
                     {
@@ -144,24 +181,44 @@ namespace Sisvta
                         {
                             ClienteIdSeleccionado = clienteId.ToString();
 
-                            // Aseguramos y mostramos el formulario Fcli mediante DI
-                            AsegurarFcliVivo(clienteId);
+                            // Aseguramos que la instancia y su scope estén listos
+                            AsegurarFcliVivo();
 
-                            if (_fcli != null)
+                            if (_fcli != null && !_fcli.IsDisposed)
                             {
                                 if (_fcli.WindowState == FormWindowState.Minimized)
                                 {
                                     _fcli.WindowState = FormWindowState.Normal;
                                 }
 
+                                // Pasamos el ID para que Fcli cargue únicamente este registro
+                                _fcli.EstablecerIdPendiente(clienteId);
                                 _fcli.Show();
                                 _fcli.BringToFront();
                                 _fcli.Focus();
+
+                                dgvClientes.Refresh();
                             }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvClientes_DataError(object? sender, DataGridViewDataErrorEventArgs e)
+        {
+            // Evita que excepciones internas de renderizado por celdas nulas colapsen la interfaz
+            e.ThrowException = false;
+          
+        }
+
+        private void regresabt_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

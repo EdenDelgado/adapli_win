@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using System;
 using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 
 namespace Sisvta
 {
@@ -17,10 +18,10 @@ namespace Sisvta
         public Fcmov(ApplicationDbContext context, string idServicioInicial = null)
         {
             InitializeComponent();
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _idServicioInicial = idServicioInicial;
-            //prodservtx.Text = idServicioInicial;
-            // ¡Probamos ejecutando la carga principal directamente aquí para forzarla!
+
+            // Unificamos la carga exclusivamente en el evento Shown para evitar duplicidad
             this.Shown += Fcmov_Shown;
         }
 
@@ -28,10 +29,13 @@ namespace Sisvta
         {
             try
             {
-               // MessageBox.Show("Entrando al evento Shown de Fcmov", "Debug");
+                // 1. Cargamos primero los almacenes para el ComboBox
+                await CargarAlmacenesAsync();
 
+                // 2. Cargamos el maestro de servicios en el Grid superior
                 await CargarMaestromovtosAsync();
 
+                // 3. Posicionamos el cursor en el servicio inicial si fue provisto
                 if (dataGridView1.Rows.Count > 0)
                 {
                     bool encontrado = false;
@@ -51,68 +55,38 @@ namespace Sisvta
                             }
                         }
                     }
-                    clavetx.Text = dataGridView1.CurrentRow.Cells["Clave"].Value?.ToString();
-                    nombretx.Text = dataGridView1.CurrentRow.Cells["Nombre"].Value?.ToString();
+
                     if (!encontrado)
                     {
                         dataGridView1.CurrentCell = dataGridView1.Rows[0].Cells[0];
-                       
+                    }
+
+                    if (dataGridView1.CurrentRow != null)
+                    {
+                        clavetx.Text = dataGridView1.CurrentRow.Cells["Clave"].Value?.ToString();
+                        nombretx.Text = dataGridView1.CurrentRow.Cells["Nombre"].Value?.ToString();
                     }
                 }
 
+                // Activamos el indicador para permitir las consultas del detalle
                 _isInitialized = true;
+
+                // 4. Cargamos los movimientos correspondientes al servicio seleccionado
                 await CargarmovtosAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error crítico en Shown: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error crítico al inicializar movimientos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private async void Fcmov_Load(object sender, EventArgs e)
-        {
-            MessageBox.Show($"Fcmov initialized with idServicioInicial: [{_idServicioInicial ?? "null"}]", "Initialization Debug");
 
-            await CargarMaestromovtosAsync();
-
-            if (dataGridView1.Rows.Count > 0)
-            {
-                bool encontrado = false;
-
-                if (!string.IsNullOrEmpty(_idServicioInicial))
-                {
-                    foreach (DataGridViewRow row in dataGridView1.Rows)
-                    {
-                        string idServ = row.Cells["Idservicio"].Value?.ToString();
-                        string clave = row.Cells["Clave"].Value?.ToString();
-
-                        if (idServ == _idServicioInicial || clave == _idServicioInicial)
-                        {
-                            dataGridView1.CurrentCell = row.Cells[0];
-                            encontrado = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!encontrado)
-                {
-                    dataGridView1.CurrentCell = dataGridView1.Rows[0].Cells[0];
-                }
-            }
-
-            _isInitialized = true;
-            await CargarmovtosAsync();
-        }
+        // Eliminamos Fcmov_Load para evitar doble ejecución con Fcmov_Shown
 
         public async Task CargarMaestromovtosAsync()
         {
             try
             {
-                if (_context == null)
-                {
-                    // MessageBox.Show("El contexto de base de datos es nulo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                if (_context == null) return;
 
                 string sqlQuery = @"
                     SELECT 
@@ -138,16 +112,12 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = dataTable;
                 dataGridView1.Refresh();
-
-                // Verificación de éxito en maestro
-                // MessageBox.Show($"Total de servicios cargados: {dataTable.Rows.Count}", "Éxito Maestro");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar el maestro servicios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
 
         private async Task CargarmovtosAsync()
         {
@@ -159,47 +129,53 @@ namespace Sisvta
                 {
                     dataGridView2.DataSource = null;
                     totaltx.Text = "Entradas: 0.00  |  Salidas: 0.00  |  Importe: 0.00";
-          
                     return;
                 }
 
-                // Capturamos el valor actual de la celda
-                var idmovtos = dataGridView1.CurrentRow.Cells["Idservicio"].Value;
+                // Actualizamos las cajas de texto con la fila seleccionada actualmente
+                clavetx.Text = dataGridView1.CurrentRow.Cells["Clave"].Value?.ToString();
+                nombretx.Text = dataGridView1.CurrentRow.Cells["Nombre"].Value?.ToString();
 
-                // --- LÍNEA DE DEPURACIÓN CRUCIAL ---
-                // MessageBox.Show($"Valor capturado: [{idmovtos}] | Tipo: {idmovtos?.GetType().Name}", "Depuración Parámetro");
+                var idmovtos = dataGridView1.CurrentRow.Cells["Idservicio"].Value;
 
                 string sqlQuery = @"
                     SELECT
                         d.articulo AS Producto, 
                         d.daterecord AS fecha, 
-                        I.almacen AS Almacen,
-                        d.movinventario AS Referencia, 
+                        I.almacen AS Almacen, a.nombre AS AlmacenNombre,
+                        d.movinventario AS Referencia, I.folio AS Folio,
                         d.Cantidad AS entrada, 
                         0 AS salunid,
                         d.preciou AS costo,
                         (d.preciou * d.Cantidad) AS Importe
                     FROM inventario_detalles AS d
                     INNER JOIN INVENTARIO AS I ON d.movinventario = I.id_inventario
-                    WHERE d.articulo = @Idservicio and d.daterecord>= @DesdeFecha and d.daterecord<= @HastaFecha 
-                        and (I.almacen =@almacen or @almacen='') and ( @tipmov='Entradas' or @tipmov='Todos')
+                    LEFT JOIN almacen AS a ON I.almacen = a.id_almacen
+                    WHERE d.articulo = @Idservicio 
+                      AND d.daterecord >= @DesdeFecha 
+                      AND d.daterecord <= @HastaFecha 
+                      AND (I.almacen = @almacen OR @almacen = '') 
+                      AND ( @tipmov = 'Entradas' OR @tipmov = 'Todos' )
 
-UNION ALL
+                    UNION ALL
 
                     SELECT
-                        d.articulo AS Producto, 
+                        d.producto AS Producto, 
                         d.daterecord AS fecha, 
-                        I.almacen AS Almacen,
-                        d.movinventario AS Referencia, 
+                        I.almacen AS Almacen, a.nombre AS AlmacenNombre,
+                        d.salida AS Referencia, I.folio AS Folio,
                         0 AS entrada,
-                        d.cantidad AS salunid, 
-                        d.preciou AS costo,
-                        (d.preciou * (-d.cantidad)) AS Importe
-                    FROM inventario_detalles AS d
-                    INNER JOIN transacciones AS t ON d.id_invdet = t.whentry
-                    INNER JOIN INVENTARIO AS I ON d.movinventario = I.id_inventario
-                    WHERE d.articulo = @Idservicio AND (t.locationto = 2 OR t.locationto = 3)and d.daterecord>= @DesdeFecha and d.daterecord<= @HastaFecha 
-                        and (I.almacen =@almacen or @almacen='') and (@tipmov!='Entradas' or @tipmov='Todos')
+                        d.qty AS salunid, 
+                        d.precio AS costo,
+                        (d.precio * (-d.qty)) AS Importe
+                    FROM salidadetinv AS d
+                    INNER JOIN salidainv AS I ON d.salida = I.idsalida
+                    LEFT JOIN almacen AS a ON I.almacen = a.id_almacen
+                    WHERE d.producto = @Idservicio 
+                      AND d.daterecord >= @DesdeFecha 
+                      AND d.daterecord <= @HastaFecha 
+                      AND (I.almacen = @almacen OR @almacen = 0) 
+                      AND (@tipmov != 'Entradas' OR @tipmov = 'Todos')
                     ORDER BY fecha;";
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -209,18 +185,27 @@ UNION ALL
                 using var command = connection.CreateCommand();
                 command.CommandText = sqlQuery;
                 command.Parameters.AddWithValue("@Idservicio", idmovtos);
-                // <-- AQUÍ DEBES AGREGAR EL PARÁMETRO @DesdeFecha -->
-                    command.Parameters.AddWithValue("@DesdeFecha", desdefecha.Value.Date);
-                // <-- AQUÍ DEBES AGREGAR EL PARÁMETRO @HastaFecha -->
-                command.Parameters.AddWithValue("@HastaFecha", hastafecha.Value.Date);
-                command.Parameters.AddWithValue("@Almacen", almacentx.Text);
-                command.Parameters.AddWithValue("@tipmov", Movtotx.Text);
+
+                // Validación por si los DateTimePickers no tienen valor asignado aún
+                command.Parameters.AddWithValue("@DesdeFecha", desdefecha?.Value.Date ?? DateTime.Today);
+                command.Parameters.AddWithValue("@HastaFecha", hastafecha?.Value.Date ?? DateTime.Today);
+
+                // Manejo seguro del ComboBox de almacén
+                object almacenVal = txalmacen?.SelectedValue ?? "";
+                command.Parameters.AddWithValue("@Almacen", almacenVal == null || string.IsNullOrEmpty(almacenVal.ToString()) ? "" : almacenVal);
+
+                command.Parameters.AddWithValue("@tipmov", string.IsNullOrEmpty(Movtotx?.Text) ? "Todos" : Movtotx.Text);
+
                 using var reader = await command.ExecuteReaderAsync();
                 var dataTable = new DataTable();
                 dataTable.Load(reader);
 
                 dataGridView2.AutoGenerateColumns = true;
                 dataGridView2.DataSource = dataTable;
+
+                if (dataGridView2.Columns["Producto"] != null) dataGridView2.Columns["Producto"].Visible = false;
+                if (dataGridView2.Columns["Almacen"] != null) dataGridView2.Columns["Almacen"].Visible = false;
+                if (dataGridView2.Columns["Referencia"] != null) dataGridView2.Columns["Referencia"].Visible = false;
                 dataGridView2.Refresh();
 
                 if (dataGridView2.Columns["Importe"] != null)
@@ -286,7 +271,37 @@ UNION ALL
         private async void Ejecuta_Click(object sender, EventArgs e)
         {
             await CargarmovtosAsync();
-            
+        }
+
+        private async Task CargarAlmacenesAsync()
+        {
+            try
+            {
+                if (_context == null || txalmacen == null) return;
+
+                var listaAlmacenes = await _context.Set<Sisvta.Domain.Entities.Almacen>()
+                    .AsNoTracking()
+                    .Select(a => new { id_almacen = a.IdAlmacen, nombre = a.Nombre })
+                    .ToListAsync();
+
+                if (listaAlmacenes != null && listaAlmacenes.Count > 0)
+                {
+                    txalmacen.DataSource = null;
+                    txalmacen.DisplayMember = "nombre";
+                    txalmacen.ValueMember = "id_almacen";
+                    txalmacen.DataSource = listaAlmacenes;
+                    txalmacen.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los almacenes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btregresar_Click_1(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

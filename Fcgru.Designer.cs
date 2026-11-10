@@ -31,13 +31,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fcgru));
             dataGridView1 = new DataGridView();
             panel3 = new Panel();
+            regresabt = new Button();
             btarticulo = new Button();
             nuevobt = new Button();
             btlinea = new Button();
             btGrupos = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
-            regresabt = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -48,7 +48,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(0, 88);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(245, 301);
+            dataGridView1.Size = new Size(283, 301);
             dataGridView1.TabIndex = 3;
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             dataGridView1.DoubleClick += dataGridView1_DoubleClick;
@@ -68,6 +68,20 @@
             panel3.Name = "panel3";
             panel3.Size = new Size(879, 82);
             panel3.TabIndex = 22;
+            // 
+            // regresabt
+            // 
+            regresabt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            regresabt.BackColor = Color.MediumAquamarine;
+            regresabt.Image = (Image)resources.GetObject("regresabt.Image");
+            regresabt.Location = new Point(787, 3);
+            regresabt.Name = "regresabt";
+            regresabt.Size = new Size(80, 80);
+            regresabt.TabIndex = 7;
+            regresabt.Text = "Regresar";
+            regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
+            regresabt.UseVisualStyleBackColor = false;
+            regresabt.Click += regresabt_Click;
             // 
             // btarticulo
             // 
@@ -144,20 +158,6 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
-            // 
-            // regresabt
-            // 
-            regresabt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            regresabt.BackColor = Color.MediumAquamarine;
-            regresabt.Image = (Image)resources.GetObject("regresabt.Image");
-            regresabt.Location = new Point(787, 3);
-            regresabt.Name = "regresabt";
-            regresabt.Size = new Size(80, 80);
-            regresabt.TabIndex = 7;
-            regresabt.Text = "Regresar";
-            regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
-            regresabt.UseVisualStyleBackColor = false;
-            regresabt.Click += regresabt_Click;
             // 
             // Fcgru
             // 
