@@ -6,6 +6,7 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
 {
     public class ApplicationDbContext : DbContext
     {
+        // Único constructor requerido para la inyección de dependencias desde Program.cs
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Cliente> Clientes => Set<Cliente>();
@@ -15,10 +16,12 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
         public DbSet<GrupoLinea> GruposLineas => Set<GrupoLinea>();
         public DbSet<LineaArticulo> LineasArticulos => Set<LineaArticulo>();
         public DbSet<Almacen> Almacenes => Set<Almacen>();
-        public DbSet<Proveedores> Proveedores => Set<Proveedores>(); // <--- Añadido aquí
+        public DbSet<Proveedores> Proveedores => Set<Proveedores>();
         public DbSet<InvFisDet> InvFisDets => Set<InvFisDet>();
-        // Añade el DbSet junto a los demás conjuntos:
         public DbSet<InvFisico> InvFisicos => Set<InvFisico>();
+        public DbSet<Usuario> Usuarios => Set<Usuario>();
+        public DbSet<InventarioDetalle> InventarioDetalles => Set<InventarioDetalle>();
+        public DbSet<SalidaDetInv> SalidaDetInvs => Set<SalidaDetInv>();
         public DbSet<UnidadMedida> UnidadMedidas { get; set; }
         public DbSet<Impuesto> Impuesto { get; set; }
         public DbSet<ListaPrecio> ListaPrecio { get; set; }
@@ -26,9 +29,9 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
         public DbSet<StatusServicio> StatusServicio { get; set; }
         public DbSet<Servicio> Servicios { get; set; }
         public DbSet<Concepto> Conceptos { get; set; }
-        public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Estado> Estado { get; set; }
         public DbSet<Pais> Pais { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>(entity =>
@@ -44,7 +47,7 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<Proveedores>(entity =>
             {
                 entity.ToTable("Proveedores", "dbo");
-                entity.HasKey(e => e.Id); // <--- Llave primaria requerida
+                entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).HasColumnName("Id_proveedor");
                 entity.Property(e => e.Nombre).HasColumnName("nombre").HasMaxLength(255).IsRequired();
                 entity.Property(e => e.Direccion).HasColumnName("direccion").HasMaxLength(255);
@@ -59,8 +62,8 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
                 entity.Property(e => e.Nombre).HasColumnName("s_nombre");
                 entity.Property(e => e.Descripcion).HasColumnName("descripcion");
                 entity.Property(e => e.Prodserv)
-                                        .HasColumnName("id_servicio")
-                                        .ValueGeneratedOnAdd();
+                                            .HasColumnName("id_servicio")
+                                            .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Linea).HasColumnName("lineaArticulo");
                 entity.Property(e => e.Inventariable).HasColumnName("inventariable");
@@ -112,7 +115,6 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
                 entity.Property(e => e.PrecioUnitario).HasColumnName("precio");
             });
 
-            // --- Configuración mapeada para la entidad Almacen ---
             modelBuilder.Entity<Almacen>(entity =>
             {
                 entity.ToTable("almacen", "dbo");
@@ -127,6 +129,7 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
                 entity.Property(e => e.Leyendatickt).HasColumnName("leyendatickt");
                 entity.Property(e => e.Default).HasColumnName("default");
             });
+
             modelBuilder.Entity<InvFisico>(entity =>
             {
                 entity.ToTable("invfisico", "dbo");
@@ -148,7 +151,6 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
                 entity.Property(e => e.InvFisico).HasColumnName("invfisico");
                 entity.Property(e => e.CantidadReal).HasColumnName("cantidad_real");
 
-                // Opcional: Configurar el índice único compuesto si lo requiere EF Core para restricciones lógicas
                 entity.HasIndex(e => new { e.Articulo, e.InvFisico }).IsUnique();
             });
 
@@ -156,30 +158,16 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
             {
                 entity.ToTable("status_servicios");
                 entity.HasKey(e => e.IdStatusServicios);
-
-                entity.Property(e => e.IdStatusServicios)
-                      .HasColumnName("id_status_servicios");
-
-                entity.Property(e => e.Status)
-                      .HasColumnName("status")
-                      .HasMaxLength(15);
-                //.HasCollation("Modern_Spanish_CI_AS");
-
-                entity.Property(e => e.Descripcion)
-                      .HasColumnName("descripcion")
-                      .HasMaxLength(50);
-                //.HasCollation("Modern_Spanish_CI_AS");
-
-                entity.Property(e => e.Daterecord)
-                      .HasColumnName("daterecord")
-                      .HasDefaultValueSql("getdate()");
+                entity.Property(e => e.IdStatusServicios).HasColumnName("id_status_servicios");
+                entity.Property(e => e.Status).HasColumnName("status").HasMaxLength(15);
+                entity.Property(e => e.Descripcion).HasColumnName("descripcion").HasMaxLength(50);
+                entity.Property(e => e.Daterecord).HasColumnName("daterecord").HasDefaultValueSql("getdate()");
             });
 
             modelBuilder.Entity<Servicio>(entity =>
             {
                 entity.ToTable("servicios");
                 entity.HasKey(e => e.IdServicio);
-
                 entity.Property(e => e.IdServicio).HasColumnName("id_servicio");
                 entity.Property(e => e.Clave).HasColumnName("clave").IsRequired();
                 entity.Property(e => e.Nombre).HasColumnName("s_nombre").IsRequired();
@@ -190,8 +178,6 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
                 entity.Property(e => e.Inventariable).HasColumnName("inventariable");
                 entity.Property(e => e.Status).HasColumnName("status");
                 entity.Property(e => e.ClaveProServ).HasColumnName("ClaveProServ");
-                // Agrega el resto de propiedades si prefieres mapearlas explícitamente aquí 
-                // en lugar de usar los atributos [Column] en la entidad.
             });
 
             modelBuilder.Entity<Concepto>(entity =>
@@ -204,6 +190,34 @@ namespace Sisvta.Infrastructure.Persistence.Contexts
                 entity.Property(e => e.Naturaleza).HasColumnName("naturaleza");
                 entity.Property(e => e.Status).HasColumnName("status");
                 entity.Property(e => e.DateRecord).HasColumnName("DateRecord");
+            });
+
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.ToTable("usuarios", "dbo");
+                entity.HasKey(e => e.IdUsuario);
+                entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+                entity.Property(e => e.IdAlmacen).HasColumnName("idAlmacen");
+                entity.Property(e => e.IdCaja).HasColumnName("idCaja");
+                entity.Property(e => e.IdDistribuidor).HasColumnName("id_distribuidor");
+                entity.Property(e => e.Nombre).HasColumnName("nombre").HasMaxLength(40).IsRequired();
+                entity.Property(e => e.Password).HasColumnName("password").HasMaxLength(50).IsRequired();
+                entity.Property(e => e.Nick).HasColumnName("nick").HasMaxLength(30);
+                entity.Property(e => e.IdPerfil).HasColumnName("id_perfil");
+                entity.Property(e => e.IdStatusUser).HasColumnName("id_statususer");
+                entity.Property(e => e.FechaStatus).HasColumnName("fecha_status");
+                entity.Property(e => e.Mail).HasColumnName("mail").HasMaxLength(100).IsRequired();
+                entity.Property(e => e.IdEmpresa).HasColumnName("id_empresa");
+                entity.Property(e => e.Vigencia).HasColumnName("vigencia");
+                entity.Property(e => e.Personal).HasColumnName("personal");
+                entity.Property(e => e.IdDepto).HasColumnName("id_depto");
+                entity.Property(e => e.Orden).HasColumnName("orden");
+                entity.Property(e => e.IdProveedor).HasColumnName("id_proveedor");
+                entity.Property(e => e.IdSucursal).HasColumnName("id_sucursal");
+                entity.Property(e => e.UserCreator).HasColumnName("UserCreator");
+                entity.Property(e => e.DateLastUpdate).HasColumnName("DateLastUpdate");
+                entity.Property(e => e.UserLastUpdater).HasColumnName("UserLastUpdater");
+                entity.Property(e => e.DateRecord).HasColumnName("Daterecord");
             });
         }
     }

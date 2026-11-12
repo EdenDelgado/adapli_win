@@ -175,7 +175,8 @@
             Ejecuta.Name = "Ejecuta";
             Ejecuta.Size = new Size(71, 63);
             Ejecuta.TabIndex = 3;
-            Ejecuta.Text = "Ejecuta";
+            Ejecuta.Text = "Filtra";
+            Ejecuta.TextAlign = ContentAlignment.BottomCenter;
             Ejecuta.UseVisualStyleBackColor = false;
             Ejecuta.Click += Ejecuta_Click;
             // 

@@ -41,18 +41,31 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
-                        d.id_factura AS Idfactura, 
-                        d.folio AS Folio,i.id_inventario AS IdInventario, 
-                        d.fechafactura AS Fecha,
+                       /* i.id_factura AS Idfactura, */
+                        i.folio AS Folio,i.idsalida AS IdSalida, 
+                        i.fecha AS Fecha, i.almacen AS IdAlmacen, a.nombre as nomalmacen,
+                        i.cliente AS Cliente, cl.nombre as Nomcliente,
                       i.concepto AS Concepto,c.concepto as Nomconcepto,
-                        d.proveedor AS Proveedor, i.proveedor as iprov, p.nombre as Nomproveedor,
-                        i.descripcion AS Descripcion,
-                        d.almacen AS IdAlmacen, a.nombre as nomalmacen
-                    FROM doctoscc as d left join inventario as i on d.id_factura = i.id_factura
-                    left join almacen as a on d.almacen=a.id_almacen
+                        sum(d.qty*d.precio) as Total
+                       /* , i.descripcion AS Descripcion */
+                       
+                    FROM salidainv as i 
+                    left join salidadetinv as d on i.idsalida=d.salida
+                    left join almacen as a on i.almacen=a.id_almacen
                     left join concepto as c on i.concepto=c.id_conceptosprov
-                    left join proveedores as p on d.proveedor=p.id_proveedor
-                    WHERE d.fechafactura >= @desde AND d.fechafactura <= @hasta";
+                    left join clientes as cl on i.cliente=cl.id_empros
+                    
+                    WHERE i.fecha >= @desde AND i.fecha <= @hasta
+                    GROUP BY
+                    i.idsalida,
+                     i.folio, 
+                    i.fecha, 
+                     i.almacen, 
+                     a.nombre, 
+                     i.cliente, 
+                     cl.nombre, 
+                 i.concepto, 
+                 c.concepto";
               
 
                 string connectionString = _context.Database.GetConnectionString();
@@ -77,10 +90,34 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
-                dataGridView1.Columns["Idfactura"].Visible = false;
-                dataGridView1.Columns["IdInventario"].Visible = false; dataGridView1.Columns["Concepto"].Visible = false;
-                dataGridView1.Columns["iprov"].Visible = false;
-                dataGridView1.Columns["proveedor"].Visible = false; dataGridView1.Columns["idalmacen"].Visible = false;
+                //dataGridView1.Columns["Idfactura"].Visible = false;
+                dataGridView1.Columns["IdSalida"].Visible = false; dataGridView1.Columns["Concepto"].Visible = false;
+               // dataGridView1.Columns["iprov"].Visible = false;
+                dataGridView1.Columns["cliente"].Visible = false; dataGridView1.Columns["idalmacen"].Visible = false;
+                if (dataGridView1.Columns["Nombre"] != null)  dataGridView1.Columns["Nombre"].Width = 200;
+            
+                dataGridView1.Columns["Total"].DefaultCellStyle.Format = "N2";
+                dataGridView1.Columns["Total"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                // AGREGAR COLUMNA DE MOVIMIENTOS CON SÍMBOLO GRÁFICO (📊)
+                // =========================================================================
+                if (!dataGridView1.Columns.Contains("ColMov"))
+                {
+                    var colMov = new DataGridViewButtonColumn
+                    {
+                        Name = "ColMov",
+                        HeaderText = "Movs",
+                        Text = "📊",
+                        UseColumnTextForButtonValue = true,
+                        Width = 55,
+                        FlatStyle = FlatStyle.Flat
+                    };
+                    dataGridView1.Columns.Add(colMov);
+                }
+
+                if (dataGridView1.Columns["ColMov"] != null)
+                {
+                    dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 1;
+                }
 
                 dataGridView1.Refresh();
             }
@@ -102,16 +139,30 @@ namespace Sisvta
                 if (rowView != null)
                 {
                     // Obtenemos el ID de la entrada (o los campos que necesites)
-                    int idfactura = Convert.ToInt32(dataGridView1.CurrentRow.Cells["Idfactura"].Value);
+                    //int id = Convert.ToInt32(dataGridView1.CurrentRow.Cells["IdInventario"].Value);
+                    var Id = rowView["IdSalida"];
 
                     // Instanciamos el formulario Fent pasándole el ID (Asegúrate de que Fent tenga un constructor que reciba este int)
-                    var formFent = new Fent(_context,idfactura);
-
-                    if (formFent.ShowDialog() == DialogResult.OK)
+                    if (Id != null && Id != DBNull.Value && int.TryParse(Id.ToString(), out int idinventario))
                     {
-                        // Recargamos el grid si se realizaron cambios o guardados
-                        await CargarMaestroDoctoscpAsync();
+                        var fsal = new Fsal(_context, idinventario);
+                        fsal.btGuardar.Visible = false; // Oculta el botón "Nuevo" en Fsal
+                        fsal.btagregar.Visible = false; // Oculta el botón "Agregar" en Fsal
+                        fsal.btborrar.Visible = false; // Oculta el botón "Borrar" en Fsal
+                        if (fsal.ShowDialog() == DialogResult.OK)
+                        {
+                            // Recargamos el grid si se realizaron cambios o guardados
+                            await CargarMaestroDoctoscpAsync();
+                        }
                     }
+                    else
+                    {
+                        MessageBox.Show("No se pudo obtener el ID de la entrada seleccionada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo obtener la fila seleccionada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

@@ -30,10 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Fprod));
             splitContainer1 = new SplitContainer();
+            grupotxt = new ComboBox();
             statustxt = new ComboBox();
             btfiltro = new Button();
-            grupotxt = new TextBox();
-            lineatxt = new TextBox();
             nomclatxt = new TextBox();
             label5 = new Label();
             label4 = new Label();
@@ -47,6 +46,7 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
+            lineatxt = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -65,10 +65,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(lineatxt);
+            splitContainer1.Panel1.Controls.Add(grupotxt);
             splitContainer1.Panel1.Controls.Add(statustxt);
             splitContainer1.Panel1.Controls.Add(btfiltro);
-            splitContainer1.Panel1.Controls.Add(grupotxt);
-            splitContainer1.Panel1.Controls.Add(lineatxt);
             splitContainer1.Panel1.Controls.Add(nomclatxt);
             splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(label4);
@@ -82,6 +82,14 @@
             splitContainer1.Size = new Size(1148, 587);
             splitContainer1.SplitterDistance = 160;
             splitContainer1.TabIndex = 14;
+            // 
+            // grupotxt
+            // 
+            grupotxt.FormattingEnabled = true;
+            grupotxt.Location = new Point(596, 103);
+            grupotxt.Name = "grupotxt";
+            grupotxt.Size = new Size(121, 23);
+            grupotxt.TabIndex = 41;
             // 
             // statustxt
             // 
@@ -103,20 +111,6 @@
             btfiltro.TextImageRelation = TextImageRelation.ImageAboveText;
             btfiltro.UseVisualStyleBackColor = false;
             btfiltro.Click += btfiltro_Click;
-            // 
-            // grupotxt
-            // 
-            grupotxt.Location = new Point(612, 103);
-            grupotxt.Name = "grupotxt";
-            grupotxt.Size = new Size(100, 23);
-            grupotxt.TabIndex = 37;
-            // 
-            // lineatxt
-            // 
-            lineatxt.Location = new Point(365, 103);
-            lineatxt.Name = "lineatxt";
-            lineatxt.Size = new Size(100, 23);
-            lineatxt.TabIndex = 36;
             // 
             // nomclatxt
             // 
@@ -269,6 +263,14 @@
             dataGridView1.CellDoubleClick += dataGridView1_CellDoubleClick;
             dataGridView1.CellMouseClick += dataGridView1_CellMouseDoubleClick;
             // 
+            // lineatxt
+            // 
+            lineatxt.FormattingEnabled = true;
+            lineatxt.Location = new Point(355, 106);
+            lineatxt.Name = "lineatxt";
+            lineatxt.Size = new Size(121, 23);
+            lineatxt.TabIndex = 42;
+            // 
             // Fprod
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -296,8 +298,6 @@
         #endregion
         private SplitContainer splitContainer1;
         private Button btfiltro;
-        private TextBox grupotxt;
-        private TextBox lineatxt;
         private TextBox nomclatxt;
         private Label label5;
         private Label label4;
@@ -312,5 +312,7 @@
         private DataGridView dataGridView1;
         private Button btregresar;
         private ComboBox statustxt;
+        private ComboBox grupotxt;
+        private ComboBox lineatxt;
     }
 }

@@ -42,6 +42,7 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
+            label4 = new Label();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -60,6 +61,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(label4);
             splitContainer1.Panel1.Controls.Add(txalmacen);
             splitContainer1.Panel1.Controls.Add(textBox2);
             splitContainer1.Panel1.Controls.Add(Filtrarbt);
@@ -192,6 +194,15 @@
             dataGridView1.Size = new Size(953, 354);
             dataGridView1.TabIndex = 1;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(510, 91);
+            label4.Name = "label4";
+            label4.Size = new Size(54, 15);
+            label4.TabIndex = 32;
+            label4.Text = "Almacen";
+            // 
             // Frepexi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -228,5 +239,6 @@
         private Button Filtrarbt;
         private TextBox textBox2;
         private ComboBox txalmacen;
+        private Label label4;
     }
 }

@@ -38,7 +38,6 @@
             txobservacion = new TextBox();
             panel3 = new Panel();
             regresabt = new Button();
-            button2 = new Button();
             btGuardar = new Button();
             label8 = new Label();
             pictureBox1 = new PictureBox();
@@ -151,7 +150,6 @@
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
-            panel3.Controls.Add(button2);
             panel3.Controls.Add(btGuardar);
             panel3.Controls.Add(label8);
             panel3.Controls.Add(pictureBox1);
@@ -174,20 +172,6 @@
             regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
             regresabt.UseVisualStyleBackColor = false;
             regresabt.Click += regresabt_Click;
-            // 
-            // button2
-            // 
-            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.BackColor = Color.MediumAquamarine;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(856, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(80, 80);
-            button2.TabIndex = 4;
-            button2.Text = "Nuevo";
-            button2.TextImageRelation = TextImageRelation.ImageAboveText;
-            button2.UseVisualStyleBackColor = false;
-            button2.Visible = false;
             // 
             // btGuardar
             // 
@@ -369,17 +353,16 @@
         private Label label1;
         private Panel panel3;
         private Button regresabt;
-        private Button button2;
-        private Button btGuardar;
         private Label label8;
         private PictureBox pictureBox1;
         private TextBox txobservacion;
         private ComboBox txalmacen;
         private ComboBox txproveedor;
         private Label label5;
-        private Button btagregar;
-        private Button btborrar;
         private ComboBox conceptotxt;
         private DateTimePicker txfecha;
+        public Button btGuardar;
+        public Button btagregar;
+        public Button btborrar;
     }
 }

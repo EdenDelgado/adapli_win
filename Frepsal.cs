@@ -115,6 +115,28 @@ namespace Sisvta
                 dataGridView1.AutoGenerateColumns = true;
                 dataGridView1.DataSource = null;
                 dataGridView1.DataSource = dataTable;
+                dataGridView1.Columns["NomConcepto"].Width = 200; dataGridView1.Columns["NomCliente"].Width = 200;
+                // AGREGAR COLUMNA DE MOVIMIENTOS CON SÍMBOLO GRÁFICO (📊)
+                // =========================================================================
+                if (!dataGridView1.Columns.Contains("ColMov"))
+                {
+                    var colMov = new DataGridViewButtonColumn
+                    {
+                        Name = "ColMov",
+                        HeaderText = "Movs",
+                        Text = "📊",
+                        UseColumnTextForButtonValue = true,
+                        Width = 55,
+                        FlatStyle = FlatStyle.Flat
+                    };
+                    dataGridView1.Columns.Add(colMov);
+                }
+
+                if (dataGridView1.Columns["ColMov"] != null)
+                {
+                    dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 1;
+                }
+
                 dataGridView1.Refresh();
             }
             catch (Exception ex)

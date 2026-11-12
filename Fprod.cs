@@ -26,7 +26,7 @@ namespace Sisvta
             _useCase = useCase;
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            // Inicializamos Finv2 inyectándole el mismo caso de uso
+            // Inicializamos Finv2 inyectándole el mismo caso de uso y contexto
             _finv2 = new Fprodd(_useCase, _context);
             _finv2.ProductoModificado += async (s, e) => await CargarGridAsync();
 
@@ -42,9 +42,10 @@ namespace Sisvta
         {
             try
             {
-                // 1. Cargamos el ComboBox de estatus de forma independiente con ADO.NET
+                // 1. Cargamos los catálogos de forma independiente con ADO.NET
                 CargarStatusServicioSincrono();
-
+                CargarLineasArticuloSincrono();
+                CargarGruposLineaSincrono();
                 // 2. Cargamos los datos del grid de forma segura
                 CargarGridSincrono();
             }
@@ -147,9 +148,11 @@ namespace Sisvta
             if (dataGridView1.Columns["Pcompra"] != null)
             {
                 dataGridView1.Columns["Pcompra"].HeaderText = "pcompra";
-                dataGridView1.Columns["Pcompra"].Width = 60;
+                dataGridView1.Columns["Pcompra"].Width = 70; dataGridView1.Columns["Pventa"].Width = 70;
                 dataGridView1.Columns["Pcompra"].DefaultCellStyle.Format = "N2";
                 dataGridView1.Columns["Pcompra"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns["Pventa"].DefaultCellStyle.Format = "N2";
+                dataGridView1.Columns["Pventa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             dataGridView1.Columns["Nombre"].Width = 220;
             dataGridView1.Columns["Status"].Width = 40;
@@ -169,18 +172,18 @@ namespace Sisvta
             dataGridView1.Columns["umedida"].Visible = false;
             dataGridView1.Columns["maximo"].Visible = false;
             dataGridView1.Columns["minimo"].Visible = false;
-            dataGridView1.Columns["reorden"].Visible = false; dataGridView1.Columns["claveproserv"].Visible = false;
+            dataGridView1.Columns["reorden"].Visible = false;
+            dataGridView1.Columns["claveproserv"].Visible = false;
+            dataGridView1.Columns["Moneda"].Visible = false;
 
-
-
-            // 1. Agregar la columna de Movimientos con un icono/emoji representativo
+            // 1. Agregar la columna de Movimientos
             if (!dataGridView1.Columns.Contains("ColMov"))
             {
                 var colMov = new DataGridViewButtonColumn
                 {
                     Name = "ColMov",
                     HeaderText = "Movs",
-                    Text = "📊", // Icono o emoji para representar movimientos/reportes
+                    Text = "📊",
                     UseColumnTextForButtonValue = true,
                     Width = 55,
                     FlatStyle = FlatStyle.Flat
@@ -188,12 +191,12 @@ namespace Sisvta
                 dataGridView1.Columns.Add(colMov);
             }
 
-            // Asegurar que quede colocado siempre antes de la columna de borrar (al final del grid)
             if (dataGridView1.Columns["ColMov"] != null)
             {
                 dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 2;
             }
 
+            // 2. Agregar la columna de Borrar
             if (!dataGridView1.Columns.Contains("ColBorrar"))
             {
                 var colBorrar = new DataGridViewButtonColumn
@@ -207,10 +210,6 @@ namespace Sisvta
                 dataGridView1.Columns.Add(colBorrar);
             }
 
-            if (dataGridView1.Columns["ColMov"] != null)
-            {
-                dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 2;
-            }
             if (dataGridView1.Columns["ColBorrar"] != null)
             {
                 dataGridView1.Columns["ColBorrar"].DisplayIndex = dataGridView1.Columns.Count - 1;
@@ -368,11 +367,50 @@ namespace Sisvta
                                                        "Confirmar Borrado",
                                                        MessageBoxButtons.YesNo,
                                                        MessageBoxIcon.Warning);
+
                     if (confirmResult == DialogResult.Yes)
                     {
                         try
                         {
-                            MessageBox.Show($"Producto '{claveSeleccionada}' borrado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            var prodservVal = fila.Cells["Prodserv"].Value?.ToString();
+                            if (!int.TryParse(prodservVal, out int idServicio))
+                            {
+                                MessageBox.Show("No se pudo identificar el ID del producto para validar sus movimientos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            // 1. Verificar movimientos en inventario_detalles
+                            int totalInventarioDet = _context.InventarioDetalles
+                                .Count(id => id.Articulo == idServicio);
+
+                            // 2. Verificar movimientos en salidadetinv
+                            int totalSalidaDet = _context.Set<SalidaDetInv>()
+                                .Count(sd => sd.Producto == idServicio);
+
+                            // 3. Validar si tiene registros asociados
+                            if (totalInventarioDet > 0 || totalSalidaDet > 0)
+                            {
+                                MessageBox.Show($"El producto '{claveSeleccionada}' no se puede borrar porque tiene movimientos registrados en el inventario o salidas.",
+                                                  "Acción Denegada",
+                                                  MessageBoxButtons.OK,
+                                                  MessageBoxIcon.Warning);
+                                return;
+                            }
+
+                            // 4. Proceder a borrar el producto si no tiene dependencias
+                            var productoAEliminar = _context.Servicios.FirstOrDefault(s => s.IdServicio == idServicio);
+                            if (productoAEliminar != null)
+                            {
+                                _context.Servicios.Remove(productoAEliminar);
+                                _context.SaveChanges();
+
+                                MessageBox.Show($"Producto '{claveSeleccionada}' borrado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarGridSincrono();
+                            }
+                            else
+                            {
+                                MessageBox.Show("No se encontró el registro del producto en la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -437,5 +475,76 @@ namespace Sisvta
             Close();
         }
 
+        private void CargarGruposLineaSincrono()
+        {
+            try
+            {
+                if (_context == null) return;
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                connection.Open();
+
+                string sqlQuery = "SELECT id_gruposlineas AS Id, nombre AS Nombre FROM grupolinea ORDER BY id_gruposlineas";
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlQuery;
+
+                using var reader = command.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    grupotxt.DataSource = null;
+                    grupotxt.DisplayMember = "Nombre";
+                    grupotxt.ValueMember = "Id";
+                    grupotxt.DataSource = dataTable;
+                    grupotxt.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el catálogo de grupos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CargarLineasArticuloSincrono()
+        {
+            try
+            {
+                if (_context == null) return;
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                connection.Open();
+
+                string sqlQuery = "SELECT id_lineasarticulos AS Id, nombre AS Nombre FROM lineaarticulo ORDER BY id_lineasarticulos";
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlQuery;
+
+                using var reader = command.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    lineatxt.DataSource = null;
+                    lineatxt.DisplayMember = "Nombre";
+                    lineatxt.ValueMember = "Id";
+                    lineatxt.DataSource = dataTable;
+                    lineatxt.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el catálogo de líneas de artículos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

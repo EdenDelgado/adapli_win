@@ -16,7 +16,7 @@ namespace Sisvta
         private Panel panelContenedor;
         private System.Windows.Forms.Timer timerEfectoMenu;
 
-        private const int AnchoMinimo = 70;   // Ancho colapsado del menú (espacio fijo reservado)
+        private const int AnchoMinimo = 70;   // Ancho colapsado del menú
         private const int AnchoMaximo = 220;  // Ancho expandido del menú al hacer hover
 
         // Botones principales y submenús
@@ -27,16 +27,21 @@ namespace Sisvta
         {
             InitializeComponent();
             this.IsMdiContainer = false;
+
+            // FORZAMOS LA CONSTRUCCIÓN DEL MENÚ AQUÍ PARA QUE NUNCA QUEDE VACÍO
+            ConfigurarMenuLateralDinamico();
         }
 
         public Fmain(IServiceProvider serviceProvider) : this()
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            ConfigurarMenuLateralDinamico();
         }
 
         private void ConfigurarMenuLateralDinamico()
         {
+            // Evita duplicar controles si ya fueron creados previamente
+            if (flpMenuLateral != null) return;
+
             this.Size = new Size(1400, 760);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Sisvta - Sistema de Control de Almacén y Ventas";
@@ -52,7 +57,6 @@ namespace Sisvta
             this.Controls.Add(flpMenuLateral);
 
             // 2. Panel contenedor central donde se cargarán los formularios hijos vía DI
-            // Se posiciona explícitamente a partir de X = 70 para que las pantallas hijas inicien exactamente ahí
             panelContenedor = new Panel();
             panelContenedor.Location = new Point(AnchoMinimo, 0);
             panelContenedor.Size = new Size(this.ClientSize.Width - AnchoMinimo, this.ClientSize.Height);
@@ -74,6 +78,7 @@ namespace Sisvta
             var btnDepositos = CrearBotonSubmenu("📥", "Depósitos");
             var btnRetiros = CrearBotonSubmenu("📤", "Retiros");
             var btnEstadosCuenta = CrearBotonSubmenu("📄", "Estados de Cta.");
+
             pnlSubmenuBancos.Controls.Add(btnEstadosCuenta);
             pnlSubmenuBancos.Controls.Add(btnRetiros);
             pnlSubmenuBancos.Controls.Add(btnDepositos);
@@ -131,7 +136,7 @@ namespace Sisvta
             var btntraspasos = CrearBotonSubmenu("🔀", "Traspasos");
             var btntransacciones = CrearBotonSubmenu("🔄", "Transacciones");
 
-            // Enlaces con formularios usando DI (Entradas y Salidas integradas)
+            // Enlaces con formularios usando DI de Inventarios
             btnAlmacenes.Click += (s, e) => AbrirFormularioEnPanel<Fcalm>();
             btnArticulos.Click += (s, e) => AbrirFormularioEnPanel<Fprod>();
             btnEntradas.Click += (s, e) => AbrirFormularioEnPanel<Fcent>();
@@ -151,8 +156,6 @@ namespace Sisvta
             pnlSubmenuInventarios.Controls.Add(btnListaPrecios);
             pnlSubmenuInventarios.Controls.Add(btnCambioPrecio);
             pnlSubmenuInventarios.Controls.Add(btntransacciones);
-           
-           
             pnlSubmenuInventarios.Controls.Add(btnReportesInv);
             pnlSubmenuInventarios.Controls.Add(btnDevoluciones);
             pnlSubmenuInventarios.Controls.Add(btnsugerencias);
@@ -179,6 +182,7 @@ namespace Sisvta
             var btnProdd = CrearBotonSubmenu("⚙️", "Prodd (Gestión)");
             var btnPedidos = CrearBotonSubmenu("📋", "Pedidos");
 
+            // Enlaces con formularios usando DI de PDV
             btnProductos.Click += (s, e) => AbrirFormularioEnPanel<Fcprod>();
             btnClientes.Click += (s, e) => AbrirFormularioEnPanel<Fccli>();
             btnProdd.Click += (s, e) => AbrirFormularioEnPanel<Fmprod>();
@@ -267,31 +271,48 @@ namespace Sisvta
 
         private void AbrirFormularioEnPanel<TForm>() where TForm : notnull
         {
-            if (_serviceProvider == null) return;
+            IServiceProvider providerActual = _serviceProvider ?? Program.HostInstance?.Services;
 
-            var scope = _serviceProvider.CreateScope();
-            var formularioHijo = scope.ServiceProvider.GetRequiredService<TForm>();
-
-            if (formularioHijo is Form winForm)
+            if (providerActual == null)
             {
-                if (panelContenedor.Controls.Count > 0)
-                {
-                    panelContenedor.Controls[0].Dispose();
-                }
-
-                winForm.TopLevel = false;
-                winForm.FormBorderStyle = FormBorderStyle.None;
-                winForm.Dock = DockStyle.Fill;
-
-                panelContenedor.Controls.Add(winForm);
-                panelContenedor.Tag = winForm;
-
-                winForm.FormClosed += (sender, e) => scope.Dispose();
-                winForm.Show();
+                MessageBox.Show("No se pudo inicializar el contenedor de servicios para abrir la pantalla.", "Error de Contexto", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            else
+
+            try
             {
-                scope.Dispose();
+                var scope = providerActual.CreateScope();
+                var formularioHijo = scope.ServiceProvider.GetRequiredService<TForm>();
+
+                if (formularioHijo is Form winForm)
+                {
+                    if (panelContenedor.Controls.Count > 0)
+                    {
+                        var formAnterior = panelContenedor.Controls[0] as Form;
+                        panelContenedor.Controls.Clear();
+                        formAnterior?.Dispose();
+                    }
+
+                    winForm.TopLevel = false;
+                    winForm.FormBorderStyle = FormBorderStyle.None;
+                    winForm.Dock = DockStyle.Fill;
+
+                    panelContenedor.Controls.Add(winForm);
+                    panelContenedor.Tag = winForm;
+
+                    winForm.FormClosed += (sender, e) => scope.Dispose();
+                    winForm.Show();
+                    winForm.BringToFront();
+                }
+                else
+                {
+                    scope.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir la pantalla '{typeof(TForm).Name}': {ex.Message}\n\nDetalles: {ex.InnerException?.Message}",
+                                "Error de Ejecución", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -339,8 +360,10 @@ namespace Sisvta
 
         private void EjecutarReporteClientes()
         {
-            if (_serviceProvider == null) return;
-            using var scope = _serviceProvider.CreateScope();
+            IServiceProvider providerActual = _serviceProvider ?? Program.HostInstance?.Services;
+            if (providerActual == null) return;
+
+            using var scope = providerActual.CreateScope();
             var useCase = scope.ServiceProvider.GetRequiredService<GenerarReporteClientesUseCase>();
             var datos = useCase.Ejecutar();
             ReportePedidosTexto.ProcesarEImprimir(datos);
@@ -348,8 +371,10 @@ namespace Sisvta
 
         private void EjecutarReportePedidos()
         {
-            if (_serviceProvider == null) return;
-            using var scope = _serviceProvider.CreateScope();
+            IServiceProvider providerActual = _serviceProvider ?? Program.HostInstance?.Services;
+            if (providerActual == null) return;
+
+            using var scope = providerActual.CreateScope();
             var useCase = scope.ServiceProvider.GetRequiredService<ReportePedidoPorPedidoUseCase>();
             var datos = useCase.Ejecutar();
             if (!datos.Any())
@@ -360,6 +385,8 @@ namespace Sisvta
             ReportePedidoPorPedidoTexto.ProcesarEImprimir(datos);
         }
 
-        private void Fmain_Load(object sender, EventArgs e) { }
+        private void Fmain_Load(object sender, EventArgs e)
+        {
+        }
     }
 }

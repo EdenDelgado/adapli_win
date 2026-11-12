@@ -38,7 +38,6 @@
             txfecha = new DateTimePicker();
             panel3 = new Panel();
             regresabt = new Button();
-            btnuevo = new Button();
             btGuardar = new Button();
             label8 = new Label();
             pictureBox1 = new PictureBox();
@@ -157,7 +156,6 @@
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(regresabt);
-            panel3.Controls.Add(btnuevo);
             panel3.Controls.Add(btGuardar);
             panel3.Controls.Add(label8);
             panel3.Controls.Add(pictureBox1);
@@ -180,21 +178,6 @@
             regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
             regresabt.UseVisualStyleBackColor = false;
             regresabt.Click += regresabt_Click;
-            // 
-            // btnuevo
-            // 
-            btnuevo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnuevo.BackColor = Color.MediumAquamarine;
-            btnuevo.Image = (Image)resources.GetObject("btnuevo.Image");
-            btnuevo.Location = new Point(856, -1);
-            btnuevo.Name = "btnuevo";
-            btnuevo.Size = new Size(80, 80);
-            btnuevo.TabIndex = 4;
-            btnuevo.Text = "Nuevo";
-            btnuevo.TextImageRelation = TextImageRelation.ImageAboveText;
-            btnuevo.UseVisualStyleBackColor = false;
-            btnuevo.Visible = false;
-            btnuevo.Click += btnuevo_Click;
             // 
             // btGuardar
             // 
@@ -317,7 +300,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(0, 89);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(114, 80);
+            dataGridView1.Size = new Size(20, 13);
             dataGridView1.TabIndex = 0;
             // 
             // btborrar
@@ -392,17 +375,16 @@
         private Label label1;
         private Panel panel3;
         private Button regresabt;
-        private Button btnuevo;
-        private Button btGuardar;
         private Label label8;
         private PictureBox pictureBox1;
-        private Button btborrar;
-        private Button btagregar;
         private DateTimePicker txfecha;
         private ComboBox conceptotxt;
         private ComboBox txalmacen;
         private ComboBox txcliente;
         private Label label10;
         private Label label9;
+        public Button btGuardar;
+        public Button btborrar;
+        public Button btagregar;
     }
 }

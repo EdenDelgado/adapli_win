@@ -211,12 +211,17 @@ namespace Sisvta
                 if (dataGridView2.Columns["Importe"] != null)
                 {
                     dataGridView2.Columns["Importe"].DefaultCellStyle.Format = "N2";
+                    dataGridView2.Columns["Importe"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
                 if (dataGridView2.Columns["costo"] != null)
                 {
                     dataGridView2.Columns["costo"].DefaultCellStyle.Format = "N2";
+                    dataGridView2.Columns["costo"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
-
+                dataGridView2.Columns["entrada"].DefaultCellStyle.Format = "N3";
+                dataGridView2.Columns["entrada"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; 
+                dataGridView2.Columns["salunid"].DefaultCellStyle.Format = "N3";
+                dataGridView2.Columns["salunid"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 ActualizarTotalCosto();
             }
             catch (Exception ex)

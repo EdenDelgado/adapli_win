@@ -65,10 +65,9 @@ namespace Sisvta
                     SELECT 
                         s.id_servicio AS Idservicio, 
                         s.clave AS Clave,
-                        s.descripcion AS Descripcion,
-                       
+                        s.s_nombre AS Nombre,
                         i.almacen AS IdAlmacen, 
-                        a.nombre AS NomAlmacen, i.saldo AS SaldoActual,
+                        a.nombre AS NomAlmacen, i.saldo AS ExistenciaActual,
                         s.preciocompra AS PrecioCompra, 0 as Ultimoprecio
                     FROM servicios s 
                     LEFT JOIN inventarioactual AS i ON s.id_servicio = i.articulo  
@@ -104,6 +103,35 @@ namespace Sisvta
                 // Ocultamos únicamente las columnas internas que existen en el SELECT
                 if (dataGridView1.Columns["IdAlmacen"] != null)
                     dataGridView1.Columns["IdAlmacen"].Visible = false;
+                dataGridView1.Columns["IdServicio"].Visible = false;
+                dataGridView1.Columns["ExistenciaActual"].DefaultCellStyle.Format = "N3";
+                dataGridView1.Columns["ExistenciaActual"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns["PrecioCompra"].DefaultCellStyle.Format = "N2";
+                dataGridView1.Columns["PrecioCompra"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns["Ultimoprecio"].DefaultCellStyle.Format = "N2";
+                dataGridView1.Columns["Ultimoprecio"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns["Nombre"].Width = 200;
+
+                // AGREGAR COLUMNA DE MOVIMIENTOS CON SÍMBOLO GRÁFICO (📊)
+                // =========================================================================
+                if (!dataGridView1.Columns.Contains("ColMov"))
+                {
+                    var colMov = new DataGridViewButtonColumn
+                    {
+                        Name = "ColMov",
+                        HeaderText = "Movs",
+                        Text = "📊",
+                        UseColumnTextForButtonValue = true,
+                        Width = 55,
+                        FlatStyle = FlatStyle.Flat
+                    };
+                    dataGridView1.Columns.Add(colMov);
+                }
+
+                if (dataGridView1.Columns["ColMov"] != null)
+                {
+                    dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 1;
+                }
 
                 dataGridView1.Refresh();
             }

@@ -48,13 +48,13 @@ namespace Sisvta
 
                 string sqlQuery = @"
                     SELECT 
-                        i.articulo AS Idarticulo,s.clave AS Clave,  
+                        i.articulo AS Idarticulo,s.clave AS Clave,  s.s_nombre AS Nombre,
+                        a.nombre AS NomAlmacen, 
                         i.entradas AS Entradas,
                         i.salidas AS Salidas, 
                         i.saldo AS Saldo,
-                        i.almacen AS Almacen,
-                        s.s_nombre AS Nombre,
-                        a.nombre AS NomAlmacen
+                        i.almacen AS Almacen
+                       
                     FROM inventarioactual AS i 
                     LEFT JOIN servicios AS s ON i.articulo = s.id_servicio
                     LEFT JOIN almacen AS a ON i.almacen = a.id_almacen";
@@ -91,6 +91,10 @@ namespace Sisvta
                 dataGridView1.DataSource = dataTable;
                 dataGridView1.Columns["Almacen"].Visible = false;
                 dataGridView1.Columns["Idarticulo"].Visible = false;
+                dataGridView1.Columns["Nombre"].Width = 200;
+                // AGREGAR COLUMNA DE MOVIMIENTOS CON SÍMBOLO GRÁFICO (📊)
+                // =========================================================================
+
                 dataGridView1.Refresh();
             }
             catch (Exception ex)
