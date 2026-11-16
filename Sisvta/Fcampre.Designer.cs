@@ -1,4 +1,4 @@
-﻿namespace Sisvta
+namespace Sisvta
 {
     partial class Fcampre
     {

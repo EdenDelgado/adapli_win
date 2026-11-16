@@ -161,8 +161,8 @@ namespace Sisvta
                         invfisico AS Invfisico, 
                         id_invfisdet AS Idinvfisdet, 
                         articulo AS Articulo, 
-                        s.clave AS ClaveProducto,
-                        s.s_nombre AS NombreProducto,
+                        s.clave AS Clave,
+                        s.s_nombre AS Nombre,
                         cantidad,
                         cantidad_real                        
                     FROM invfisdet as d 

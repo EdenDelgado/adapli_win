@@ -151,6 +151,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Name = "Fdtra";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fdtra  Captura detalle Traspaso";
             ResumeLayout(false);
             PerformLayout();

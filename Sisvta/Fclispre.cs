@@ -20,7 +20,7 @@ namespace Sisvta
 
             // Suscripción a eventos
             dataGridView1.SelectionChanged += dataGridView1_SelectionChanged;
-            dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
+            //dataGridView1.CellMouseDoubleClick += dataGridView1_CellMouseDoubleClick;
             dataGridView1.CellClick += dataGridView1_CellClick; // <-- Evento para capturar el clic en la columna de edición
             dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete; // <-- Para asegurar la columna de imagen
 

@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Frepexi));
             splitContainer1 = new SplitContainer();
+            txalmacen = new ComboBox();
             textBox2 = new TextBox();
-            textBox1 = new TextBox();
             Filtrarbt = new Button();
             label3 = new Label();
             label2 = new Label();
@@ -42,6 +42,7 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             dataGridView1 = new DataGridView();
+            label4 = new Label();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -60,8 +61,9 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(label4);
+            splitContainer1.Panel1.Controls.Add(txalmacen);
             splitContainer1.Panel1.Controls.Add(textBox2);
-            splitContainer1.Panel1.Controls.Add(textBox1);
             splitContainer1.Panel1.Controls.Add(Filtrarbt);
             splitContainer1.Panel1.Controls.Add(label3);
             splitContainer1.Panel1.Controls.Add(label2);
@@ -76,6 +78,14 @@
             splitContainer1.SplitterDistance = 164;
             splitContainer1.TabIndex = 0;
             // 
+            // txalmacen
+            // 
+            txalmacen.FormattingEnabled = true;
+            txalmacen.Location = new Point(489, 109);
+            txalmacen.Name = "txalmacen";
+            txalmacen.Size = new Size(121, 23);
+            txalmacen.TabIndex = 31;
+            // 
             // textBox2
             // 
             textBox2.Location = new Point(642, 110);
@@ -83,21 +93,16 @@
             textBox2.Size = new Size(100, 23);
             textBox2.TabIndex = 30;
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(483, 110);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 29;
-            // 
             // Filtrarbt
             // 
-            Filtrarbt.Location = new Point(787, 116);
+            Filtrarbt.BackColor = Color.MediumAquamarine;
+            Filtrarbt.Image = (Image)resources.GetObject("Filtrarbt.Image");
+            Filtrarbt.Location = new Point(787, 89);
             Filtrarbt.Name = "Filtrarbt";
-            Filtrarbt.Size = new Size(89, 22);
+            Filtrarbt.Size = new Size(80, 60);
             Filtrarbt.TabIndex = 28;
             Filtrarbt.Text = "Filtrar";
-            Filtrarbt.UseVisualStyleBackColor = true;
+            Filtrarbt.UseVisualStyleBackColor = false;
             Filtrarbt.Click += Filtrarbt_Click;
             // 
             // label3
@@ -189,6 +194,15 @@
             dataGridView1.Size = new Size(953, 354);
             dataGridView1.TabIndex = 1;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(510, 91);
+            label4.Name = "label4";
+            label4.Size = new Size(54, 15);
+            label4.TabIndex = 32;
+            label4.Text = "Almacen";
+            // 
             // Frepexi
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -196,6 +210,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Frepexi";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Frepexi  REPORTE EXISTENCIAS";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -223,6 +238,7 @@
         private DateTimePicker desdefechatx;
         private Button Filtrarbt;
         private TextBox textBox2;
-        private TextBox textBox1;
+        private ComboBox txalmacen;
+        private Label label4;
     }
 }

@@ -139,6 +139,7 @@
             Controls.Add(txpedido);
             Controls.Add(label1);
             Name = "Fcped";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fcped Consulta de Pedidos";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);

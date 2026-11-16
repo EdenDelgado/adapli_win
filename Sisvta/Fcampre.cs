@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 
@@ -16,20 +17,23 @@ namespace Sisvta
     {
         private readonly ApplicationDbContext _context;
         private readonly int _idServicio;
-        private readonly string _clave; private readonly string _nombre;
+        private readonly string _clave;
+        private readonly string _nombre;
 
-        private readonly int _listaPrecio; private readonly string _nomlistaPrecio;
+        private readonly int _listaPrecio;
+        private readonly string _nomlistaPrecio;
         private readonly double _precioVenta;
 
         // Constructor para edición que recibe el Contexto, ID del servicio, Nombre de la lista y Precio de venta
-        public Fcampre(ApplicationDbContext context, int idServicio, string clave, string nombre, int listaPrecio, string NomlistaPrecio, double precioVenta)
+        public Fcampre(ApplicationDbContext context, int idServicio, string clave, string nombre, int listaPrecio, string nomlistaPrecio, double precioVenta)
         {
             InitializeComponent();
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _idServicio = idServicio;
             _clave = clave;
             _nombre = nombre;
-            _listaPrecio = listaPrecio; _nomlistaPrecio = NomlistaPrecio;
+            _listaPrecio = listaPrecio;
+            _nomlistaPrecio = nomlistaPrecio;
             _precioVenta = precioVenta;
 
             // Forzamos la carga inicial aquí para no depender exclusivamente del Load
@@ -42,8 +46,10 @@ namespace Sisvta
             InitializeComponent();
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _idServicio = 0;
-            _clave = string.Empty; _nombre = string.Empty;
-            _listaPrecio = 0; _nomlistaPrecio = string.Empty;
+            _clave = string.Empty;
+            _nombre = string.Empty;
+            _listaPrecio = 0;
+            _nomlistaPrecio = string.Empty;
             _precioVenta = 0.0;
 
             _ = InicializarDatosAsync();
@@ -57,8 +63,11 @@ namespace Sisvta
             if (_idServicio > 0)
             {
                 clavetxt.SelectedValue = _idServicio;
-                nombretxt.Text = _nombre;
-                listapreciotxt.Text = _nomlistaPrecio;
+
+                // Verificamos si los controles existen en el diseñador antes de asignar
+                if (nombretxt != null) nombretxt.Text = _nombre;
+                if (listapreciotxt != null) listapreciotxt.Text = _nomlistaPrecio;
+
                 preciotxt.Text = _precioVenta.ToString("N2");
             }
         }
@@ -77,10 +86,9 @@ namespace Sisvta
             {
                 if (_context == null) return;
 
-                var listaServicios = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync(
-                    _context.Set<Sisvta.Domain.Entities.Servicio>()
-                        .Select(s => new { id_servicio = s.IdServicio, clave = s.Clave })
-                );
+                var listaServicios = await _context.Set<Servicio>()
+                    .Select(s => new { id_servicio = s.IdServicio, clave = s.Clave })
+                    .ToListAsync();
 
                 if (listaServicios != null && listaServicios.Count > 0)
                 {
@@ -125,12 +133,12 @@ namespace Sisvta
                 string sqlUpdate = @"
                     UPDATE preciosarticulo 
                     SET precioventa = @precioventa 
-                    WHERE articulo = @articulo and listaprecio=@listaprecio;";
+                    WHERE articulo = @articulo AND listaprecio = @listaprecio;";
 
                 string connectionString = _context.Database.GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString)) return;
 
-                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                using var connection = new SqlConnection(connectionString);
                 await connection.OpenAsync();
 
                 using var command = connection.CreateCommand();
@@ -162,7 +170,5 @@ namespace Sisvta
                 preciotxt.Text = precio.ToString("N2");
             }
         }
-
-
     }
 }

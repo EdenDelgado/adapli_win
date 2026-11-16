@@ -72,6 +72,7 @@
             Controls.Add(panel1);
             Controls.Add(dataGridView1);
             Name = "Fcprod";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fcprod Consulta de Productos";
             Load += Fcprod_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();

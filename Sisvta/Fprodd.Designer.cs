@@ -73,7 +73,6 @@
             umedidatxt = new ComboBox();
             panel4 = new Panel();
             btregresar = new Button();
-            button2 = new Button();
             btGuardar = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
@@ -107,11 +106,12 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(12, 88);
+            label2.Location = new Point(42, 89);
             label2.Name = "label2";
             label2.Size = new Size(817, 25);
             label2.TabIndex = 1;
             label2.Text = "CLAVE PRODUCTO SERVICIO INVÁLIDA  FALTA PRECIO A LA LISTA DE PRECIOS: PRECIO PUBLICO";
+            label2.Visible = false;
             // 
             // label3
             // 
@@ -487,7 +487,6 @@
             // 
             panel4.BackColor = SystemColors.ControlLight;
             panel4.Controls.Add(btregresar);
-            panel4.Controls.Add(button2);
             panel4.Controls.Add(btGuardar);
             panel4.Controls.Add(label1);
             panel4.Controls.Add(pictureBox1);
@@ -510,19 +509,6 @@
             btregresar.TextImageRelation = TextImageRelation.ImageAboveText;
             btregresar.UseVisualStyleBackColor = false;
             btregresar.Click += btregresar_Click;
-            // 
-            // button2
-            // 
-            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.BackColor = Color.MediumAquamarine;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(655, 6);
-            button2.Name = "button2";
-            button2.Size = new Size(80, 80);
-            button2.TabIndex = 4;
-            button2.Text = "Nuevo";
-            button2.TextImageRelation = TextImageRelation.ImageAboveText;
-            button2.UseVisualStyleBackColor = false;
             // 
             // btGuardar
             // 
@@ -805,7 +791,6 @@
         public ComboBox umedidatxt;
         private Panel panel4;
         private Button btregresar;
-        private Button button2;
         private Button btGuardar;
         private Label label1;
         private PictureBox pictureBox1;

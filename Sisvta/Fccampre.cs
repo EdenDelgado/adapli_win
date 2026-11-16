@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using System;
@@ -115,7 +115,7 @@ namespace Sisvta
                 // Ocultamos la columna técnica id_listaprecio si se prefiere no mostrar en bruto
                 if (dataGridView1.Columns.Contains("listaprecio"))
                 {
-                   
+
                     dataGridView1.Columns["listaprecio"].Visible = false;
                 }
                 dataGridView1.Columns["id_servicio"].Visible = false;
@@ -161,7 +161,7 @@ namespace Sisvta
                     double precioventa = (rowView["precioventa"] != DBNull.Value) ? Convert.ToDouble(rowView["precioventa"]) : 0.0;
 
                     // Instanciamos el formulario pasando el contexto y los datos del registro
-                    using (var formEdicion = new Fcampre(_context, idServicio, clave, nombre, listaPrecio,NomlistaPrecio, precioventa))
+                    using (var formEdicion = new Fcampre(_context, idServicio, clave, nombre, listaPrecio, NomlistaPrecio, precioventa))
                     {
                         if (formEdicion.ShowDialog() == DialogResult.OK)
                         {

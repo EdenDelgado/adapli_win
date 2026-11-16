@@ -27,9 +27,7 @@
 		<Compile Update="Flispre.cs">
 		  <SubType>Form</SubType>
 		</Compile>
-		<Compile Update="Fccampre.cs">
-		  <SubType>Form</SubType>
-		</Compile>
+		<Compile Update="Fccampre.cs" />
 		<Compile Update="Fcdev.cs">
 		  <SubType>Form</SubType>
 		</Compile>

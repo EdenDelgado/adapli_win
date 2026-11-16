@@ -131,6 +131,7 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Name = "Fdinvfis";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fdent  Captura detalle Entrada";
             ResumeLayout(false);
             PerformLayout();

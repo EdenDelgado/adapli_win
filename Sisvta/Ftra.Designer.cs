@@ -300,7 +300,7 @@
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.Location = new Point(0, 89);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(133, 80);
+            dataGridView1.Size = new Size(21, 25);
             dataGridView1.TabIndex = 0;
             // 
             // btborrar
@@ -343,6 +343,7 @@
             ClientSize = new Size(934, 522);
             Controls.Add(splitContainer1);
             Name = "Ftra";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Ftra  TRASPASOS ALMACEN";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

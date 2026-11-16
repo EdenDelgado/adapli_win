@@ -67,12 +67,14 @@
             // 
             // Filtrarbt
             // 
-            Filtrarbt.Location = new Point(720, 105);
+            Filtrarbt.BackColor = Color.MediumAquamarine;
+            Filtrarbt.Image = (Image)resources.GetObject("Filtrarbt.Image");
+            Filtrarbt.Location = new Point(720, 89);
             Filtrarbt.Name = "Filtrarbt";
-            Filtrarbt.Size = new Size(89, 22);
+            Filtrarbt.Size = new Size(89, 72);
             Filtrarbt.TabIndex = 28;
             Filtrarbt.Text = "Filtrar";
-            Filtrarbt.UseVisualStyleBackColor = true;
+            Filtrarbt.UseVisualStyleBackColor = false;
             Filtrarbt.Click += Filtrarbt_Click;
             // 
             // panel3
@@ -155,6 +157,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Fclispre";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fclispre LISTA DE PRECIOS";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);

@@ -193,6 +193,7 @@
             ClientSize = new Size(953, 522);
             Controls.Add(splitContainer1);
             Name = "Fctac";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Fctac  TRANSACCIONES";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();

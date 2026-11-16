@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Sisvta;
+using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using Sisvta.Infrastructure.Repositories;
 using Sisvta.UseCases;
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,27 +15,114 @@ namespace Sisvta
     public partial class Fprod : Form
     {
         private readonly GestionarProductosUseCase _useCase;
-
-        private readonly ApplicationDbContext _context; // Añadimos el contexto para poder instanciar repositorios hijos
+        private readonly ApplicationDbContext _context;
         private Fprodd _finv2;
         private Fcgru _fcgru;
-
         private Fclin _fclin;
 
         public Fprod(GestionarProductosUseCase useCase, ApplicationDbContext context)
         {
             InitializeComponent();
             _useCase = useCase;
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            // Inicializamos Finv2 inyectándole el mismo caso de uso
+            // Inicializamos Finv2 inyectándole el mismo caso de uso y contexto
             _finv2 = new Fprodd(_useCase, _context);
             _finv2.ProductoModificado += async (s, e) => await CargarGridAsync();
 
-            // Corregido: Usamos el nombre exacto 'RepositorioGrupoLinea' y le pasamos el _context
             _fcgru = new Fcgru(new GestionarGruposLineasUseCase(new GrupoLineaRepository(_context)));
 
             dataGridView1.DataBindingComplete += dataGridView1_DataBindingComplete;
+
+            // Vinculamos el evento Load para la carga inicial secuencial y segura
+            this.Load += Fprod_Load_Secuencial;
+        }
+
+        private void Fprod_Load_Secuencial(object sender, EventArgs e)
+        {
+            try
+            {
+                // 1. Cargamos los catálogos de forma independiente con ADO.NET
+                CargarStatusServicioSincrono();
+                CargarLineasArticuloSincrono();
+                CargarGruposLineaSincrono();
+                // 2. Cargamos los datos del grid de forma segura
+                CargarGridSincrono();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al inicializar la ventana: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // =========================================================================
+        // CARGA AISLADA CON ADO.NET PARA EVITAR CONFLICTOS CON EL DbContext
+        // =========================================================================
+        private void CargarStatusServicioSincrono()
+        {
+            try
+            {
+                if (_context == null) return;
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                connection.Open();
+
+                string sqlQuery = "SELECT id_status_servicios AS IdStatusServicios, status AS Status FROM status_servicios ORDER BY id_status_servicios";
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlQuery;
+
+                using var reader = command.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    statustxt.DataSource = null;
+                    statustxt.DisplayMember = "Status";          // Campo visible
+                    statustxt.ValueMember = "IdStatusServicios"; // Valor interno ID
+                    statustxt.DataSource = dataTable;
+                    statustxt.SelectedIndex = -1;                // Sin selección por defecto
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el catálogo de status: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CargarGridSincrono()
+        {
+            try
+            {
+                var task = Task.Run(async () => await _useCase.ObtenerFiltradosDtoAsync(null, null, string.Empty));
+                var lista = task.Result;
+
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = lista.ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al recargar la tabla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task CargarGridAsync()
+        {
+            try
+            {
+                var lista = await _useCase.ObtenerFiltradosDtoAsync(null, null, string.Empty);
+
+                dataGridView1.DataSource = null;
+                dataGridView1.DataSource = lista.ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al recargar la tabla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void AsegurarFinv2Vivo()
@@ -48,27 +138,9 @@ namespace Sisvta
             }
         }
 
-
-        private async Task CargarGridAsync()
+        private void Fprod_Load(object sender, EventArgs e)
         {
-            try
-            {
-                // En lugar de ObtenerTodosAsync() (que trae la entidad pura sin el JOIN de grupo),
-                // usamos ObtenerFiltradosDtoAsync sin restricciones para obtener el DTO completo con el Grupo.
-                var lista = await _useCase.ObtenerFiltradosDtoAsync(null, null, string.Empty);
-
-                dataGridView1.DataSource = null;
-                dataGridView1.DataSource = lista.ToList();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al recargar la tabla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private async void Fprod_Load(object sender, EventArgs e)
-        {
-           // await CargarGridAsync();
+            // Evento reservado del diseñador
         }
 
         private void dataGridView1_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -76,16 +148,17 @@ namespace Sisvta
             if (dataGridView1.Columns["Pcompra"] != null)
             {
                 dataGridView1.Columns["Pcompra"].HeaderText = "pcompra";
-                dataGridView1.Columns["Pcompra"].Width = 60;
+                dataGridView1.Columns["Pcompra"].Width = 70; dataGridView1.Columns["Pventa"].Width = 70;
                 dataGridView1.Columns["Pcompra"].DefaultCellStyle.Format = "N2";
                 dataGridView1.Columns["Pcompra"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-               // dataGridView1.Columns["Pventa"].DefaultCellStyle.Format = "N2";
-               // dataGridView1.Columns["Pventa"].Width = 60;
-               // dataGridView1.Columns["Pventa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridView1.Columns["Pventa"].DefaultCellStyle.Format = "N2";
+                dataGridView1.Columns["Pventa"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
             dataGridView1.Columns["Nombre"].Width = 220;
             dataGridView1.Columns["Status"].Width = 40;
-            dataGridView1.Columns["nomlinea"].Width = 140; dataGridView1.Columns["nomgrupo"].Width = 140;
+            dataGridView1.Columns["nomlinea"].Width = 140;
+            dataGridView1.Columns["nomgrupo"].Width = 140;
+
             if (dataGridView1.Columns["Linea"] != null)
             {
                 dataGridView1.Columns["Linea"].Visible = false;
@@ -94,50 +167,55 @@ namespace Sisvta
             {
                 dataGridView1.Columns["Grupo"].Visible = false;
             }
-            dataGridView1.Columns["descripcion"].Visible = false; dataGridView1.Columns["umedida"].Visible = false;
-           // dataGridView1.Columns["moneda"].Visible = false; dataGridView1.Columns["inventariable"].Visible = false;
-            dataGridView1.Columns["maximo"].Visible = false; dataGridView1.Columns["minimo"].Visible = false; dataGridView1.Columns["reorden"].Visible = false;
-            //dataGridView1.Columns["Clave"].Visible = false;
+            dataGridView1.Columns["descripcion"].Visible = false;
+            dataGridView1.Columns["status"].Visible = false;
+            dataGridView1.Columns["umedida"].Visible = false;
+            dataGridView1.Columns["maximo"].Visible = false;
+            dataGridView1.Columns["minimo"].Visible = false;
+            dataGridView1.Columns["reorden"].Visible = false;
+            dataGridView1.Columns["claveproserv"].Visible = false;
+            dataGridView1.Columns["Moneda"].Visible = false;
+
+            // 1. Agregar la columna de Movimientos
             if (!dataGridView1.Columns.Contains("ColMov"))
             {
-                var colMov = new DataGridViewTextBoxColumn
+                var colMov = new DataGridViewButtonColumn
                 {
                     Name = "ColMov",
-                    HeaderText = "mov",
-                    ReadOnly = true,
-
-                    //UseColumnTextForButtonValue = true, // Esto hace que dibuje el texto/icono en cada botón de la celda
-
-                    Width = 50
+                    HeaderText = "Movs",
+                    Text = "📊",
+                    UseColumnTextForButtonValue = true,
+                    Width = 55,
+                    FlatStyle = FlatStyle.Flat
                 };
                 dataGridView1.Columns.Add(colMov);
             }
 
-            // --- 3. AGREGAR COLUMNA 'Borrar' CON ICONO DE BOTE DE BASURA (SI NO EXISTE YA) ---
+            if (dataGridView1.Columns["ColMov"] != null)
+            {
+                dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 2;
+            }
+
+            // 2. Agregar la columna de Borrar
             if (!dataGridView1.Columns.Contains("ColBorrar"))
             {
                 var colBorrar = new DataGridViewButtonColumn
                 {
                     Name = "ColBorrar",
                     HeaderText = "Borrar",
-                    Text = "🗑️", // Puedes usar un emoji de bote de basura o texto alternativo
-                    UseColumnTextForButtonValue = true, // Esto hace que dibuje el texto/icono en cada botón de la celda
+                    Text = "🗑️",
+                    UseColumnTextForButtonValue = true,
                     Width = 55
                 };
                 dataGridView1.Columns.Add(colBorrar);
             }
-            // Forzar que ColMov y ColBorrar se coloquen siempre al final del grid
-            if (dataGridView1.Columns["ColMov"] != null)
-            {
-                dataGridView1.Columns["ColMov"].DisplayIndex = dataGridView1.Columns.Count - 2;
-            }
+
             if (dataGridView1.Columns["ColBorrar"] != null)
             {
                 dataGridView1.Columns["ColBorrar"].DisplayIndex = dataGridView1.Columns.Count - 1;
             }
         }
 
-        // Método para abrir Finv2 y registrar un nuevo producto
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             AsegurarFinv2Vivo();
@@ -145,17 +223,14 @@ namespace Sisvta
             {
                 _finv2.MdiParent = this.MdiParent;
             }
-            // Limpiamos todos los campos para asegurar un registro completamente nuevo
+
             _finv2.clavetxt.Clear();
             _finv2.nombretxt.Clear();
             _finv2.descripciontxt.Clear();
             _finv2.inventariabletxt.Clear();
             _finv2.prodservtxt.Visible = false;
             _finv2.claveproservtxt.Clear();
-           // _finv2.statustxt.Clear();
             _finv2.preciotxt.Text = "0.00";
-           // _finv2.lineatxt.Clear();
-            //_finv2.monedatx.Clear();
             _finv2.precioptx.Text = "0.00";
             _finv2.ultimopreciotxt.Text = "0.00";
             _finv2.umedidatxt.Text = "";
@@ -164,32 +239,35 @@ namespace Sisvta
             _finv2.maximotx.Clear();
             _finv2.minimotx.Clear();
             _finv2.reordentx.Clear();
-            //_finv2.impuestotx.Clear();
             _finv2.tasatx.Clear();
-
-            //_finv2.almacentx.Clear();
-            // Habilitamos la clave para escritura
             _finv2.clavetxt.Enabled = true;
 
             _finv2.Show();
             _finv2.BringToFront();
         }
 
-
-
         private async void btfiltro_Click(object sender, EventArgs e)
         {
             try
             {
                 string lineaFiltro = lineatxt.Text.Trim();
-                int? statusFiltro = int.TryParse(statustxt.Text.Trim(), out int s) ? s : (int?)null;
-                string clavePrefix = nomclatxt.Text.Trim();
 
-                // Agregamos la lectura del grupo (asumiendo que tu textbox se llama grupotxt, 
-                // si tiene otro nombre, reemplázalo aquí)
+                int? statusFiltro = null;
+                if (statustxt is ComboBox combo && combo.SelectedValue != null)
+                {
+                    if (int.TryParse(combo.SelectedValue.ToString(), out int valStatus))
+                    {
+                        statusFiltro = valStatus;
+                    }
+                }
+                else if (int.TryParse(statustxt.Text.Trim(), out int s))
+                {
+                    statusFiltro = s;
+                }
+
+                string clavePrefix = nomclatxt.Text.Trim();
                 string grupoFiltro = grupotxt.Text.Trim();
 
-                // Pasamos el grupoFiltro al método del caso de uso
                 var resultados = await _useCase.ObtenerFiltradosDtoAsync(lineaFiltro, statusFiltro, clavePrefix, grupoFiltro);
 
                 dataGridView1.DataSource = null;
@@ -201,30 +279,19 @@ namespace Sisvta
             }
         }
 
-        private void productosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
-
-
-
+        private void productosToolStripMenuItem_Click(object sender, EventArgs e) { }
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
 
         private void btGrupos_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Validamos que el contexto exista
                 if (_context == null)
                 {
                     MessageBox.Show("El contexto de la base de datos no está inicializado en Fprod.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // 2. Si el formulario no existe o ya fue cerrado (Disposed), lo recreamos igual que en el constructor
                 if (_fcgru == null || _fcgru.IsDisposed)
                 {
                     _fcgru = new Fcgru(new GestionarGruposLineasUseCase(new GrupoLineaRepository(_context)));
@@ -233,7 +300,6 @@ namespace Sisvta
                 {
                     _fcgru.MdiParent = this.MdiParent;
                 }
-                // 3. Mostramos el formulario
                 _fcgru.Show();
                 _fcgru.BringToFront();
             }
@@ -243,31 +309,26 @@ namespace Sisvta
             }
         }
 
-        // private Fclin _fclin;
-
         private void btlinea_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Verificamos que el contexto exista para evitar el NullReferenceException
                 if (_context == null)
                 {
                     MessageBox.Show("El contexto de la base de datos no está inicializado en Fprod.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // 2. Si el formulario no existe o ya fue cerrado (Disposed), lo creamos de nuevo
                 if (_fclin == null || _fclin.IsDisposed)
                 {
                     var repositorio = new LineaArticuloRepository(_context);
                     var useCase = new GestionarLineasArticulosUseCase(repositorio);
                     _fclin = new Fclin(useCase, _context);
                 }
-                if (_fclin.MdiParent == null)  // && this.MdiParent != null)
+                if (_fclin.MdiParent == null)
                 {
                     _fclin.MdiParent = this.MdiParent;
                 }
-                // 3. Mostramos el formulario
                 _fclin.Show();
                 _fclin.BringToFront();
             }
@@ -277,17 +338,10 @@ namespace Sisvta
             }
         }
 
-        private void dataGridView1_DoubleClick(object sender, EventArgs e)
-        {
-
-        }
-
-
-
+        private void dataGridView1_DoubleClick(object sender, EventArgs e) { }
 
         private async void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            // Validar que se hizo clic en una fila válida (excluyendo encabezados)
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow fila = dataGridView1.Rows[e.RowIndex];
@@ -295,10 +349,8 @@ namespace Sisvta
 
                 if (string.IsNullOrEmpty(claveSeleccionada)) return;
 
-                // Obtenemos el nombre de la columna actual de forma segura
                 string nombreColumna = dataGridView1.Columns[e.ColumnIndex].Name;
 
-                // 1. Si hace doble clic en ColMov (Columna 9 o por nombre) -> Abre Fcmov
                 if (e.ColumnIndex == 13 || nombreColumna == "ColMov")
                 {
                     var fcmovForm = new Fcmov(_context, claveSeleccionada);
@@ -309,20 +361,56 @@ namespace Sisvta
                     fcmovForm.Show();
                     fcmovForm.BringToFront();
                 }
-                // 2. Si hace doble clic en ColBorrar (Columna 10 o por nombre) -> Lógica de borrado
                 else if (e.ColumnIndex == 14 || nombreColumna == "ColBorrar")
                 {
                     var confirmResult = MessageBox.Show($"¿Está seguro de que desea borrar el producto '{claveSeleccionada}'?",
                                                        "Confirmar Borrado",
                                                        MessageBoxButtons.YesNo,
                                                        MessageBoxIcon.Warning);
+
                     if (confirmResult == DialogResult.Yes)
                     {
                         try
                         {
-                            // await _useCase.EliminarAsync(claveSeleccionada);
-                            // await CargarGridAsync(); // Recargamos el grid después de borrar
-                            MessageBox.Show($"Producto '{claveSeleccionada}' borrado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            var prodservVal = fila.Cells["Prodserv"].Value?.ToString();
+                            if (!int.TryParse(prodservVal, out int idServicio))
+                            {
+                                MessageBox.Show("No se pudo identificar el ID del producto para validar sus movimientos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+
+                            // 1. Verificar movimientos en inventario_detalles
+                            int totalInventarioDet = _context.InventarioDetalles
+                                .Count(id => id.Articulo == idServicio);
+
+                            // 2. Verificar movimientos en salidadetinv
+                            int totalSalidaDet = _context.Set<SalidaDetInv>()
+                                .Count(sd => sd.Producto == idServicio);
+
+                            // 3. Validar si tiene registros asociados
+                            if (totalInventarioDet > 0 || totalSalidaDet > 0)
+                            {
+                                MessageBox.Show($"El producto '{claveSeleccionada}' no se puede borrar porque tiene movimientos registrados en el inventario o salidas.",
+                                                  "Acción Denegada",
+                                                  MessageBoxButtons.OK,
+                                                  MessageBoxIcon.Warning);
+                                return;
+                            }
+
+                            // 4. Proceder a borrar el producto si no tiene dependencias
+                            var productoAEliminar = _context.Servicios.FirstOrDefault(s => s.IdServicio == idServicio);
+                            if (productoAEliminar != null)
+                            {
+                                _context.Servicios.Remove(productoAEliminar);
+                                _context.SaveChanges();
+
+                                MessageBox.Show($"Producto '{claveSeleccionada}' borrado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                CargarGridSincrono();
+                            }
+                            else
+                            {
+                                MessageBox.Show("No se encontró el registro del producto en la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -330,7 +418,6 @@ namespace Sisvta
                         }
                     }
                 }
-                // 3. Por defecto (Cualquier otra celda o columna 0) -> Abre _finv2 (Detalle / Edición)
                 else
                 {
                     dataGridView1.CurrentCell = fila.Cells[0];
@@ -359,23 +446,11 @@ namespace Sisvta
                     {
                         _finv2.preciotxt.Text = "0.00";
                     }
-                    /*
-                    if (fila.Cells["Pventa"].Value != null && double.TryParse(fila.Cells["Pventa"].Value.ToString(), out double precioventa))
-                    {
-                        _finv2.precioptx.Text = precioventa.ToString("N2");
-                    }
-                    else
-                    {
-                        _finv2.precioptx.Text = "0.00";
-                    }*/
 
                     if (_finv2.MdiParent == null && this.MdiParent != null)
                     {
                         _finv2.MdiParent = this.MdiParent;
                     }
-
-                    //_finv2.lineatxt.Text = fila.Cells["Linea"].Value?.ToString();
-                   // _finv2.monedatx.Text = fila.Cells["moneda"].Value?.ToString();
 
                     _finv2.Show();
                     _finv2.BringToFront();
@@ -392,19 +467,84 @@ namespace Sisvta
             _finv2.BringToFront();
         }
 
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e) { }
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e) { }
 
         private void btregresar_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void CargarGruposLineaSincrono()
+        {
+            try
+            {
+                if (_context == null) return;
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                connection.Open();
+
+                string sqlQuery = "SELECT id_gruposlineas AS Id, nombre AS Nombre FROM grupolinea ORDER BY id_gruposlineas";
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlQuery;
+
+                using var reader = command.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    grupotxt.DataSource = null;
+                    grupotxt.DisplayMember = "Nombre";
+                    grupotxt.ValueMember = "Id";
+                    grupotxt.DataSource = dataTable;
+                    grupotxt.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el catálogo de grupos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CargarLineasArticuloSincrono()
+        {
+            try
+            {
+                if (_context == null) return;
+
+                string connectionString = _context.Database.GetConnectionString();
+                if (string.IsNullOrEmpty(connectionString)) return;
+
+                using var connection = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                connection.Open();
+
+                string sqlQuery = "SELECT id_lineasarticulos AS Id, nombre AS Nombre FROM lineaarticulo ORDER BY id_lineasarticulos";
+
+                using var command = connection.CreateCommand();
+                command.CommandText = sqlQuery;
+
+                using var reader = command.ExecuteReader();
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    lineatxt.DataSource = null;
+                    lineatxt.DisplayMember = "Nombre";
+                    lineatxt.ValueMember = "Id";
+                    lineatxt.DataSource = dataTable;
+                    lineatxt.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el catálogo de líneas de artículos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -11,6 +11,10 @@ namespace Sisvta
     {
         private readonly IConsultarProveedoresUseCase _consultarUseCase;
         private readonly GestionarProveedoresUseCase _gestionarUseCase;
+        private int? _idPendienteCarga = null;
+
+        // EVENTO PARA NOTIFICAR A FCPROV QUE DEBE REFRESCAR LA CONSULTA SQL
+        public event Action? ProveedorModificado;
 
         public Fprov(IConsultarProveedoresUseCase consultarUseCase, GestionarProveedoresUseCase gestionarUseCase)
         {
@@ -18,7 +22,29 @@ namespace Sisvta
             _consultarUseCase = consultarUseCase ?? throw new ArgumentNullException(nameof(consultarUseCase));
             _gestionarUseCase = gestionarUseCase ?? throw new ArgumentNullException(nameof(gestionarUseCase));
 
-            this.Load += Fcli_Load;
+            this.Shown += Fprov_Shown;
+        }
+
+        public void EstablecerIdPendiente(int idProveedor)
+        {
+            _idPendienteCarga = idProveedor;
+        }
+
+        private async void Fprov_Shown(object? sender, EventArgs e)
+        {
+            if (DesignMode) return;
+
+            if (_idPendienteCarga.HasValue && _idPendienteCarga.Value > 0)
+            {
+                int idToLoad = _idPendienteCarga.Value;
+                _idPendienteCarga = null;
+                await CargarProveedorPorIdAsync(idToLoad);
+            }
+            else if (string.IsNullOrWhiteSpace(proveedortxt.Text))
+            {
+                await CargarGridAsync();
+                LimpiarControles();
+            }
         }
 
         private async Task CargarGridAsync()
@@ -33,12 +59,6 @@ namespace Sisvta
             {
                 MessageBox.Show($"Error al recargar la tabla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private async void Fcli_Load(object? sender, EventArgs e)
-        {
-            if (DesignMode) return;
-            await CargarGridAsync();
         }
 
         private void dataGridView1_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
@@ -78,6 +98,10 @@ namespace Sisvta
                 await _gestionarUseCase.GuardarAsync(proveedor);
 
                 MessageBox.Show("Proveedor registrado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // NOTIFICAMOS AL CATÁLOGO QUE SE MODIFICÓ LA BASE DE DATOS
+                ProveedorModificado?.Invoke();
+
                 LimpiarControles();
                 await CargarGridAsync();
             }
@@ -108,7 +132,13 @@ namespace Sisvta
                 await _gestionarUseCase.GuardarAsync(proveedor);
 
                 MessageBox.Show("Proveedor actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // NOTIFICAMOS AL CATÁLOGO QUE SE MODIFICÓ LA BASE DE DATOS
+                ProveedorModificado?.Invoke();
+
+                LimpiarControles();
                 await CargarGridAsync();
+                Close();
             }
             catch (Exception ex)
             {
@@ -138,6 +168,10 @@ namespace Sisvta
             {
                 await _gestionarUseCase.EliminarAsync(int.Parse(id));
                 MessageBox.Show("Proveedor eliminado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // NOTIFICAMOS AL CATÁLOGO QUE SE MODIFICÓ LA BASE DE DATOS
+                ProveedorModificado?.Invoke();
+
                 LimpiarControles();
                 await CargarGridAsync();
             }
@@ -154,25 +188,23 @@ namespace Sisvta
 
             try
             {
-                var proveedor = await _consultarUseCase.ObtenerPorIdAsync(int.Parse(id));
-                if (proveedor != null)
+                if (int.TryParse(id, out int idProveedor))
                 {
-                    nombretxt.Text = proveedor.Nombre;
-                    domiciliotxt.Text = proveedor.Direccion;
-                    rfctxt.Text = proveedor.Rfc;
-                    btguardar.Visible = false;
-                    btactualiza.Visible = true;
-                    btBaja.Visible = true;
-                }
-                else
-                {
-                    MessageBox.Show("No existe un proveedor con ese ID.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    nombretxt.Clear();
-                    domiciliotxt.Clear();
-                    rfctxt.Clear();
-                    btguardar.Visible = true;
-                    btactualiza.Visible = false;
-                    btBaja.Visible = false;
+                    var proveedor = await _consultarUseCase.ObtenerPorIdAsync(idProveedor);
+                    if (proveedor != null)
+                    {
+                        nombretxt.Text = proveedor.Nombre;
+                        domiciliotxt.Text = proveedor.Direccion;
+                        rfctxt.Text = proveedor.Rfc;
+                        btguardar.Visible = false;
+                        btactualiza.Visible = true;
+                        btBaja.Visible = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No existe un proveedor con ese ID.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LimpiarControles();
+                    }
                 }
             }
             catch (Exception ex)
@@ -190,6 +222,35 @@ namespace Sisvta
             btguardar.Visible = true;
             btactualiza.Visible = false;
             btBaja.Visible = false;
+        }
+
+        public async Task CargarProveedorPorIdAsync(int idProveedor)
+        {
+            try
+            {
+                proveedortxt.Text = idProveedor.ToString();
+
+                var proveedor = await _consultarUseCase.ObtenerPorIdAsync(idProveedor);
+                if (proveedor != null)
+                {
+                    nombretxt.Text = proveedor.Nombre;
+                    domiciliotxt.Text = proveedor.Direccion;
+                    rfctxt.Text = proveedor.Rfc;
+
+                    btguardar.Visible = false;
+                    btactualiza.Visible = true;
+                    btBaja.Visible = true;
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró el registro del proveedor seleccionado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LimpiarControles();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el proveedor seleccionado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void panel1_Paint(object? sender, PaintEventArgs e) { }
