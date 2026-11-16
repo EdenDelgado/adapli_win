@@ -14,17 +14,16 @@ namespace Sisvta
     {
         private Fprov? _fprov;
         private readonly IConsultarProveedoresUseCase _useCase;
-        private readonly IServiceProvider _serviceProvider; // Declarado correctamente
+        private readonly IServiceProvider _serviceProvider;
         private readonly BindingSource _bindingSource = new();
         private bool _isCargando = false; // Candado anti-concurrencia
 
         public string ProveedorIdSeleccionado { get; private set; } = string.Empty;
 
-        // Constructor con Inyección de Dependencias (recibe useCase y serviceProvider)
-        public Fcprov(IConsultarProveedoresUseCase useCase, IServiceProvider serviceProvider)
+        public Fcprov(IConsultarProveedoresUseCase consultarUseCase, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _useCase = useCase;
+            _useCase = consultarUseCase ?? throw new ArgumentNullException(nameof(consultarUseCase));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             this.Load += Fcprov_Load;
@@ -45,18 +44,19 @@ namespace Sisvta
 
         private async Task CargarProveedoresAsync()
         {
-            if (_isCargando || _bindingSource.DataSource != null) return;
+            if (_isCargando) return;
 
             try
             {
                 _isCargando = true;
 
-                var Proveedors = await _useCase.ObtenerTodosAsync();
-                var lista = Proveedors.ToList();
+                var proveedores = await _useCase.ObtenerTodosAsync();
+                var lista = proveedores.ToList();
 
                 if (!lista.Any())
                 {
-                    MessageBox.Show("La consulta se ejecutó pero la tabla no contiene registros.", "Sin Datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Opcional: limpiar el grid si no hay registros en lugar de mostrar alerta en cada recarga
+                    dgvProveedores.DataSource = null;
                     return;
                 }
 
@@ -93,22 +93,41 @@ namespace Sisvta
             }
         }
 
-        private void AsegurarfprovVivo(int ProveedorId)
+        private IServiceScope? _fprovScope; // Scope a nivel de clase para aislar el DbContext de Fprov
+
+        private void AsegurarfprovVivo()
         {
             if (_fprov == null || _fprov.IsDisposed)
             {
-                // Resolvemos fprov directamente a través de DI mediante un scope limpio
-                var scope = _serviceProvider.CreateScope();
-                _fprov = scope.ServiceProvider.GetRequiredService<Fprov>();
+                _fprovScope?.Dispose();
+                _fprovScope = null;
 
-                // Liberamos el scope cuando se cierre el formulario secundario
-                _fprov.FormClosed += (s, e) => scope.Dispose();
+                // 1. Creamos un nuevo scope independiente
+                _fprovScope = _serviceProvider.CreateScope();
 
-                // Obtenemos la ventana principal (Fmain) de forma segura como propietaria
-                var formPrincipal = this.TopLevelControl as Form;
-                if (formPrincipal != null)
+                // 2. Resolvemos una instancia completamente nueva de Fprov
+                _fprov = _fprovScope.ServiceProvider.GetRequiredService<Fprov>();
+
+                // 3. NOS SUSCRIBIMOS AL EVENTO DE ACTUALIZACIÓN
+                // Cada vez que Fprov guarde, actualice o elimine, recargará este catálogo automáticamente.
+                _fprov.ProveedorModificado += async () =>
                 {
-                    _fprov.Owner = formPrincipal;
+                    await CargarProveedoresAsync();
+                };
+
+                // 4. Limpiamos el scope y dejamos la referencia en null cuando el usuario cierre la ventana
+                _fprov.FormClosed += (s, e) =>
+                {
+                    _fprovScope?.Dispose();
+                    _fprovScope = null;
+                    _fprov = null;
+                };
+
+                // 5. Vinculamos el MdiParent correctamente
+                var formPrincipal = this.MdiParent ?? this.TopLevelControl as Form;
+                if (formPrincipal != null && formPrincipal.IsMdiContainer)
+                {
+                    _fprov.MdiParent = formPrincipal;
                 }
             }
         }
@@ -123,45 +142,50 @@ namespace Sisvta
             AbrirFormularioProveedor(e.RowIndex);
         }
 
- 
         private void AbrirFormularioProveedor(int rowIndex)
         {
-            if (rowIndex >= 0 && rowIndex < dgvProveedores.Rows.Count)
+            if (rowIndex < 0 || rowIndex >= dgvProveedores.Rows.Count) return;
+
+            try
             {
                 var row = dgvProveedores.Rows[rowIndex];
-                var item = row.DataBoundItem;
 
-                if (item != null)
+                // Verificamos de forma segura si la celda "Id" existe y tiene un valor válido
+                if (row.Cells["Id"]?.Value != null && int.TryParse(row.Cells["Id"].Value.ToString(), out int proveedorId))
                 {
-                    int ProveedorId = 0;
+                    ProveedorIdSeleccionado = proveedorId.ToString();
 
-                    // Extraemos la propiedad 'Id' dinámicamente sin importar si es el modelo Proveedor o ProveedorDto
-                    var propId = item.GetType().GetProperty("Id");
-                    if (propId != null)
+                    AsegurarfprovVivo();
+
+                    if (_fprov != null && !_fprov.IsDisposed)
                     {
-                        var valorId = propId.GetValue(item);
-                        if (valorId != null && int.TryParse(valorId.ToString(), out ProveedorId))
+                        if (_fprov.WindowState == FormWindowState.Minimized)
                         {
-                            ProveedorIdSeleccionado = ProveedorId.ToString();
-
-                            // Aseguramos y mostramos el formulario fprov mediante DI
-                            AsegurarfprovVivo(ProveedorId);
-
-                            if (_fprov != null)
-                            {
-                                if (_fprov.WindowState == FormWindowState.Minimized)
-                                {
-                                    _fprov.WindowState = FormWindowState.Normal;
-                                }
-
-                                _fprov.Show();
-                                _fprov.BringToFront();
-                                _fprov.Focus();
-                            }
+                            _fprov.WindowState = FormWindowState.Normal;
                         }
+
+                        _fprov.EstablecerIdPendiente(proveedorId);
+                        _fprov.Show();
+                        _fprov.BringToFront();
+                        _fprov.Focus();
+
+                        dgvProveedores.Refresh();
                     }
                 }
+                else
+                {
+                    MessageBox.Show("No se pudo obtener el ID del proveedor seleccionado en la fila.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir el formulario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void regresabt_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

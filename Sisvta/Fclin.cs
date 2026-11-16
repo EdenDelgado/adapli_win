@@ -53,6 +53,8 @@ namespace Sisvta
             {
                 dataGridView1.Columns["IdLineasArticulos"].HeaderText = "ID Línea";
                 dataGridView1.Columns["IdLineasArticulos"].Width = 50;
+                dataGridView1.Columns["IdLineasArticulos"].Visible = false;
+                dataGridView1.Columns["Grupolinea"].Visible = false;
             }
             if (dataGridView1.Columns["Nombre"] != null)
             {
@@ -81,6 +83,27 @@ namespace Sisvta
             {
                 dataGridView1.Columns["DateRecord"].HeaderText = "Fecha Registro";
                 dataGridView1.Columns["DateRecord"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm";
+            }
+            AgregarColumnaEditar();
+        }
+
+        private void AgregarColumnaEditar()
+        {
+            // Evitamos duplicar la columna si ya existe al recargar el grid
+            if (!dataGridView1.Columns.Contains("ColEditar"))
+            {
+                DataGridViewButtonColumn btnColumn = new DataGridViewButtonColumn();
+                btnColumn.Name = "ColEditar";
+                btnColumn.HeaderText = "Editar";
+                btnColumn.Text = "✏️"; // Figura del lápiz
+                btnColumn.UseColumnTextForButtonValue = true;
+                btnColumn.Width = 60;
+                btnColumn.FlatStyle = FlatStyle.Flat;
+                dataGridView1.Columns.Add(btnColumn);
+            }
+            if (dataGridView1.Columns.Contains("ColEditar"))
+            {
+                dataGridView1.Columns["ColEditar"].DisplayIndex = dataGridView1.Columns.Count - 1;
             }
         }
 

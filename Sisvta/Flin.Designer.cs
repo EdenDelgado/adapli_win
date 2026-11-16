@@ -31,18 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Flin));
             panel3 = new Panel();
             btregresar = new Button();
-            button2 = new Button();
             btGuardar = new Button();
             label1 = new Label();
             pictureBox1 = new PictureBox();
             label2 = new Label();
             nombretxt = new TextBox();
-            grupotxt = new TextBox();
             label3 = new Label();
             comisiontxt = new TextBox();
             label4 = new Label();
-            nombregrupotxt = new TextBox();
-            regresabt = new Button();
+            grupotxt = new ComboBox();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -50,9 +47,7 @@
             // panel3
             // 
             panel3.BackColor = SystemColors.ControlLight;
-            panel3.Controls.Add(regresabt);
             panel3.Controls.Add(btregresar);
-            panel3.Controls.Add(button2);
             panel3.Controls.Add(btGuardar);
             panel3.Controls.Add(label1);
             panel3.Controls.Add(pictureBox1);
@@ -67,7 +62,7 @@
             btregresar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btregresar.BackColor = Color.MediumAquamarine;
             btregresar.Image = (Image)resources.GetObject("btregresar.Image");
-            btregresar.Location = new Point(465, 6);
+            btregresar.Location = new Point(681, 7);
             btregresar.Name = "btregresar";
             btregresar.Size = new Size(80, 80);
             btregresar.TabIndex = 5;
@@ -75,19 +70,6 @@
             btregresar.TextImageRelation = TextImageRelation.ImageAboveText;
             btregresar.UseVisualStyleBackColor = false;
             btregresar.Click += btregresar_Click;
-            // 
-            // button2
-            // 
-            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.BackColor = Color.MediumAquamarine;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(627, 3);
-            button2.Name = "button2";
-            button2.Size = new Size(80, 80);
-            button2.TabIndex = 4;
-            button2.Text = "Nuevo";
-            button2.TextImageRelation = TextImageRelation.ImageAboveText;
-            button2.UseVisualStyleBackColor = false;
             // 
             // btGuardar
             // 
@@ -139,14 +121,6 @@
             nombretxt.Size = new Size(416, 23);
             nombretxt.TabIndex = 23;
             // 
-            // grupotxt
-            // 
-            grupotxt.Location = new Point(492, 240);
-            grupotxt.Name = "grupotxt";
-            grupotxt.Size = new Size(100, 23);
-            grupotxt.TabIndex = 25;
-            grupotxt.Visible = false;
-            // 
             // label3
             // 
             label3.AutoSize = true;
@@ -172,37 +146,22 @@
             label4.TabIndex = 26;
             label4.Text = "Porcentaje de Comision";
             // 
-            // nombregrupotxt
+            // grupotxt
             // 
-            nombregrupotxt.Location = new Point(71, 240);
-            nombregrupotxt.Name = "nombregrupotxt";
-            nombregrupotxt.Size = new Size(402, 23);
-            nombregrupotxt.TabIndex = 28;
-            nombregrupotxt.DoubleClick += nombregrupotxt_DoubleClick;
-            // 
-            // regresabt
-            // 
-            regresabt.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            regresabt.BackColor = Color.MediumAquamarine;
-            regresabt.Image = (Image)resources.GetObject("regresabt.Image");
-            regresabt.Location = new Point(713, 6);
-            regresabt.Name = "regresabt";
-            regresabt.Size = new Size(80, 80);
-            regresabt.TabIndex = 6;
-            regresabt.Text = "Regresar";
-            regresabt.TextImageRelation = TextImageRelation.ImageAboveText;
-            regresabt.UseVisualStyleBackColor = false;
-            regresabt.Click += btregresar_Click;
+            grupotxt.FormattingEnabled = true;
+            grupotxt.Location = new Point(71, 240);
+            grupotxt.Name = "grupotxt";
+            grupotxt.Size = new Size(303, 23);
+            grupotxt.TabIndex = 29;
             // 
             // Flin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 373);
-            Controls.Add(nombregrupotxt);
+            Controls.Add(grupotxt);
             Controls.Add(comisiontxt);
             Controls.Add(label4);
-            Controls.Add(grupotxt);
             Controls.Add(label3);
             Controls.Add(nombretxt);
             Controls.Add(label2);
@@ -221,17 +180,14 @@
 
         private Panel panel3;
         private Button btregresar;
-        private Button button2;
         private Button btGuardar;
         private Label label1;
         private PictureBox pictureBox1;
         private Label label2;
         private TextBox nombretxt;
-        private TextBox grupotxt;
         private Label label3;
         private TextBox comisiontxt;
         private Label label4;
-        private TextBox nombregrupotxt;
-        private Button regresabt;
+        private ComboBox grupotxt;
     }
 }

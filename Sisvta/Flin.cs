@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sisvta.Domain.Entities;
 using Sisvta.Infrastructure.Persistence.Contexts;
 using Sisvta.UseCases; // Asegúrate de tener este using
 using System;
+using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Sisvta
@@ -15,12 +18,14 @@ namespace Sisvta
         // Evento para notificar al formulario padre (Fclin) que hubo cambios y recargue el grid
         public event EventHandler? LineaModificada;
         private readonly ApplicationDbContext _context; // Añade este campo si no lo tienes
-                                                        // Constructor vacío para el diseñador visual
+
+        // Constructor vacío para el diseñador visual
         public Flin(GestionarLineasArticulosUseCase useCase, ApplicationDbContext context)
         {
             InitializeComponent();
             _useCase = useCase;
             _context = context;
+            CargarGrupoLineaCombo();
         }
 
         // Constructor con inyección del Caso de Uso (el que usaremos desde Fclin)
@@ -28,25 +33,67 @@ namespace Sisvta
         {
             InitializeComponent();
             _useCase = useCase;
+            CargarGrupoLineaCombo();
+        }
+
+        private void Flin_Load(object sender, EventArgs e)
+        {
+            if (DesignMode) return;
+            CargarGrupoLineaCombo();
+        }
+
+        // Método para cargar los grupos de líneas en el ComboBox grupotxt
+        private void CargarGrupoLineaCombo()
+        {
+            try
+            {
+                if (_context == null || grupotxt == null) return;
+
+                var listaGrupos = _context.Set<GrupoLinea>()
+                    .AsNoTracking()
+                    .Select(g => new { id_grupo = g.Id, nombre = g.Nombre })
+                    .ToList();
+
+                if (listaGrupos != null && listaGrupos.Count > 0)
+                {
+                    grupotxt.DataSource = null;
+                    grupotxt.DisplayMember = "nombre";
+                    grupotxt.ValueMember = "id_grupo";
+                    grupotxt.DataSource = listaGrupos;
+                    grupotxt.SelectedIndex = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar los grupos de líneas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Método para recibir los datos al hacer doble clic en el grid
-        public void CargarDatos(int id, string nombre, string nombreGrupo, string grupoLineaTexto, string prcComision)
+        public void CargarDatos(int id, string nombre, string nombreGrupo, string grupoIdTexto, string prcComision)
         {
             this.idLinea = id;                 // Almacena el ID para saber que es edición
             nombretxt.Text = nombre;
-            grupotxt.Text = grupoLineaTexto;
-            nombregrupotxt.Text = nombreGrupo;
+            //nombregrupotxt.Text = nombreGrupo;
             comisiontxt.Text = prcComision;
+
+            // Asignar el ID seleccionado en el ComboBox si es numérico válido
+            if (int.TryParse(grupoIdTexto, out int idGrupoVal) && grupotxt != null)
+            {
+                grupotxt.SelectedValue = idGrupoVal;
+            }
+            else
+            {
+                grupotxt.SelectedIndex = -1;
+            }
         }
 
         public void CargarNombre(string nombre)
         {
             this.idLinea = 0; // Si solo cargamos nombre desde cero, asumimos nuevo registro
             nombretxt.Text = nombre;
-            // Opcional: limpiar los demás campos si es un registro totalmente nuevo
-            grupotxt.Clear();
-            nombregrupotxt.Clear();
+            grupotxt.SelectedIndex = -1;
+            //nombregrupotxt.Clear();
             comisiontxt.Text = "0.00";
         }
 
@@ -74,14 +121,20 @@ namespace Sisvta
                     return;
                 }
 
+                if (grupotxt.SelectedValue == null)
+                {
+                    MessageBox.Show("Seleccione un grupo de línea válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    grupotxt.Focus();
+                    return;
+                }
+
                 // Parsear valores numéricos de forma segura
                 decimal.TryParse(comisiontxt.Text.Trim(), out decimal comision);
-                string grupoLinea = grupotxt.Text.Trim(); // Ajusta según el nombre de tu control o propiedad del DTO
+                string grupoLinea = grupotxt.SelectedValue.ToString(); // Obtenemos el ID del ComboBox
 
                 if (this.idLinea == 0)
                 {
                     // === NUEVO REGISTRO (INSERT) ===
-                    // Nota: Ajusta los parámetros según la firma exacta que tenga tu método de creación en el UseCase
                     await _useCase.CrearAsync(nombre, grupoLinea, comision, idempresa);
 
                     MessageBox.Show("Línea de artículo registrada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -89,7 +142,6 @@ namespace Sisvta
                 else
                 {
                     // === ACTUALIZACIÓN (UPDATE) usando el Id como llave ===
-                    // Nota: Ajusta los parámetros según la firma exacta que tenga tu método de actualización en el UseCase
                     await _useCase.ActualizarAsync(this.idLinea, nombre, grupoLinea, comision, idempresa);
 
                     MessageBox.Show("Línea de artículo actualizada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -107,8 +159,6 @@ namespace Sisvta
             }
         }
 
-
-
         private void nombregrupotxt_DoubleClick(object sender, EventArgs e)
         {
             try
@@ -123,8 +173,13 @@ namespace Sisvta
                 using var selector = new Fcgrul(_context);
                 if (selector.ShowDialog() == DialogResult.OK)
                 {
-                    grupotxt.Text = selector.IdGrupoSeleccionado;
-                    nombregrupotxt.Text = selector.NombreGrupoSeleccionado;
+                    // Si el selector devuelve un ID, lo asignamos directamente al ComboBox si existe
+                    if (int.TryParse(selector.IdGrupoSeleccionado, out int idGrupoSeleccionado))
+                    {
+                        grupotxt.SelectedValue = idGrupoSeleccionado;
+                    }
+
+                    //nombregrupotxt.Text = selector.NombreGrupoSeleccionado;
                     idempresa = selector.idempresa;
                 }
             }

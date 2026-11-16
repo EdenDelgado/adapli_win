@@ -148,7 +148,6 @@
             dgvClientes.Name = "dgvClientes";
             dgvClientes.Size = new Size(796, 297);
             dgvClientes.TabIndex = 3;
-            //dgvClientes.CellContentClick += dgvClientes_CellDoubleClick;
             dgvClientes.CellDoubleClick += dgvClientes_CellDoubleClick;
             // 
             // Fccli
@@ -157,6 +156,7 @@
             Controls.Add(splitContainer1);
             MdiChildrenMinimizedAnchorBottom = false;
             Name = "Fccli";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "fccli Consulta Clientes";
             Load += Fccli_Load;
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();

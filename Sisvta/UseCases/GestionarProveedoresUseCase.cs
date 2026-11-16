@@ -1,7 +1,7 @@
-﻿using Sisvta.Domain.Entities;
-using Sisvta.Domain.Interfaces;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Sisvta.Domain.Entities;
+using Sisvta.Domain.Interfaces;
 
 namespace Sisvta.UseCases
 {
@@ -9,21 +9,14 @@ namespace Sisvta.UseCases
     {
         private readonly IProveedoresRepository _proveedoresRepository;
 
+        // Inyectamos el repositorio en lugar del DbContext
         public GestionarProveedoresUseCase(IProveedoresRepository proveedoresRepository)
         {
             _proveedoresRepository = proveedoresRepository ?? throw new ArgumentNullException(nameof(proveedoresRepository));
         }
 
-        public async Task<Proveedores?> ObtenerPorIdAsync(int id)
-        {
-            return await _proveedoresRepository.ObtenerPorIdAsync(id);
-        }
-
         public async Task GuardarAsync(Proveedores proveedor)
         {
-            if (proveedor == null)
-                throw new ArgumentNullException(nameof(proveedor));
-
             if (proveedor.Id == 0)
             {
                 await _proveedoresRepository.AgregarAsync(proveedor);

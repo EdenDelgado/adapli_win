@@ -34,7 +34,6 @@
             btgrabar = new Button();
             panel3 = new Panel();
             btregresar = new Button();
-            button2 = new Button();
             btGuardar = new Button();
             label2 = new Label();
             pictureBox1 = new PictureBox();
@@ -69,7 +68,6 @@
             // 
             panel3.BackColor = SystemColors.ControlLight;
             panel3.Controls.Add(btregresar);
-            panel3.Controls.Add(button2);
             panel3.Controls.Add(btGuardar);
             panel3.Controls.Add(label2);
             panel3.Controls.Add(pictureBox1);
@@ -92,19 +90,6 @@
             btregresar.TextImageRelation = TextImageRelation.ImageAboveText;
             btregresar.UseVisualStyleBackColor = false;
             btregresar.Click += btregresar_Click;
-            // 
-            // button2
-            // 
-            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            button2.BackColor = Color.MediumAquamarine;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(655, 6);
-            button2.Name = "button2";
-            button2.Size = new Size(80, 80);
-            button2.TabIndex = 4;
-            button2.Text = "Nuevo";
-            button2.TextImageRelation = TextImageRelation.ImageAboveText;
-            button2.UseVisualStyleBackColor = false;
             // 
             // btGuardar
             // 
@@ -166,7 +151,6 @@
         private Button btgrabar;
         private Panel panel3;
         private Button btregresar;
-        private Button button2;
         private Button btGuardar;
         private Label label2;
         private PictureBox pictureBox1;

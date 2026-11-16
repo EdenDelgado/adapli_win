@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sisvta.Domain.Entities;
 using Sisvta.Domain.Interfaces;
-//using Sisvta.Infrastructure.Persistence Data; // Ajusta este namespace según la ubicación de tu DbContext
 using Sisvta.Infrastructure.Persistence.Contexts;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sisvta.Infrastructure.Repositories
 {
     public class ProveedoresRepository : IProveedoresRepository
     {
-        private readonly ApplicationDbContext _context; // Cambia "ApplicationDbContext" por el nombre de tu DbContext actual
+        private readonly ApplicationDbContext _context;
 
         public ProveedoresRepository(ApplicationDbContext context)
         {
@@ -19,7 +20,7 @@ namespace Sisvta.Infrastructure.Repositories
 
         public async Task<IEnumerable<Proveedores>> ObtenerTodosAsync()
         {
-            return await _context.Proveedores.ToListAsync();
+            return await _context.Proveedores.AsNoTracking().ToListAsync();
         }
 
         public async Task<Proveedores?> ObtenerPorIdAsync(int id)
@@ -39,7 +40,22 @@ namespace Sisvta.Infrastructure.Repositories
         {
             if (proveedor == null) throw new ArgumentNullException(nameof(proveedor));
 
-            _context.Proveedores.Update(proveedor);
+            // Verificamos si el contexto ya tiene una instancia rastreada con este mismo ID en memoria local
+            var trackedEntity = _context.Set<Proveedores>()
+                .Local
+                .FirstOrDefault(p => p.Id == proveedor.Id);
+
+            if (trackedEntity != null)
+            {
+                // Si ya existe en memoria, copiamos los nuevos valores sobre la instancia rastreada
+                _context.Entry(trackedEntity).CurrentValues.SetValues(proveedor);
+            }
+            else
+            {
+                // Si no está en memoria, usamos Update de forma segura
+                _context.Proveedores.Update(proveedor);
+            }
+
             await _context.SaveChangesAsync();
         }
 
