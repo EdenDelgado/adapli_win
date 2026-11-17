@@ -61,7 +61,7 @@
             label1.BackColor = Color.Gray;
             label1.BorderStyle = BorderStyle.FixedSingle;
             label1.Enabled = false;
-            label1.Location = new Point(268, 87);
+            label1.Location = new Point(268, 130);
             label1.Name = "label1";
             label1.Size = new Size(454, 4);
             label1.TabIndex = 2;
@@ -70,7 +70,7 @@
             // 
             label2.BackColor = Color.Gray;
             label2.BorderStyle = BorderStyle.FixedSingle;
-            label2.Location = new Point(268, 161);
+            label2.Location = new Point(268, 204);
             label2.Name = "label2";
             label2.Size = new Size(454, 4);
             label2.TabIndex = 3;
@@ -82,7 +82,7 @@
             txtuser.BorderStyle = BorderStyle.None;
             txtuser.Font = new Font("Courier New", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtuser.ForeColor = Color.DimGray;
-            txtuser.Location = new Point(291, 57);
+            txtuser.Location = new Point(291, 100);
             txtuser.Name = "txtuser";
             txtuser.Size = new Size(413, 19);
             txtuser.TabIndex = 1;
@@ -96,7 +96,7 @@
             txtpas.BorderStyle = BorderStyle.None;
             txtpas.Font = new Font("Courier New", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtpas.ForeColor = Color.DimGray;
-            txtpas.Location = new Point(268, 139);
+            txtpas.Location = new Point(268, 182);
             txtpas.Name = "txtpas";
             txtpas.PasswordChar = '@';
             txtpas.Size = new Size(413, 19);
@@ -109,7 +109,7 @@
             // 
             InicioDeSesionLbl.AutoSize = true;
             InicioDeSesionLbl.Font = new Font("Franklin Gothic Medium", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            InicioDeSesionLbl.Location = new Point(394, 22);
+            InicioDeSesionLbl.Location = new Point(394, 39);
             InicioDeSesionLbl.Name = "InicioDeSesionLbl";
             InicioDeSesionLbl.Size = new Size(219, 34);
             InicioDeSesionLbl.TabIndex = 6;
@@ -123,9 +123,9 @@
             btnlogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(64, 64, 64);
             btnlogin.FlatStyle = FlatStyle.Flat;
             btnlogin.ForeColor = Color.Black;
-            btnlogin.Location = new Point(305, 262);
+            btnlogin.Location = new Point(268, 262);
             btnlogin.Name = "btnlogin";
-            btnlogin.Size = new Size(307, 40);
+            btnlogin.Size = new Size(454, 40);
             btnlogin.TabIndex = 3;
             btnlogin.Text = "ACCEDER";
             btnlogin.UseVisualStyleBackColor = false;
@@ -160,7 +160,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Franklin Gothic Medium", 40F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(44, 139);
+            label3.Location = new Point(51, 139);
             label3.Name = "label3";
             label3.Size = new Size(203, 68);
             label3.TabIndex = 10;
@@ -171,7 +171,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Franklin Gothic Medium", 40F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label4.ForeColor = Color.White;
-            label4.Location = new Point(-7, 134);
+            label4.Location = new Point(2, 134);
             label4.Name = "label4";
             label4.Size = new Size(69, 68);
             label4.TabIndex = 11;
