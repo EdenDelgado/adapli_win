@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(loginFrm));
             panel1 = new Panel();
+            label3 = new Label();
+            label4 = new Label();
             label1 = new Label();
             label2 = new Label();
             txtuser = new TextBox();
@@ -38,8 +40,6 @@
             btnlogin = new Button();
             linkLabel2 = new LinkLabel();
             btncerrar = new PictureBox();
-            label3 = new Label();
-            label4 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)btncerrar).BeginInit();
             SuspendLayout();
@@ -55,6 +55,28 @@
             panel1.Size = new Size(250, 360);
             panel1.TabIndex = 0;
             panel1.MouseDown += panel1_MouseDown;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Franklin Gothic Medium", 40F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label3.ForeColor = Color.White;
+            label3.Location = new Point(51, 139);
+            label3.Name = "label3";
+            label3.Size = new Size(203, 68);
+            label3.TabIndex = 10;
+            label3.Text = "ADAPLI";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Franklin Gothic Medium", 40F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label4.ForeColor = Color.White;
+            label4.Location = new Point(2, 134);
+            label4.Name = "label4";
+            label4.Size = new Size(69, 68);
+            label4.TabIndex = 11;
+            label4.Text = ": :";
             // 
             // label1
             // 
@@ -120,7 +142,7 @@
             btnlogin.BackColor = Color.Transparent;
             btnlogin.FlatAppearance.BorderColor = Color.Black;
             btnlogin.FlatAppearance.MouseDownBackColor = Color.FromArgb(28, 28, 28);
-            btnlogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(64, 64, 64);
+            btnlogin.FlatAppearance.MouseOverBackColor = Color.White;
             btnlogin.FlatStyle = FlatStyle.Flat;
             btnlogin.ForeColor = Color.Black;
             btnlogin.Location = new Point(268, 262);
@@ -154,28 +176,6 @@
             btncerrar.TabIndex = 9;
             btncerrar.TabStop = false;
             btncerrar.Click += btncerrar_Click;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Franklin Gothic Medium", 40F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.ForeColor = Color.White;
-            label3.Location = new Point(51, 139);
-            label3.Name = "label3";
-            label3.Size = new Size(203, 68);
-            label3.TabIndex = 10;
-            label3.Text = "ADAPLI";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Franklin Gothic Medium", 40F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label4.ForeColor = Color.White;
-            label4.Location = new Point(2, 134);
-            label4.Name = "label4";
-            label4.Size = new Size(69, 68);
-            label4.TabIndex = 11;
-            label4.Text = ": :";
             // 
             // loginFrm
             // 

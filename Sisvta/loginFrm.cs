@@ -17,6 +17,19 @@ namespace Sisvta
         {
             InitializeComponent();
             _context = context;
+            ConfigurarHover(btnlogin);
+        }
+
+        private void ConfigurarHover(Button btn)
+        {
+            var colorTextoOriginal = btn.ForeColor;
+
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.MouseOverBackColor = Color.Gray;
+            btn.FlatAppearance.MouseDownBackColor = Color.DimGray;
+
+            btn.MouseEnter += (s, e) => btn.ForeColor = Color.White;
+            btn.MouseLeave += (s, e) => btn.ForeColor = colorTextoOriginal;
         }
 
         [DllImport("user32.dll", EntryPoint = "ReleaseCapture")]
@@ -31,7 +44,7 @@ namespace Sisvta
             if (txtuser.Text == "")
             {
                 txtuser.Text = "USUARIO";
-                txtuser.ForeColor = Color.DarkGray;
+                txtuser.ForeColor = Color.Black;
             }
         }
 
@@ -40,7 +53,7 @@ namespace Sisvta
             if (txtuser.Text == "USUARIO")
             {
                 txtuser.Text = "";
-                txtuser.ForeColor = Color.LightGray;
+                txtuser.ForeColor = Color.Black;
             }
         }
 
@@ -106,8 +119,6 @@ namespace Sisvta
                     MessageBox.Show("Este usuario se encuentra inactivo.", "Acceso Denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
-                MessageBox.Show("¡Bienvenido al sistema, " + usuarioEncontrado.Nombre + "!", "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Fmain fmainForm = new Fmain();
                 this.Hide();

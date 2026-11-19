@@ -1,5 +1,4 @@
 ﻿using Sisvta.Domain.Entities;
-using Sisvta.Domain.Interfaces;
 using Sisvta.Infrastructure.Repositories;
 using Sisvta.UseCases.DTO;
 using System;
